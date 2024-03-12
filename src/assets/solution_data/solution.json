@@ -1,0 +1,141 @@
+{
+    "cities": [
+        {
+            "name": "Tours",
+            "id": 0,
+            "cohorte": false
+        },
+        {
+            "name": "Lille",
+            "id": 1,
+            "cohorte": true
+        },
+        {
+            "name": "Lyon",
+            "id": 2,
+            "cohorte": false
+        },
+        {
+            "name": "Montpellier",
+            "id": 3,
+            "cohorte": false
+        },
+        {
+            "name": "Poitiers",
+            "id": 4,
+            "cohorte": true
+        },
+        {
+            "name": "Toulouse",
+            "id": 5,
+            "cohorte": false
+        },
+        {
+            "name": "Bordeaux",
+            "id": 6,
+            "cohorte": false
+        },
+        {
+            "name": "Rennes",
+            "id": 7,
+            "cohorte": false
+        },
+        {
+            "name": "Reims",
+            "id": 8,
+            "cohorte": false
+        },
+        {
+            "name": "Strasbourg",
+            "id": 9,
+            "cohorte": false
+        }
+    ],
+    "cohortes": [
+        {
+            "nbPatients": 284,
+            "city": "Lille",
+            "types": [
+                {
+                    "name": "LCR",
+                    "tubes": [
+                        {
+                            "number": 1,
+                            "volume": 62,
+                            "envoi": []
+                        },
+                        {
+                            "number": 2,
+                            "volume": 27,
+                            "envoi": []
+                        }
+                    ]
+                },
+                {
+                    "name": "SER",
+                    "tubes": [
+                        {
+                            "number": 1,
+                            "volume": 21,
+                            "envoi": []
+                        },
+                        {
+                            "number": 2,
+                            "volume": 37,
+                            "envoi": []
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "nbPatients": 325,
+            "city": "Poitiers",
+            "types": [
+                {
+                    "name": "LCR",
+                    "tubes": [
+                        {
+                            "number": 1,
+                            "volume": 15,
+                            "envoi": []
+                        },
+                        {
+                            "number": 2,
+                            "volume": 84,
+                            "envoi": []
+                        }
+                    ]
+                },
+                {
+                    "name": "SER",
+                    "tubes": [
+                        {
+                            "number": 1,
+                            "volume": 15,
+                            "envoi": []
+                        },
+                        {
+                            "number": 2,
+                            "volume": 44,
+                            "envoi": []
+                        }
+                    ]
+                }
+            ]
+        }
+    ],
+    "types": ["LCR","SER"],
+    "demande": [
+        ["Tours",6,0],
+        ["Lille",6,12],
+        ["Lyon",4,0],
+        ["Montpellier",10,3],
+        ["Poitiers",14,1],
+        ["Toulouse",9, 9],
+        ["Bordeaux",14,11 ],
+        ["Rennes",14,6],
+        ["Reims",8,10 ],
+        ["Strasbourg",0,0]
+    ]
+}

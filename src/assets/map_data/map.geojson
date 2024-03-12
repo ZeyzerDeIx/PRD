@@ -1,0 +1,145 @@
+{
+    "type": "FeatureCollection",
+    "features": [
+        {
+            "type": "Feature",
+            "properties": {
+                "name": "Tours"
+            },
+            "geometry": {
+                "coordinates": [
+                    47.3872,
+                    0.6885
+                ],
+                "type": "Point"
+            },
+            "id": 0
+        },
+        {
+            "type": "Feature",
+            "properties": {
+                "name": "Lille"
+            },
+            "geometry": {
+                "coordinates": [
+                    50.6365,
+                    3.0633
+                ],
+                "type": "Point"
+            },
+            "id": 1
+        },
+        {
+            "type": "Feature",
+            "properties": {
+                "name": "Lyon"
+            },
+            "geometry": {
+                "coordinates": [
+                    45.7579,
+                    4.8449
+                ],
+                "type": "Point"
+            },
+            "id": 2
+        },
+        {
+            "type": "Feature",
+            "properties": {
+                "name": "Montpellier"
+            },
+            "geometry": {
+                "coordinates": [
+                    43.61095,
+                    3.87751
+                ],
+                "type": "Point"
+            },
+            "id": 3
+        },
+        {
+            "type": "Feature",
+            "properties": {
+                "name": "Poitiers"
+            },
+            "geometry": {
+                "coordinates": [
+                    46.5809,
+                    0.3419
+                ],
+                "type": "Point"
+            },
+            "id": 4
+        },
+        {
+            "type": "Feature",
+            "properties": {
+                "name": "Toulouse"
+            },
+            "geometry": {
+                "coordinates": [
+                    43.6026,
+                    1.4454
+                ],
+                "type": "Point"
+            },
+            "id": 5
+        },
+        {
+            "type": "Feature",
+            "properties": {
+                "name": "Bordeaux"
+            },
+            "geometry": {
+                "coordinates": [
+                    44.8393,
+                    -0.5769
+                ],
+                "type": "Point"
+            },
+            "id": 6
+        },
+        {
+            "type": "Feature",
+            "properties": {
+                "name": "Rennes"
+            },
+            "geometry": {
+                "coordinates": [
+                    48.1198,
+                    -1.6654
+                ],
+                "type": "Point"
+            },
+            "id": 7
+        },
+        {
+            "type": "Feature",
+            "properties": {
+                "name": "Reims"
+            },
+            "geometry": {
+                "coordinates": [
+                    49.2545,
+                    4.0309
+                ],
+                "type": "Point"
+            },
+            "id": 8
+        },
+        {
+            "type": "Feature",
+            "properties": {
+                "name": "Strasbourg"
+            },
+            "geometry": {
+                "coordinates": [
+                    48.5808,
+                    7.7491
+                ],
+                "type": "Point"
+            },
+            "id": 9
+        }
+    ]
+}

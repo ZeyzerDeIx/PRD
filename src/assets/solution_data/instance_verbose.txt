@@ -1,0 +1,35 @@
+param N:=10;
+param C:=2;
+param VilleCohorte := 
+1	2
+2	5
+;
+param Taille := 
+1	284
+2	325
+;
+param T:=2;
+param NbTubes:=2;
+param VolTube :=
+[1,*,*] :1 2 :=
+1 62 27 
+2 21 37 
+[2,*,*] :1 2 :=
+1 15 84 
+2 15 44 
+;
+param dde : 1 2 :=
+1 6 0 
+2 6 12 
+3 4 0 
+4 10 3 
+5 14 1 
+6 9 9 
+7 14 11 
+8 14 6 
+9 8 10 
+10 0 0 
+;
+param NBCONGELMAX :=3;
+param LB :=325;
+end;
