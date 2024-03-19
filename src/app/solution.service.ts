@@ -106,7 +106,7 @@ export class SolutionService {
     solution.demande = [];
     setTimeout(() =>{
       this.getInstance().subscribe(data => {
-        var textLines = data.split('\r\n');
+        var textLines = data.split('\n');
         var nbVilles = Number(textLines[0]);
         var nbCohortes = Number(textLines[1]);
         var cohorteVilleline = textLines[2].split('\t');
@@ -177,7 +177,7 @@ export class SolutionService {
     var arcs: any[] = [];
     setTimeout(() =>{
       this.getInstanceSolution().subscribe(data =>{
-        var textLines = data.split('\r\n');
+        var textLines = data.split('\n');
         for(var i = 0; i < textLines.length; i++){
           var line = textLines[i].split(' ');
           var arcsTube = [];
