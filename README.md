@@ -9,8 +9,8 @@ Le projet est codé en TypeScript avec le framework Angular, ainsi que la biblio
 
 ## Initialisation du projet
 
-Après avoir pull le projet depuis le repository Git (`https://github.com/BethencourtFlorian/PRD`),
+Après avoir pull le projet depuis le repository Git (`https://github.com/BethencourtFlorian/PRD`),  
 ouvrez un terminal et déplacez vous dans le dossier "PRD".
-D'ici, lancez la commande `npm install` pour installer toutes les dépendances du projet.
-Ensuite la commande `ng serve` ouvrira un serveur de développement à l'adresse `http://localhost:4200`.
-Vous pouvez également lancer `ng serve --open`pour ouvrir l'onglet automatiquement.
+D'ici, lancez la commande `npm install` pour installer toutes les dépendances du projet.  
+Ensuite la commande `ng serve` ouvrira un serveur de développement à l'adresse `http://localhost:4200`.  
+Vous pouvez également lancer `ng serve --open`pour ouvrir l'onglet automatiquement.  
