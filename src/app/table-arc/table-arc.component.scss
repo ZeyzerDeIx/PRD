@@ -1,8 +1,6 @@
-.divFormArc{
+#divButton{
     display: flex;
-    flex-wrap: nowrap;
-    flex-direction: row;
-    justify-content: space-evenly;
+    justify-content: flex-end;
 }
 
 .mat-mdc-table .mdc-data-table__row:hover{

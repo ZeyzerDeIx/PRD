@@ -56,11 +56,12 @@ export class FormCohorteComponent {
         else{
           this.cohorteMarker.setIcon(iconDefault); // Reset the previous marker icon
           this.cohorteMarker = marker;
-          this.cohorteMarker.setIcon(iconViolet); // Change the actual marker
+          this.cohorteMarker.setIcon(iconViolet); // Change the current marker
         }
         
       }
     }
+    this.arcService.setCohorteCity(city);
     this.type = {
       name: "",
       tubes: []
