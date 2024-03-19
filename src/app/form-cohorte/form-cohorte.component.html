@@ -1,0 +1,26 @@
+<div class="divFormCohorte">
+  <mat-form-field>
+    <mat-label>Cohorte</mat-label>
+    <mat-select [(value)]="cohorte" (selectionChange)="cohorteChange($event)">
+      @for (cohorte of solution.cohortes; track cohorte) {
+        <mat-option [value]="cohorte">{{cohorte.city}}</mat-option>
+      }
+    </mat-select>
+  </mat-form-field>
+  <mat-form-field>
+    <mat-label>Type de tube</mat-label>
+    <mat-select [(value)]="type"(selectionChange)="typeChange()">
+      @for (type of cohorte.types; track type) {
+        <mat-option [value]="type">{{type.name}}</mat-option>
+      }
+    </mat-select>
+  </mat-form-field>
+  <mat-form-field>
+    <mat-label>Tube(s) n°</mat-label>
+    <mat-select [(value)]="tube" (selectionChange)="tubeChange()">
+      @for (tube of type.tubes; track tube) {
+        <mat-option [value]="tube">{{tube.number}}</mat-option>
+      }
+    </mat-select>
+  </mat-form-field>
+</div>

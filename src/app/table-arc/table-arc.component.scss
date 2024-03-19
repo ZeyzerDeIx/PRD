@@ -1,0 +1,20 @@
+.divFormArc{
+    display: flex;
+    flex-wrap: nowrap;
+    flex-direction: row;
+    justify-content: space-evenly;
+}
+
+.mat-mdc-table .mdc-data-table__row:hover{
+    background-color: rgba(236, 236, 236, 0.514) !important;
+}
+
+// TODO : J'aimais pas la gueule du  paginator donc j'ai caché des trucs, libre à toi de changer
+// surtout que !important c'est pas fou à utiliser normalement
+::ng-deep .mat-mdc-paginator-page-size, ::ng-deep .mat-mdc-paginator-range-label{
+    display: none !important;
+}
+
+::ng-deep .mat-mdc-paginator-container{
+    justify-content: center !important;
+}

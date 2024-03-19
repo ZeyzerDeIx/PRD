@@ -1,6 +1,9 @@
 <div class="app-container-div">
-    <div id="map">
-      <button id="refreshButton" (click)="defaultZoom($event)">Retour</button>
-    </div>
-    <div id="form"><app-form [map]="map" [markersArray]="markersArray"></app-form></div>
+  <div id="map">
+    <button id="refreshButton" (click)="defaultZoom($event)">Retour</button>
   </div>
+  <div class="forms">
+    <div id="formCohorte"><app-form-cohorte [map]="map" [markersArray]="markersArray"></app-form-cohorte></div>
+    <div id="tableArc"><app-table-arc></app-table-arc></div>
+  </div>
+</div>

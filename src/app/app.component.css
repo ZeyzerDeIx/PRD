@@ -11,8 +11,18 @@
   justify-content: space-evenly;
 }
 
-#form {
+.forms {
   width: 30%;
+  display: flex;
+  flex-direction: column;
+}
+
+#formCohorte{
+  height: 15%;
+}
+
+#tableArc{
+  height: 85%;
 }
 
 #mainContainer{

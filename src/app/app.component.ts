@@ -1,24 +1,13 @@
-import { AfterViewInit, Component, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { HttpClientModule} from '@angular/common/http';
+import { SolutionService } from './solution.service';
+import { FormCohorteComponent } from './form-cohorte/form-cohorte.component';
+import { TableArcComponent } from './table-arc/table-arc.component';
+import { iconDefault } from './include/leaflet-icons';
+
 import * as L from 'leaflet';
 import "leaflet-polylinedecorator";
 import "leaflet-textpath";
-import { HttpClientModule} from '@angular/common/http';
-import { SolutionService } from './solution.service';
-import { FormComponent } from './form/form.component';
-
-const iconUrl = 'assets/images/marker-icon.png';
-const iconVioletUrl = 'assets/images/marker-icon-violet.png';
-const shadowUrl = 'assets/images/marker-shadow.png';
-
-const iconDefault = L.icon({
-  iconUrl,
-  shadowUrl,
-  iconSize: [25, 41],
-  iconAnchor: [12, 41],
-  popupAnchor: [1, -34],
-  tooltipAnchor: [16, -28],
-  shadowSize: [41, 41]
-});
 
 L.Marker.prototype.options.icon = iconDefault;
 
@@ -26,7 +15,7 @@ L.Marker.prototype.options.icon = iconDefault;
   selector: 'app-root',
   standalone: true,
   templateUrl: './app.component.html',
-  imports: [HttpClientModule, FormComponent],
+  imports: [HttpClientModule, FormCohorteComponent, TableArcComponent],
   styleUrls: ['./app.component.scss'],
 })
 export class AppComponent implements OnInit {
@@ -36,12 +25,11 @@ export class AppComponent implements OnInit {
   markersArray: L.Marker[] = [];
 
   constructor(private solutionService:SolutionService) {
-    solutionService.solution = solutionService.getSolution();
   }
 
   public ngOnInit(): void {
     this.loadMap();
-    this.solution = this.solutionService.solution;
+    this.solution = this.solutionService.getSolution();
     this.markersArray = this.solutionService.drawCities(this.map, this.solution.cities);
     setTimeout(() => {
       this.createMarkersPopup()
@@ -66,7 +54,6 @@ export class AppComponent implements OnInit {
   }
 
   private createMarkersPopup(){
-    console.log(this.markersArray);
     for (const marker of this.markersArray){
       var city = marker.options.alt  || "";
       var popupContent = `` + `<div>Ville : ${ city } <br>

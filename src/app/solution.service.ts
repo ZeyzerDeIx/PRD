@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import * as L from 'leaflet';
+import L, { LatLngExpression } from 'leaflet';
 import 'leaflet-arrowheads';
 
 @Injectable({
@@ -12,31 +12,77 @@ export class SolutionService {
   private mapDataUrl = "assets/map_data/map.geojson";
   private instanceUrl = "assets/solution_data/instance.txt";
   private instanceSolutionUrl = "assets/solution_data/solution_instance.txt";
-  private citiesPosition: any[] = [];
   private types = ["LCR","SER","PLA"];
 
-  solution:any = {};
+  private citiesPosition: Map<string,number[]>;
+  private solution: any;
 
-  constructor(protected http:HttpClient) { }
-
-  getSolution(){
-    return this.parseSolution();
+  constructor(protected http:HttpClient) {
+    this.citiesPosition = this.parseCitiesPosition();
+    this.solution = this.parseSolution();
   }
 
-  getMapData(){
+  private getMapData(){
     return this.http.get(this.mapDataUrl);
   }
 
-  getInstance(){
+  private getInstance(){
     return this.http.get(this.instanceUrl, { responseType: 'text'});
   }
 
-  getInstanceSolution(){
+  private getInstanceSolution(){
     return this.http.get(this.instanceSolutionUrl, { responseType: 'text'});
   }
 
-  public getCitiesPosition(): any[] {
-    let citiesPosition: any[] = [];
+  public getCitiesPosition(): Map<string, number[]> {
+    return this.citiesPosition;
+  }
+
+  public getSolution(): any{
+    return this.solution;
+  }
+
+  public drawCities(map: L.Map, cities:any): L.Marker[]{ 
+    var markersArray: L.Marker[] = [];
+    setTimeout(() => {
+      for (const city of cities) {
+        // Ugly line to work around "LatLngExpression is not assignable to number | any | undefined..."
+        let latlngs:LatLngExpression = [this.citiesPosition.get(city.name)![0], this.citiesPosition.get(city.name)![1]];
+
+        const marker = L.marker(latlngs, {alt: city.name});
+
+        // Ajout du marqueur à la cart
+        marker.addTo(map);
+
+        markersArray.push(marker);
+      }
+    }, 500);
+    
+    return markersArray;
+  }
+
+  private parseCities(): any[]{
+    var cities:any[] = [];
+    setTimeout(() => {
+      this.getMapData().subscribe((data:any) => {
+        for (const city of data.features) {
+          const name = city.properties.name;
+          const id = city.id; 
+          
+          cities.push({
+            "name": name,
+            "id": id,
+            "cohorte": false
+          });
+        }
+      });
+    }, 200);
+    
+    return cities;
+  }
+
+  private parseCitiesPosition(): Map<string, number[]>{
+    let citiesPosition: Map<string, number[]> = new Map();
     setTimeout((() =>{
       this.getMapData().subscribe((cities:any) => {
         for (const city of cities.features) {
@@ -44,45 +90,12 @@ export class SolutionService {
           const lon = city.geometry.coordinates[1];
           const name = city.properties.name; 
           
-          citiesPosition[name] = [lat,lon];
+          citiesPosition.set(name, [lat,lon]);
         }
       });
     }),100);
     
     return citiesPosition;
-  }
-
-  drawCities(map: L.Map, cities:any): L.Marker[]{
-    var markersArray: L.Marker[] = [];
-    this.citiesPosition = this.getCitiesPosition();
-    setTimeout(() =>{
-      for (const city of cities) {
-        const marker = L.marker(this.citiesPosition[city.name], {alt: city.name});
-
-        // Ajout du marqueur à la carte
-        marker.addTo(map);
-
-        markersArray.push(marker);
-      }
-    },500);
-    return markersArray;
-  }
-
-  private parseCities(): any[]{
-    var cities:any[] = [];
-    this.getMapData().subscribe((data:any) => {
-      for (const city of data.features) {
-        const name = city.properties.name;
-        const id = city.id; 
-        
-        cities.push({
-          "name": name,
-          "id": id,
-          "cohorte": false
-        });
-      }
-    });
-    return cities;
   }
 
   private parseSolution(): any{
@@ -143,6 +156,8 @@ export class SolutionService {
               for(var k = 0; k < nbTubes; k++){
                 var indice = i*nbTypes*nbTubes + j*nbTubes + k;
                 for(var l = 0; l < arcs[indice].length; l++){
+                  // TODO : Pour l'instant envoi est construit à partir de la partition de chaque tube, et la quantité est de 0
+                  // Il faudrait le remplir avec des vrais valeurs via parseArcs() et un autre fichier de sortie du modèle (à voir avec M.Billaut)
                   solution.cohortes[i].types[j].tubes[k].envoi.push([
                     solution.cohortes[i].city,
                     this.findCityNameById(solution.cities, arcs[indice][l]),
@@ -154,7 +169,7 @@ export class SolutionService {
           }
         },1000);
       });
-    },100);
+    },300);
     return solution;
   }
 
