@@ -1,7 +1,7 @@
 # PRD  Optimisation des déplacements d’échantillons médicaux dans le cadre de la Sclérose Latérale Amyotrophique (SLA ou Maladie de Charcot)
 
 Ce projet correspond à la deuxième partie de mon PRD, à savoir un outil de visualisation des solutions proposées par le modèle,
-avec pour objectif de pouvoir modifier à sa guise les flux d'échantillons et évaluer l'impact de ces décisions sur la solutino optimale.
+avec pour objectif de pouvoir modifier à sa guise les flux d'échantillons et évaluer l'impact de ces décisions sur la solution optimale.
 
 ## Technologies utilisées
 
