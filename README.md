@@ -1,27 +1,16 @@
-# PRD
+# PRD  Optimisation des déplacements d’échantillons médicaux dans le cadre de la Sclérose Latérale Amyotrophique (SLA ou Maladie de Charcot)
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 17.2.0.
+Ce projet correspond à la deuxième partie de mon PRD, à savoir un outil de visualisation des solutions proposées par le modèle,
+avec pour objectif de pouvoir modifier à sa guise les flux d'échantillons et évaluer l'impact de ces décisions sur la solutino optimale.
 
-## Development server
+## Technologies utilisées
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
+Le projet est codé en TypeScript avec le framework Angular, ainsi que la bibliothèque Leaflet pour la gestion de la carte interactive.
 
-## Code scaffolding
+## Initialisation du projet
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
-
-## Build
-
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
-
-## Running unit tests
-
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
-
-## Running end-to-end tests
-
-Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
-
-## Further help
-
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
+Après avoir pull le projet depuis le repository Git (`https://github.com/BethencourtFlorian/PRD`),
+ouvrez un terminal et déplacez vous dans le dossier "PRD".
+D'ici, lancez la commande `npm install` pour installer toutes les dépendances du projet.
+Ensuite la commande `ng serve` ouvrira un serveur de développement à l'adresse `http://localhost:4200`.
+Vous pouvez également lancer `ng serve --open`pour ouvrir l'onglet automatiquement.
