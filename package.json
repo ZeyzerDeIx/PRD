@@ -7,7 +7,9 @@
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
-    "compodoc": "npx compodoc -p tsconfig.doc.json -s"
+    "compodoc": "npx compodoc -p tsconfig.doc.json -n \"Documentation PRD\" -s",
+    "compodoc generate": "npx compodoc -p tsconfig.doc.json",
+    "compodoc serv": "npx compodoc -s"
   },
   "private": true,
   "dependencies": {
