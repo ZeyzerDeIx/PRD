@@ -1,0 +1,1199 @@
+<!doctype html>
+<html class="no-js" lang="">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <title>prd documentation</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link rel="icon" type="image/x-icon" href="../images/favicon.ico">
+	   <link rel="stylesheet" href="../styles/style.css">
+        <link rel="stylesheet" href="../styles/dark.css">
+    </head>
+    <body>
+          <script>
+               // Blocking script to avaoid flickering dark mode
+               // Dark mode toggle button
+               var useDark = window.matchMedia('(prefers-color-scheme: dark)');
+               var darkModeState = useDark.matches;
+               var $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               var $darkModeToggles = document.querySelectorAll('.dark-mode-switch');
+               var darkModeStateLocal = localStorage.getItem('compodoc_darkmode-state');
+
+               function checkToggle(check) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].checked = check;
+                    }
+               }
+
+               function toggleDarkMode(state) {
+                    if (window.localStorage) {
+                         localStorage.setItem('compodoc_darkmode-state', state);
+                    }
+
+                    checkToggle(state);
+
+                    const hasClass = document.body.classList.contains('dark');
+
+                    if (state) {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.add('dark');
+                         }
+                         if (!hasClass) {
+                              document.body.classList.add('dark');
+                         }
+                    } else {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.remove('dark');
+                         }
+                         if (hasClass) {
+                              document.body.classList.remove('dark');
+                         }
+                    }
+               }
+
+               useDark.addEventListener('change', function (evt) {
+                    toggleDarkMode(evt.matches);
+               });
+               if (darkModeStateLocal) {
+                    darkModeState = darkModeStateLocal === 'true';
+               }
+               toggleDarkMode(darkModeState);
+
+               if ($darkModeToggles.length > 0) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].addEventListener('change', function (event) {
+                              darkModeState = !darkModeState;
+                              toggleDarkMode(darkModeState);
+                         });
+                    }
+               }
+          </script>
+
+        <div class="navbar navbar-default navbar-fixed-top d-block d-sm-none">
+            <a href="../" class="navbar-brand">prd documentation</a>
+            <button type="button" class="btn btn-default btn-menu ion-ios-menu" id="btn-menu"></button>
+        </div>
+
+        <div class="xs-menu menu" id="mobile-menu">
+                <div id="book-search-input" role="search"><input type="text" placeholder="Type to search"></div>            <compodoc-menu></compodoc-menu>
+        </div>
+
+        <div class="container-fluid main">
+           <div class="row main">
+               <div class="hidden-xs menu">
+                   <compodoc-menu mode="normal"></compodoc-menu>
+               </div>
+               <!-- START CONTENT -->
+               <div class="content component">
+                   <div class="content-data">
+
+
+
+
+<ol class="breadcrumb">
+  <li class="breadcrumb-item">Components</li>
+  <li class="breadcrumb-item"
+  >
+  FormCohorteComponent</li>
+</ol>
+
+<ul class="nav nav-tabs" role="tablist">
+        <li class="nav-item">
+            <a href="#info" class="nav-link active"
+                role="tab" id="info-tab" data-bs-toggle="tab" data-link="info">Info</a>
+        </li>
+        <li class="nav-item">
+            <a href="#source" class="nav-link"
+                role="tab" id="source-tab" data-bs-toggle="tab" data-link="source">Source</a>
+        </li>
+        <li class="nav-item">
+            <a href="#templateData" class="nav-link"
+                role="tab" id="templateData-tab" data-bs-toggle="tab" data-link="template">Template</a>
+        </li>
+        <li class="nav-item">
+            <a href="#tree" class="nav-link"
+                role="tab" id="tree-tab" data-bs-toggle="tab" data-link="dom-tree">DOM Tree</a>
+        </li>
+</ul>
+
+<div class="tab-content">
+    <div class="tab-pane fade active in" id="info"><p class="comment">
+    <h3>File</h3>
+</p>
+<p class="comment">
+    <code>src/app/form-cohorte/form-cohorte.component.ts</code>
+</p>
+
+
+    <p class="comment">
+        <h3>Description</h3>
+    </p>
+    <p class="comment">
+        <p>FormCohorteComponent gère la sélection de la cohorte, du type et du tube voulu</p>
+
+    </p>
+
+
+
+
+<section data-compodoc="block-metadata">
+    <h3>Metadata</h3>
+    <table class="table table-sm table-hover metadata">
+        <tbody>
+
+
+
+
+
+
+
+
+
+
+
+
+            <tr>
+                <td class="col-md-3">selector</td>
+                <td class="col-md-9"><code>app-form-cohorte</code></td>
+            </tr>
+
+            <tr>
+                <td class="col-md-3">Standalone</td>
+                <td class="col-md-9"><code>true</code></td>
+            </tr>
+
+            <tr>
+                <td class="col-md-3">imports</td>
+                <td class="col-md-9">
+                            <code>MatFormFieldModule</code>
+                            <code>MatSelectModule</code>
+                            <code>MatInputModule</code>
+                            <code>FormsModule</code>
+                </td>
+            </tr>
+
+
+
+
+            <tr>
+                <td class="col-md-3">templateUrl</td>
+                <td class="col-md-9"><code>./form-cohorte.component.html</code></td>
+            </tr>
+
+
+
+            <tr>
+                <td class="col-md-3">styleUrl</td>
+                <td class="col-md-9"><code>./form-cohorte.component.scss</code></td>
+            </tr>
+
+
+
+
+
+        </tbody>
+    </table>
+</section>
+
+    <section data-compodoc="block-index">
+    <h3 id="index">Index</h3>
+    <table class="table table-sm table-bordered index-table">
+        <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Properties</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                <a href="#cohorte" >cohorte</a>
+                            </li>
+                            <li>
+                                <a href="#cohorteMarker" >cohorteMarker</a>
+                            </li>
+                            <li>
+                                <a href="#solution" >solution</a>
+                            </li>
+                            <li>
+                                <a href="#tube" >tube</a>
+                            </li>
+                            <li>
+                                <a href="#type" >type</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Methods</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                <a href="#cohorteChange" >cohorteChange</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                <a href="#drawPolylines" >drawPolylines</a>
+                            </li>
+                            <li>
+                                <a href="#removeArcs" >removeArcs</a>
+                            </li>
+                            <li>
+                                <a href="#tubeChange" >tubeChange</a>
+                            </li>
+                            <li>
+                                <a href="#typeChange" >typeChange</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Inputs</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                <a href="#map" >map</a>
+                            </li>
+                            <li>
+                                <a href="#markersArray" >markersArray</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+
+
+
+        </tbody>
+    </table>
+</section>
+
+    <section data-compodoc="block-constructor">
+    <h3 id="constructor">Constructor</h3>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+<code>constructor(solutionService: <a href="../injectables/SolutionService.html" target="_self">SolutionService</a>, arcService: <a href="../injectables/ArcService.html" target="_self">ArcService</a>)</code>
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="68" class="link-to-prism">src/app/form-cohorte/form-cohorte.component.ts:68</a></div>
+                            </td>
+                        </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                            <div class="io-description"><p>Constructeur du composant</p>
+</div>
+                            <div>
+                                    <b>Parameters :</b>
+                                    <table class="params">
+                                        <thead>
+                                            <tr>
+                                                <td>Name</td>
+                                                    <td>Type</td>
+                                                <td>Optional</td>
+                                                    <td>Description</td>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                                <tr>
+                                                        <td>solutionService</td>
+                                                  
+                                                        <td>
+                                                                        <code><a href="../injectables/SolutionService.html" target="_self" >SolutionService</a></code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                        <td>
+                                                                <p>Service permettant de créer l&#39;objet Solution</p>
+
+                                                        </td>
+                                                </tr>
+                                                <tr>
+                                                        <td>arcService</td>
+                                                  
+                                                        <td>
+                                                                        <code><a href="../injectables/ArcService.html" target="_self" >ArcService</a></code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                        <td>
+                                                                <p>Service permettant de créér les arcs</p>
+
+                                                        </td>
+                                                </tr>
+                                        </tbody>
+                                    </table>
+                            </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+</section>
+
+    <section data-compodoc="block-inputs">
+    <h3 id="inputs">Inputs</h3>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="map"></a>
+                        <b>map</b>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>L.Map</code>
+
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-2" colspan="2">
+                                    <div class="io-line">Defined in <a href="" data-line="27" class="link-to-prism">src/app/form-cohorte/form-cohorte.component.ts:27</a></div>
+                            </td>
+                        </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <div class="io-description"><p>Carte Leaflet du composant principal</p>
+</div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="markersArray"></a>
+                        <b>markersArray</b>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>L.Marker[]</code>
+
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-2" colspan="2">
+                                    <div class="io-line">Defined in <a href="" data-line="32" class="link-to-prism">src/app/form-cohorte/form-cohorte.component.ts:32</a></div>
+                            </td>
+                        </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <div class="io-description"><p>Liste des marqueurs Leaflet de la carte (1 marqueur par ville)</p>
+</div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+</section>
+
+
+
+    <section data-compodoc="block-methods">
+    
+    <h3 id="methods">
+        Methods
+    </h3>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="cohorteChange"></a>
+                    <span class="name">
+                        <span ><b>cohorteChange</b></span>
+                        <a href="#cohorteChange"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>cohorteChange(e: MatSelectChange)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="83"
+                                    class="link-to-prism">src/app/form-cohorte/form-cohorte.component.ts:83</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Gère la sélection d&#39;une nouvelle cohorte dans le formulaire</p>
+</div>
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                                <td>Description</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>e</td>
+                                            <td>
+                                                        <code>MatSelectChange</code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                            <td>
+                                                    <p>Contient l&#39;ancienne cohorte et la nouvelle choisie</p>
+
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="drawPolylines"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                        <span ><b>drawPolylines</b></span>
+                        <a href="#drawPolylines"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>drawPolylines(map: L.Map, arcs: <a href="../interfaces/Arc.html" target="_self">Arc[]</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="144"
+                                    class="link-to-prism">src/app/form-cohorte/form-cohorte.component.ts:144</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Dessine les arcs en entrée sur la carte</p>
+</div>
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                                <td>Description</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>map</td>
+                                            <td>
+                                                        <code>L.Map</code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                            <td>
+                                                    <p>La carte sur laquelle les arcs doivent être ajoutés</p>
+
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                                <td>arcs</td>
+                                            <td>
+                                                            <code><a href="../interfaces/Arc.html" target="_self" >Arc[]</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                            <td>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="removeArcs"></a>
+                    <span class="name">
+                        <span ><b>removeArcs</b></span>
+                        <a href="#removeArcs"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>removeArcs()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="131"
+                                    class="link-to-prism">src/app/form-cohorte/form-cohorte.component.ts:131</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Efface tous les arcs créés</p>
+</div>
+
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="tubeChange"></a>
+                    <span class="name">
+                        <span ><b>tubeChange</b></span>
+                        <a href="#tubeChange"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>tubeChange()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="122"
+                                    class="link-to-prism">src/app/form-cohorte/form-cohorte.component.ts:122</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Gère la sélection d&#39;un nouveau tube dans le formulaire</p>
+</div>
+
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="typeChange"></a>
+                    <span class="name">
+                        <span ><b>typeChange</b></span>
+                        <a href="#typeChange"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>typeChange()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="110"
+                                    class="link-to-prism">src/app/form-cohorte/form-cohorte.component.ts:110</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Gère la sélection d&#39;un nouveau type de tube dans le formulaire</p>
+</div>
+
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</section>
+    <section data-compodoc="block-properties">
+    
+    <h3 id="inputs">
+        Properties
+    </h3>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="cohorte"></a>
+                    <span class="name">
+                        <span ><b>cohorte</b></span>
+                        <a href="#cohorte"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="../interfaces/Cohorte.html" target="_self" >Cohorte</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>{
+    nbPatients: 0,
+    city: &quot;&quot;,
+    types: []
+  }</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="42" class="link-to-prism">src/app/form-cohorte/form-cohorte.component.ts:42</a></div>
+                        </td>
+                    </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Variable contenant la cohorte choisie dans le formulaire</p>
+</div>
+                </td>
+            </tr>
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="cohorteMarker"></a>
+                    <span class="name">
+                        <span ><b>cohorteMarker</b></span>
+                        <a href="#cohorteMarker"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>L.Marker | undefined</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>undefined</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="37" class="link-to-prism">src/app/form-cohorte/form-cohorte.component.ts:37</a></div>
+                        </td>
+                    </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Marqueur de la ville de départ de la cohorte</p>
+</div>
+                </td>
+            </tr>
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="solution"></a>
+                    <span class="name">
+                        <span ><b>solution</b></span>
+                        <a href="#solution"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="../interfaces/Solution.html" target="_self" >Solution</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>this.solutionService.getSolution()</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="68" class="link-to-prism">src/app/form-cohorte/form-cohorte.component.ts:68</a></div>
+                        </td>
+                    </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Solution provenant de SolutionService (Initialisée en amont depuis le service même)</p>
+</div>
+                </td>
+            </tr>
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="tube"></a>
+                    <span class="name">
+                        <span ><b>tube</b></span>
+                        <a href="#tube"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="../interfaces/Tube.html" target="_self" >Tube</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>{
+    number: 0,
+    volume: 0,
+    arcs: []
+  }</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="59" class="link-to-prism">src/app/form-cohorte/form-cohorte.component.ts:59</a></div>
+                        </td>
+                    </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Variable contenant le tube choisi dans le formulaire</p>
+</div>
+                </td>
+            </tr>
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="type"></a>
+                    <span class="name">
+                        <span ><b>type</b></span>
+                        <a href="#type"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="../interfaces/Type.html" target="_self" >Type</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>{
+    name: &quot;&quot;,
+    tubes: []
+  }</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="51" class="link-to-prism">src/app/form-cohorte/form-cohorte.component.ts:51</a></div>
+                        </td>
+                    </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Variable contenant le type de tube choisi dans le formulaire</p>
+</div>
+                </td>
+            </tr>
+
+        </tbody>
+    </table>
+</section>
+
+</div>
+
+
+    <div class="tab-pane fade  tab-source-code" id="source">
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { Component, Input} from &#x27;@angular/core&#x27;;
+import {FormsModule} from &#x27;@angular/forms&#x27;;
+import {MatInputModule} from &#x27;@angular/material/input&#x27;;
+import {MatSelectChange, MatSelectModule} from &#x27;@angular/material/select&#x27;;
+import {MatFormFieldModule} from &#x27;@angular/material/form-field&#x27;;
+import { SolutionService } from &#x27;../solution.service&#x27;;
+import L, { LatLngExpression } from &#x27;leaflet&#x27;;
+import { __propKey } from &#x27;tslib&#x27;;
+import { ArcService } from &#x27;../arc.service&#x27;;
+import { iconDefault, iconViolet } from &#x27;../include/leaflet-icons&#x27;;
+import { Cohorte, Type, Tube, Arc, Solution } from &#x27;../include/interfaces&#x27;;
+
+/**
+ * FormCohorteComponent gère la sélection de la cohorte, du type et du tube voulu
+ */
+@Component({
+  selector: &#x27;app-form-cohorte&#x27;,
+  standalone: true,
+  imports: [MatFormFieldModule, MatSelectModule, MatInputModule, FormsModule],
+  templateUrl: &#x27;./form-cohorte.component.html&#x27;,
+  styleUrl: &#x27;./form-cohorte.component.scss&#x27;
+})
+export class FormCohorteComponent {
+  /**
+   * Carte Leaflet du composant principal
+   */
+  @Input() map!: L.Map;
+
+  /**
+   * Liste des marqueurs Leaflet de la carte (1 marqueur par ville)
+   */
+  @Input() markersArray!: L.Marker[];
+
+  /**
+   * Marqueur de la ville de départ de la cohorte
+   */
+  cohorteMarker: L.Marker | undefined &#x3D; undefined;
+
+  /**
+   * Variable contenant la cohorte choisie dans le formulaire
+   */
+  cohorte: Cohorte &#x3D; {
+    nbPatients: 0,
+    city: &quot;&quot;,
+    types: []
+  };
+
+  /**
+   * Variable contenant le type de tube choisi dans le formulaire
+   */
+  type: Type &#x3D; {
+    name: &quot;&quot;,
+    tubes: []
+  }
+
+  /**
+   * Variable contenant le tube choisi dans le formulaire
+   */
+  tube: Tube &#x3D; {
+    number: 0,
+    volume: 0,
+    arcs: []
+  }
+
+  /**
+   * Solution provenant de SolutionService (Initialisée en amont depuis le service même)
+   */
+  solution: Solution &#x3D; this.solutionService.getSolution();
+  
+  /**
+   * Constructeur du composant
+   * @param solutionService Service permettant de créer l&#x27;objet Solution
+   * @param arcService Service permettant de créér les arcs
+   */
+  constructor(private solutionService:SolutionService, private arcService:ArcService){
+    //this.solution &#x3D; solutionService.solution;
+  }
+
+  /**
+   * Gère la sélection d&#x27;une nouvelle cohorte dans le formulaire
+   * @param e Contient l&#x27;ancienne cohorte et la nouvelle choisie
+   */
+  cohorteChange(e: MatSelectChange){
+    var city:string &#x3D; e.value.city;
+    for (const marker of this.markersArray){
+      if(marker.options.alt &#x3D;&#x3D; city){
+        if(this.cohorteMarker &#x3D;&#x3D; undefined){
+          this.cohorteMarker &#x3D; marker;
+          this.cohorteMarker.setIcon(iconViolet);
+        }
+        else{
+          this.cohorteMarker.setIcon(iconDefault); // Reset the previous marker icon
+          this.cohorteMarker &#x3D; marker;
+          this.cohorteMarker.setIcon(iconViolet); // Change the current marker
+        }
+        
+      }
+    }
+    this.arcService.setCohorteCity(city);
+    this.type &#x3D; {
+      name: &quot;&quot;,
+      tubes: []
+    }
+    this.typeChange();
+  }
+
+  /**
+   * Gère la sélection d&#x27;un nouveau type de tube dans le formulaire
+   */
+  typeChange(){
+    this.tube &#x3D; {
+      number: 0,
+      volume: 0,
+      arcs: []
+    }
+    this.tubeChange();
+  }
+
+  /**
+   * Gère la sélection d&#x27;un nouveau tube dans le formulaire
+   */
+  tubeChange(){
+    this.removeArcs();
+    this.drawPolylines(this.map, this.tube.arcs)
+    this.arcService.setPolylineArray(this.tube.arcs);
+  }
+
+  /**
+   * Efface tous les arcs créés
+   */
+  removeArcs(){
+    this.map.eachLayer((layer:any) &#x3D;&gt;{
+      if (layer instanceof L.Polyline) {
+        this.map.removeLayer(layer);
+      }
+    });
+  }
+
+  /**
+   * Dessine les arcs en entrée sur la carte
+   * @param map La carte sur laquelle les arcs doivent être ajoutés
+   * @param
+   */
+  private drawPolylines(map:L.Map, arcs: Arc[]){
+    for (const arc of arcs){
+      arc.polyline.bindTooltip(&#x60;&lt;div&gt;Quantité : ${ arc.quantity }&lt;/div&gt;&#x60;);
+      arc.polyline.addTo(map);
+    }
+  }
+}
+</code></pre>
+    </div>
+
+    <div class="tab-pane fade " id="templateData">
+        <pre class="line-numbers"><code class="language-html">&lt;div class&#x3D;&quot;divFormCohorte&quot;&gt;
+  &lt;mat-form-field&gt;
+    &lt;mat-label&gt;Cohorte&lt;/mat-label&gt;
+    &lt;mat-select [(value)]&#x3D;&quot;cohorte&quot; (selectionChange)&#x3D;&quot;cohorteChange($event)&quot;&gt;
+      @for (cohorte of solution.cohortes; track cohorte) {
+        &lt;mat-option [value]&#x3D;&quot;cohorte&quot;&gt;{{cohorte.city}}&lt;/mat-option&gt;
+      }
+    &lt;/mat-select&gt;
+  &lt;/mat-form-field&gt;
+  &lt;mat-form-field&gt;
+    &lt;mat-label&gt;Type de tube&lt;/mat-label&gt;
+    &lt;mat-select [(value)]&#x3D;&quot;type&quot;(selectionChange)&#x3D;&quot;typeChange()&quot;&gt;
+      @for (type of cohorte.types; track type) {
+        &lt;mat-option [value]&#x3D;&quot;type&quot;&gt;{{type.name}}&lt;/mat-option&gt;
+      }
+    &lt;/mat-select&gt;
+  &lt;/mat-form-field&gt;
+  &lt;mat-form-field&gt;
+    &lt;mat-label&gt;Tube(s) n°&lt;/mat-label&gt;
+    &lt;mat-select [(value)]&#x3D;&quot;tube&quot; (selectionChange)&#x3D;&quot;tubeChange()&quot;&gt;
+      @for (tube of type.tubes; track tube) {
+        &lt;mat-option [value]&#x3D;&quot;tube&quot;&gt;{{tube.number}}&lt;/mat-option&gt;
+      }
+    &lt;/mat-select&gt;
+  &lt;/mat-form-field&gt;
+&lt;/div&gt;</code></pre>
+    </div>
+
+
+    <div class="tab-pane fade " id="tree">
+        <div id="tree-container"></div>
+        <div class="tree-legend">
+            <div class="title">
+                <b>Legend</b>
+            </div>
+            <div>
+                <div class="color htmlelement"></div><span>Html element</span>
+            </div>
+            <div>
+                <div class="color component"></div><span>Component</span>
+            </div>
+            <div>
+                <div class="color directive"></div><span>Html element with directive</span>
+            </div>
+        </div>
+    </div>
+
+    
+</div>
+
+<script src="../js/libs/vis.min.js"></script>
+<script src="../js/libs/htmlparser.js"></script>
+<script src="../js/libs/deep-iterator.js"></script>
+<script>
+        var COMPONENT_TEMPLATE = '<div><div class="divFormCohorte">  <mat-form-field>    <mat-label>Cohorte</mat-label>    <mat-select [(value)]="cohorte" (selectionChange)="cohorteChange($event)">      @for (cohorte of solution.cohortes; track cohorte) {        <mat-option [value]="cohorte">{{cohorte.city}}</mat-option>      }    </mat-select>  </mat-form-field>  <mat-form-field>    <mat-label>Type de tube</mat-label>    <mat-select [(value)]="type"(selectionChange)="typeChange()">      @for (type of cohorte.types; track type) {        <mat-option [value]="type">{{type.name}}</mat-option>      }    </mat-select>  </mat-form-field>  <mat-form-field>    <mat-label>Tube(s) n°</mat-label>    <mat-select [(value)]="tube" (selectionChange)="tubeChange()">      @for (tube of type.tubes; track tube) {        <mat-option [value]="tube">{{tube.number}}</mat-option>      }    </mat-select>  </mat-form-field></div></div>'
+    var COMPONENTS = [{'name': 'AppComponent', 'selector': 'app-root'},{'name': 'FormCohorteComponent', 'selector': 'app-form-cohorte'},{'name': 'TableArcComponent', 'selector': 'app-table-arc'}];
+    var DIRECTIVES = [];
+    var ACTUAL_COMPONENT = {'name': 'FormCohorteComponent'};
+</script>
+<script src="../js/tree.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                   </div><div class="search-results">
+    <div class="has-results">
+        <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+        <ul class="search-results-list"></ul>
+    </div>
+    <div class="no-results">
+        <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+    </div>
+</div>
+</div>
+               <!-- END CONTENT -->
+           </div>
+       </div>
+
+          <label class="dark-mode-switch">
+               <input type="checkbox">
+               <span class="slider">
+                    <svg class="slider-icon" viewBox="0 0 24 24" fill="none" height="20" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" width="20" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path>
+                    </svg>
+               </span>
+          </label>
+
+       <script>
+            var COMPODOC_CURRENT_PAGE_DEPTH = 1;
+            var COMPODOC_CURRENT_PAGE_CONTEXT = 'component';
+            var COMPODOC_CURRENT_PAGE_URL = 'FormCohorteComponent.html';
+            var MAX_SEARCH_RESULTS = 15;
+       </script>
+
+       <script src="../js/libs/custom-elements.min.js"></script>
+       <script src="../js/libs/lit-html.js"></script>
+
+       <script src="../js/menu-wc.js" defer></script>
+       <script nomodule src="../js/menu-wc_es5.js" defer></script>
+
+       <script src="../js/libs/bootstrap-native.js"></script>
+
+       <script src="../js/libs/es6-shim.min.js"></script>
+       <script src="../js/libs/EventDispatcher.js"></script>
+       <script src="../js/libs/promise.min.js"></script>
+       <script src="../js/libs/zepto.min.js"></script>
+
+       <script src="../js/compodoc.js"></script>
+
+       <script src="../js/tabs.js"></script>
+       <script src="../js/menu.js"></script>
+       <script src="../js/libs/clipboard.min.js"></script>
+       <script src="../js/libs/prism.js"></script>
+       <script src="../js/sourceCode.js"></script>
+          <script src="../js/search/search.js"></script>
+          <script src="../js/search/lunr.min.js"></script>
+          <script src="../js/search/search-lunr.js"></script>
+          <script src="../js/search/search_index.js"></script>
+       <script src="../js/lazy-load-graphs.js"></script>
+
+
+    </body>
+</html>

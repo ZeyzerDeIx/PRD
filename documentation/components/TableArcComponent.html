@@ -1,0 +1,1529 @@
+<!doctype html>
+<html class="no-js" lang="">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <title>prd documentation</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link rel="icon" type="image/x-icon" href="../images/favicon.ico">
+	   <link rel="stylesheet" href="../styles/style.css">
+        <link rel="stylesheet" href="../styles/dark.css">
+    </head>
+    <body>
+          <script>
+               // Blocking script to avaoid flickering dark mode
+               // Dark mode toggle button
+               var useDark = window.matchMedia('(prefers-color-scheme: dark)');
+               var darkModeState = useDark.matches;
+               var $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               var $darkModeToggles = document.querySelectorAll('.dark-mode-switch');
+               var darkModeStateLocal = localStorage.getItem('compodoc_darkmode-state');
+
+               function checkToggle(check) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].checked = check;
+                    }
+               }
+
+               function toggleDarkMode(state) {
+                    if (window.localStorage) {
+                         localStorage.setItem('compodoc_darkmode-state', state);
+                    }
+
+                    checkToggle(state);
+
+                    const hasClass = document.body.classList.contains('dark');
+
+                    if (state) {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.add('dark');
+                         }
+                         if (!hasClass) {
+                              document.body.classList.add('dark');
+                         }
+                    } else {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.remove('dark');
+                         }
+                         if (hasClass) {
+                              document.body.classList.remove('dark');
+                         }
+                    }
+               }
+
+               useDark.addEventListener('change', function (evt) {
+                    toggleDarkMode(evt.matches);
+               });
+               if (darkModeStateLocal) {
+                    darkModeState = darkModeStateLocal === 'true';
+               }
+               toggleDarkMode(darkModeState);
+
+               if ($darkModeToggles.length > 0) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].addEventListener('change', function (event) {
+                              darkModeState = !darkModeState;
+                              toggleDarkMode(darkModeState);
+                         });
+                    }
+               }
+          </script>
+
+        <div class="navbar navbar-default navbar-fixed-top d-block d-sm-none">
+            <a href="../" class="navbar-brand">prd documentation</a>
+            <button type="button" class="btn btn-default btn-menu ion-ios-menu" id="btn-menu"></button>
+        </div>
+
+        <div class="xs-menu menu" id="mobile-menu">
+                <div id="book-search-input" role="search"><input type="text" placeholder="Type to search"></div>            <compodoc-menu></compodoc-menu>
+        </div>
+
+        <div class="container-fluid main">
+           <div class="row main">
+               <div class="hidden-xs menu">
+                   <compodoc-menu mode="normal"></compodoc-menu>
+               </div>
+               <!-- START CONTENT -->
+               <div class="content component">
+                   <div class="content-data">
+
+
+
+
+<ol class="breadcrumb">
+  <li class="breadcrumb-item">Components</li>
+  <li class="breadcrumb-item"
+  >
+  TableArcComponent</li>
+</ol>
+
+<ul class="nav nav-tabs" role="tablist">
+        <li class="nav-item">
+            <a href="#info" class="nav-link active"
+                role="tab" id="info-tab" data-bs-toggle="tab" data-link="info">Info</a>
+        </li>
+        <li class="nav-item">
+            <a href="#source" class="nav-link"
+                role="tab" id="source-tab" data-bs-toggle="tab" data-link="source">Source</a>
+        </li>
+        <li class="nav-item">
+            <a href="#templateData" class="nav-link"
+                role="tab" id="templateData-tab" data-bs-toggle="tab" data-link="template">Template</a>
+        </li>
+        <li class="nav-item">
+            <a href="#tree" class="nav-link"
+                role="tab" id="tree-tab" data-bs-toggle="tab" data-link="dom-tree">DOM Tree</a>
+        </li>
+</ul>
+
+<div class="tab-content">
+    <div class="tab-pane fade active in" id="info"><p class="comment">
+    <h3>File</h3>
+</p>
+<p class="comment">
+    <code>src/app/table-arc/table-arc.component.ts</code>
+</p>
+
+
+    <p class="comment">
+        <h3>Description</h3>
+    </p>
+    <p class="comment">
+        <p>TableArcComponent gère la modification des arcs pour chaque tube</p>
+
+    </p>
+
+
+    <p class="comment">
+        <h3>Implements</h3>
+    </p>
+    <p class="comment">
+                <code>OnInit</code>
+    </p>
+
+
+<section data-compodoc="block-metadata">
+    <h3>Metadata</h3>
+    <table class="table table-sm table-hover metadata">
+        <tbody>
+
+
+
+
+
+
+
+
+
+
+
+
+            <tr>
+                <td class="col-md-3">selector</td>
+                <td class="col-md-9"><code>app-table-arc</code></td>
+            </tr>
+
+            <tr>
+                <td class="col-md-3">Standalone</td>
+                <td class="col-md-9"><code>true</code></td>
+            </tr>
+
+            <tr>
+                <td class="col-md-3">imports</td>
+                <td class="col-md-9">
+                            <code>MatFormFieldModule</code>
+                            <code>MatSelectModule</code>
+                            <code>MatInputModule</code>
+                            <code>FormsModule</code>
+                            <code>MatTableModule</code>
+                            <code>MatPaginator</code>
+                            <code>NgIf</code>
+                            <code>MatButtonModule</code>
+                </td>
+            </tr>
+
+
+
+
+            <tr>
+                <td class="col-md-3">templateUrl</td>
+                <td class="col-md-9"><code>./table-arc.component.html</code></td>
+            </tr>
+
+
+
+            <tr>
+                <td class="col-md-3">styleUrl</td>
+                <td class="col-md-9"><code>./table-arc.component.scss</code></td>
+            </tr>
+
+
+
+
+
+        </tbody>
+    </table>
+</section>
+
+    <section data-compodoc="block-index">
+    <h3 id="index">Index</h3>
+    <table class="table table-sm table-bordered index-table">
+        <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Properties</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                <a href="#cities" >cities</a>
+                            </li>
+                            <li>
+                                <a href="#dataSource" >dataSource</a>
+                            </li>
+                            <li>
+                                <a href="#displayedColumns" >displayedColumns</a>
+                            </li>
+                            <li>
+                                <a href="#newSolution" >newSolution</a>
+                            </li>
+                            <li>
+                                <a href="#pageIndex" >pageIndex</a>
+                            </li>
+                            <li>
+                                <a href="#pageSize" >pageSize</a>
+                            </li>
+                            <li>
+                                    <span class="modifier"></span>
+                                <a href="#paginator" >paginator</a>
+                            </li>
+                            <li>
+                                <a href="#polylineArray" >polylineArray</a>
+                            </li>
+                            <li>
+                                <a href="#selectedDestination" >selectedDestination</a>
+                            </li>
+                            <li>
+                                <a href="#selectedOrigin" >selectedOrigin</a>
+                            </li>
+                            <li>
+                                <a href="#totalRecords" >totalRecords</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Methods</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                <a href="#arcChange" >arcChange</a>
+                            </li>
+                            <li>
+                                <a href="#checkSolution" >checkSolution</a>
+                            </li>
+                            <li>
+                                <a href="#handleSaveErrors" >handleSaveErrors</a>
+                            </li>
+                            <li>
+                                <a href="#mouseOutArc" >mouseOutArc</a>
+                            </li>
+                            <li>
+                                <a href="#mouseOverArc" >mouseOverArc</a>
+                            </li>
+                            <li>
+                                <a href="#ngOnInit" >ngOnInit</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+
+
+
+
+        </tbody>
+    </table>
+</section>
+
+    <section data-compodoc="block-constructor">
+    <h3 id="constructor">Constructor</h3>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+<code>constructor(arcService: <a href="../injectables/ArcService.html" target="_self">ArcService</a>, solutionService: <a href="../injectables/SolutionService.html" target="_self">SolutionService</a>)</code>
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="79" class="link-to-prism">src/app/table-arc/table-arc.component.ts:79</a></div>
+                            </td>
+                        </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                            <div class="io-description"><p>Constructeur du composant</p>
+</div>
+                            <div>
+                                    <b>Parameters :</b>
+                                    <table class="params">
+                                        <thead>
+                                            <tr>
+                                                <td>Name</td>
+                                                    <td>Type</td>
+                                                <td>Optional</td>
+                                                    <td>Description</td>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                                <tr>
+                                                        <td>arcService</td>
+                                                  
+                                                        <td>
+                                                                        <code><a href="../injectables/ArcService.html" target="_self" >ArcService</a></code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                        <td>
+                                                                <p>Service permettant de créér les arcs</p>
+
+                                                        </td>
+                                                </tr>
+                                                <tr>
+                                                        <td>solutionService</td>
+                                                  
+                                                        <td>
+                                                                        <code><a href="../injectables/SolutionService.html" target="_self" >SolutionService</a></code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                        <td>
+                                                                <p>Service permettant de créer l&#39;objet Solution</p>
+
+                                                        </td>
+                                                </tr>
+                                        </tbody>
+                                    </table>
+                            </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+</section>
+
+
+
+
+
+    <section data-compodoc="block-methods">
+    
+    <h3 id="methods">
+        Methods
+    </h3>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="arcChange"></a>
+                    <span class="name">
+                        <span ><b>arcChange</b></span>
+                        <a href="#arcChange"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>arcChange(index: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="115"
+                                    class="link-to-prism">src/app/table-arc/table-arc.component.ts:115</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Modifie l&#39;arc dessiné sur la carte avec les valeurs sélectionnées dans le tableau d&#39;arcs</p>
+</div>
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                                <td>Description</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>index</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                            <td>
+                                                    <p>: Indice de l&#39;arc à modifier</p>
+
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="checkSolution"></a>
+                    <span class="name">
+                        <span ><b>checkSolution</b></span>
+                        <a href="#checkSolution"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>checkSolution()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="128"
+                                    class="link-to-prism">src/app/table-arc/table-arc.component.ts:128</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Vérifie si la solution modifiée par l&#39;utilisateur reste faisable (i.e. chaque ville est bien desservie par une seule autre ville)</p>
+</div>
+
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="handleSaveErrors"></a>
+                    <span class="name">
+                        <span ><b>handleSaveErrors</b></span>
+                        <a href="#handleSaveErrors"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>handleSaveErrors(error: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="157"
+                                    class="link-to-prism">src/app/table-arc/table-arc.component.ts:157</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Affiche un message d&#39;erreur quand l&#39;utilisateur essaie de sauvegarder une solution infaisable</p>
+</div>
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                                <td>Description</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>error</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                            <td>
+                                                    <p>Message d&#39;erreur à afficher</p>
+
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="mouseOutArc"></a>
+                    <span class="name">
+                        <span ><b>mouseOutArc</b></span>
+                        <a href="#mouseOutArc"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>mouseOutArc(data: <a href="../interfaces/Arc.html" target="_self">Arc</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="104"
+                                    class="link-to-prism">src/app/table-arc/table-arc.component.ts:104</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Réinitialise le style d&#39;un arc quand on enlève la souris de la ligne associée dans le tableau d&#39;arcs</p>
+</div>
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                                <td>Description</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>data</td>
+                                            <td>
+                                                            <code><a href="../interfaces/Arc.html" target="_self" >Arc</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                            <td>
+                                                    <p>Arc à réinitialiser</p>
+
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="mouseOverArc"></a>
+                    <span class="name">
+                        <span ><b>mouseOverArc</b></span>
+                        <a href="#mouseOverArc"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>mouseOverArc(data: <a href="../interfaces/Arc.html" target="_self">Arc</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="93"
+                                    class="link-to-prism">src/app/table-arc/table-arc.component.ts:93</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Modifie le style d&#39;un arc quand on passe la souris sur la ligne associée dans le tableau d&#39;arcs</p>
+</div>
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                                <td>Description</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>data</td>
+                                            <td>
+                                                            <code><a href="../interfaces/Arc.html" target="_self" >Arc</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                            <td>
+                                                    <p>Arc à modifier</p>
+
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="ngOnInit"></a>
+                    <span class="name">
+                        <span ><b>ngOnInit</b></span>
+                        <a href="#ngOnInit"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>ngOnInit()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="164"
+                                    class="link-to-prism">src/app/table-arc/table-arc.component.ts:164</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Initialise toutes les valeurs du composant</p>
+</div>
+
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</section>
+    <section data-compodoc="block-properties">
+    
+    <h3 id="inputs">
+        Properties
+    </h3>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="cities"></a>
+                    <span class="name">
+                        <span ><b>cities</b></span>
+                        <a href="#cities"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>string[]</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>[]</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="49" class="link-to-prism">src/app/table-arc/table-arc.component.ts:49</a></div>
+                        </td>
+                    </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Tableau contenant le nom des villes attribuées à un tube</p>
+</div>
+                </td>
+            </tr>
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="dataSource"></a>
+                    <span class="name">
+                        <span ><b>dataSource</b></span>
+                        <a href="#dataSource"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="../interfaces/Arc.html" target="_self" >MatTableDataSource&lt;Arc&gt;</a></code>
+
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="34" class="link-to-prism">src/app/table-arc/table-arc.component.ts:34</a></div>
+                        </td>
+                    </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Variable contenant les données des arcs pour remplir l&#39;objet MatTable</p>
+</div>
+                </td>
+            </tr>
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="displayedColumns"></a>
+                    <span class="name">
+                        <span ><b>displayedColumns</b></span>
+                        <a href="#displayedColumns"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>string[]</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>[&#x27;number&#x27;, &#x27;origin&#x27;, &#x27;destination&#x27;]</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="29" class="link-to-prism">src/app/table-arc/table-arc.component.ts:29</a></div>
+                        </td>
+                    </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Variable pour les titres des colonnes de l&#39;objet MatTable</p>
+</div>
+                </td>
+            </tr>
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="newSolution"></a>
+                    <span class="name">
+                        <span ><b>newSolution</b></span>
+                        <a href="#newSolution"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="../interfaces/Solution.html" target="_self" >Solution</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>this.solutionService.getSolution()</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="39" class="link-to-prism">src/app/table-arc/table-arc.component.ts:39</a></div>
+                        </td>
+                    </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Solution provenant de SolutionService (Initialisée en amont depuis le service même)</p>
+</div>
+                </td>
+            </tr>
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="pageIndex"></a>
+                    <span class="name">
+                        <span ><b>pageIndex</b></span>
+                        <a href="#pageIndex"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>0</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="79" class="link-to-prism">src/app/table-arc/table-arc.component.ts:79</a></div>
+                        </td>
+                    </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Numéro de la page du tableau d&#39;arcs</p>
+</div>
+                </td>
+            </tr>
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="pageSize"></a>
+                    <span class="name">
+                        <span ><b>pageSize</b></span>
+                        <a href="#pageSize"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>10</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="74" class="link-to-prism">src/app/table-arc/table-arc.component.ts:74</a></div>
+                        </td>
+                    </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Nombre d&#39;arcs par page du tableau d&#39;arcs</p>
+</div>
+                </td>
+            </tr>
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="paginator"></a>
+                    <span class="name">
+                            <span class="modifier"></span>
+                        <span ><b>paginator</b></span>
+                        <a href="#paginator"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>MatPaginator</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <b>Decorators : </b>
+                        <br />
+                        <code>
+                            @ViewChild(&#x27;paginator&#x27;)<br />
+                        </code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="64" class="link-to-prism">src/app/table-arc/table-arc.component.ts:64</a></div>
+                        </td>
+                    </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Le paginateur du composant</p>
+</div>
+                </td>
+            </tr>
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="polylineArray"></a>
+                    <span class="name">
+                        <span ><b>polylineArray</b></span>
+                        <a href="#polylineArray"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="../interfaces/Arc.html" target="_self" >Arc[]</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>[]</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="44" class="link-to-prism">src/app/table-arc/table-arc.component.ts:44</a></div>
+                        </td>
+                    </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Tableau d&#39;Arc contenant la liste des arcs</p>
+</div>
+                </td>
+            </tr>
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="selectedDestination"></a>
+                    <span class="name">
+                        <span ><b>selectedDestination</b></span>
+                        <a href="#selectedDestination"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>string[]</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>[]</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="59" class="link-to-prism">src/app/table-arc/table-arc.component.ts:59</a></div>
+                        </td>
+                    </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Tableau contenant les villes d&#39;arrivée des arcs d&#39;un tube</p>
+</div>
+                </td>
+            </tr>
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="selectedOrigin"></a>
+                    <span class="name">
+                        <span ><b>selectedOrigin</b></span>
+                        <a href="#selectedOrigin"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>string[]</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>[]</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="54" class="link-to-prism">src/app/table-arc/table-arc.component.ts:54</a></div>
+                        </td>
+                    </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Tableau contenant les villes de départ des arcs d&#39;un tube</p>
+</div>
+                </td>
+            </tr>
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="totalRecords"></a>
+                    <span class="name">
+                        <span ><b>totalRecords</b></span>
+                        <a href="#totalRecords"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>0</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="69" class="link-to-prism">src/app/table-arc/table-arc.component.ts:69</a></div>
+                        </td>
+                    </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Taille du tableau d&#39;arcs</p>
+</div>
+                </td>
+            </tr>
+
+        </tbody>
+    </table>
+</section>
+
+</div>
+
+
+    <div class="tab-pane fade  tab-source-code" id="source">
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { ArcService } from &#x27;../arc.service&#x27;;
+import { SolutionService } from &#x27;../solution.service&#x27;;
+import { Component, OnInit, ViewChild } from &#x27;@angular/core&#x27;;
+import { FormsModule } from &#x27;@angular/forms&#x27;;
+import { MatButtonModule } from &#x27;@angular/material/button&#x27;;
+import { MatFormFieldModule } from &#x27;@angular/material/form-field&#x27;;
+import { MatInputModule } from &#x27;@angular/material/input&#x27;;
+import { MatSelectModule } from &#x27;@angular/material/select&#x27;;
+import { MatTableDataSource, MatTableModule } from &#x27;@angular/material/table&#x27;;
+import { MatPaginator } from &#x27;@angular/material/paginator&#x27;;
+import { NgIf } from &#x27;@angular/common&#x27;;
+import { LatLngExpression } from &#x27;leaflet&#x27;;
+import { Arc, Solution } from &#x27;../include/interfaces&#x27;;
+
+/**
+ * TableArcComponent gère la modification des arcs pour chaque tube
+ */
+@Component({
+  selector: &#x27;app-table-arc&#x27;,
+  standalone: true,
+  imports: [MatFormFieldModule, MatSelectModule, MatInputModule, FormsModule, MatTableModule, MatPaginator, NgIf,  MatButtonModule],
+  templateUrl: &#x27;./table-arc.component.html&#x27;,
+  styleUrl: &#x27;./table-arc.component.scss&#x27;
+})
+export class TableArcComponent implements OnInit{
+  /**
+   * Variable pour les titres des colonnes de l&#x27;objet MatTable
+   */
+  displayedColumns: string[] &#x3D; [&#x27;number&#x27;, &#x27;origin&#x27;, &#x27;destination&#x27;];
+
+  /**
+   * Variable contenant les données des arcs pour remplir l&#x27;objet MatTable
+   */
+  dataSource!: MatTableDataSource&lt;Arc&gt;;
+
+  /**
+   * Solution provenant de SolutionService (Initialisée en amont depuis le service même)
+   */
+  newSolution: Solution &#x3D; this.solutionService.getSolution();
+
+  /**
+   * Tableau d&#x27;Arc contenant la liste des arcs 
+   */
+  polylineArray: Arc[] &#x3D; [];
+
+  /**
+   * Tableau contenant le nom des villes attribuées à un tube
+   */
+  cities: string[] &#x3D; [];
+
+  /**
+   * Tableau contenant les villes de départ des arcs d&#x27;un tube
+   */
+  selectedOrigin: string[] &#x3D; [];
+
+  /**
+   * Tableau contenant les villes d&#x27;arrivée des arcs d&#x27;un tube
+   */
+  selectedDestination: string[] &#x3D; [];
+
+  /**
+   * Le paginateur du composant
+   */
+  @ViewChild(&#x27;paginator&#x27;) paginator!: MatPaginator;
+
+  /**
+   * Taille du tableau d&#x27;arcs
+   */
+  totalRecords &#x3D; 0;
+
+  /**
+   * Nombre d&#x27;arcs par page du tableau d&#x27;arcs
+   */
+  pageSize &#x3D; 10;
+
+  /**
+   * Numéro de la page du tableau d&#x27;arcs
+   */
+  pageIndex &#x3D; 0;
+
+  /**
+   * Constructeur du composant
+   * @param solutionService Service permettant de créer l&#x27;objet Solution
+   * @param arcService Service permettant de créér les arcs
+   */
+  constructor(private arcService:ArcService, private solutionService:SolutionService){
+  }
+
+  /**
+   * Modifie le style d&#x27;un arc quand on passe la souris sur la ligne associée dans le tableau d&#x27;arcs
+   * @param data Arc à modifier
+   */
+  mouseOverArc(data: Arc){
+    data.polyline.setStyle({
+      weight: 6,
+      opacity: 1
+    })
+  }
+
+  /**
+   * Réinitialise le style d&#x27;un arc quand on enlève la souris de la ligne associée dans le tableau d&#x27;arcs
+   * @param data Arc à réinitialiser
+   */
+  mouseOutArc(data: Arc){
+    data.polyline.setStyle({
+      weight: 5,
+      opacity: 0.7
+    })
+  }
+
+  /**
+   * Modifie l&#x27;arc dessiné sur la carte avec les valeurs sélectionnées dans le tableau d&#x27;arcs
+   * @param index: Indice de l&#x27;arc à modifier
+   */
+  arcChange(index: number){
+    var newOrigin:string &#x3D; this.selectedOrigin[index];
+    var newDestination:string &#x3D; this.selectedDestination[index];
+    var citiesPosition &#x3D; this.solutionService.getCitiesPosition();
+    var newOriginCoord: LatLngExpression &#x3D; [citiesPosition.get(newOrigin)![0], citiesPosition.get(newOrigin)![1]];
+    var newDestinationCoord: LatLngExpression &#x3D; [citiesPosition.get(newDestination)![0], citiesPosition.get(newDestination)![1]];
+    this.polylineArray[index].polyline.setLatLngs([newOriginCoord, newDestinationCoord]);
+  }
+
+  // TODO : La fonction marche mais elle ne fait que afficher le résultat dans la console
+  /**
+   * Vérifie si la solution modifiée par l&#x27;utilisateur reste faisable (i.e. chaque ville est bien desservie par une seule autre ville)
+   */
+  checkSolution(){
+    var cohorteCity &#x3D; this.arcService.getCohorteCity();
+    var error &#x3D; &quot;Ok !&quot;
+    if (this.selectedDestination.includes(cohorteCity)){
+      error &#x3D; &quot;La ville cohorte ne peut pas être dans les villes d&#x27;arrivée&quot;;
+      this.handleSaveErrors(error);
+    }
+    var nbOccurences &#x3D; new Map&lt;string, number&gt;();
+    this.cities.forEach(city &#x3D;&gt; {
+      nbOccurences.set(city, 0);
+    });
+    this.selectedDestination.forEach(city &#x3D;&gt; {
+      nbOccurences.set(city, nbOccurences.get(city)! + 1);
+    });
+    for (const city of this.cities){
+      if(city !&#x3D; cohorteCity &amp;&amp; nbOccurences.get(city) !&#x3D; 1){
+        error &#x3D; city + &quot; ne doit apparaître qu&#x27;une seule et unique fois !&quot;
+        this.handleSaveErrors(error);
+      }
+    }
+    if(error &#x3D;&#x3D; &quot;Ok !&quot;){
+      this.handleSaveErrors(error);
+    }
+  }
+
+  /**
+   * Affiche un message d&#x27;erreur quand l&#x27;utilisateur essaie de sauvegarder une solution infaisable
+   * @param error Message d&#x27;erreur à afficher
+   */
+  handleSaveErrors(error: string){
+    console.log(error);
+  }
+
+  /**
+   * Initialise toutes les valeurs du composant
+   */
+  ngOnInit(){
+    this.arcService.polylineUpdated.subscribe(
+      (polylineArray) &#x3D;&gt; {
+        this.cities &#x3D; [];
+        this.selectedOrigin &#x3D; [];
+        this.selectedDestination &#x3D; [];
+        var cityCohorte &#x3D; this.arcService.getCohorteCity();
+        var indexToRemove &#x3D; -1;
+        for (const line of polylineArray){
+          if (line.destination &#x3D;&#x3D; cityCohorte){
+            /* TODO : Je sais pas trop quoi faire de la ligne Cohorte à Cohorte, 
+            pour l&#x27;instant je l&#x27;enlève mais c&#x27;est pas forcément le meilleur */
+            indexToRemove &#x3D; line.index; // remove the line cohorte -&gt; cohorte  
+          }
+          else{
+            this.cities.indexOf(line.origin) &#x3D;&#x3D;&#x3D; -1 ? this.cities.push(line.origin): null; // Push if not already present, else nothing
+            this.cities.indexOf(line.destination) &#x3D;&#x3D;&#x3D; -1 ? this.cities.push(line.destination): null; // Push if not already present, else nothing
+
+            this.selectedOrigin.push(line.origin);
+            this.selectedDestination.push(line.destination); // Fill the arrays to not get an error from the cells in mat-table
+          }
+        }
+        if (indexToRemove !&#x3D; -1){
+          // TODO : Il faudrait aussi update les line.index après une suppression
+          polylineArray.splice(indexToRemove,1);
+
+        }
+        this.polylineArray &#x3D; polylineArray;
+        this.dataSource &#x3D; new MatTableDataSource&lt;Arc&gt;(polylineArray);
+        this.totalRecords &#x3D; this.polylineArray.length;
+        this.dataSource.paginator &#x3D; this.paginator;
+      }
+    );
+  }
+}</code></pre>
+    </div>
+
+    <div class="tab-pane fade " id="templateData">
+        <pre class="line-numbers"><code class="language-html">&lt;table mat-table [dataSource]&#x3D;&quot;dataSource&quot; class&#x3D;&quot;mat-elevation-z8&quot;&gt;
+  &lt;!-- Number Column --&gt;
+  &lt;ng-container matColumnDef&#x3D;&quot;number&quot;&gt;
+    &lt;th mat-header-cell *matHeaderCellDef&gt;N°&lt;/th&gt;
+    &lt;td mat-cell *matCellDef&#x3D;&quot;let arc&quot;&gt;{{arc.index + 1}}&lt;/td&gt;
+  &lt;/ng-container&gt;
+
+  &lt;!-- Origin Column --&gt;
+  &lt;ng-container matColumnDef&#x3D;&quot;origin&quot;&gt;
+    &lt;th mat-header-cell *matHeaderCellDef&gt;Départ&lt;/th&gt;
+    &lt;td mat-cell *matCellDef&#x3D;&quot;let arc; let i &#x3D; index&quot;&gt;
+      &lt;mat-select [(value)]&#x3D;&quot;selectedOrigin[i]&quot; (selectionChange)&#x3D;&quot;arcChange(i)&quot;&gt;
+        @for (city of cities; track city) {
+          &lt;div *ngIf&#x3D;&quot;arc.origin &#x3D;&#x3D; city; else elseBlock&quot;&gt;&lt;mat-option selected value&#x3D;{{city}}&gt;{{city}}&lt;/mat-option&gt;&lt;/div&gt; &lt;!-- to add &quot;selected&quot; on the right value--&gt;
+          &lt;ng-template #elseBlock&gt;&lt;mat-option value&#x3D;{{city}}&gt;{{city}}&lt;/mat-option&gt;&lt;/ng-template&gt;
+        }
+      &lt;/mat-select&gt;
+    &lt;/td&gt;
+  &lt;/ng-container&gt;
+
+  &lt;!-- Destination Column --&gt;
+  &lt;ng-container matColumnDef&#x3D;&quot;destination&quot;&gt;
+    &lt;th mat-header-cell *matHeaderCellDef&gt;Arrivée&lt;/th&gt;
+    &lt;td mat-cell *matCellDef&#x3D;&quot;let arc; let i &#x3D; index&quot;&gt;
+      &lt;mat-select [(value)]&#x3D;&quot;selectedDestination[i]&quot; (selectionChange)&#x3D;&quot;arcChange(i)&quot;&gt;
+        @for (city of cities; track city) {
+          &lt;div *ngIf&#x3D;&quot;arc.destination &#x3D;&#x3D; city; else elseBlock&quot;&gt;&lt;mat-option selected value&#x3D;{{city}}&gt;{{city}}&lt;/mat-option&gt;&lt;/div&gt; &lt;!-- to add &quot;selected&quot; on the right value--&gt;
+          &lt;ng-template #elseBlock&gt;&lt;mat-option value&#x3D;{{city}}&gt;{{city}}&lt;/mat-option&gt;&lt;/ng-template&gt;
+        }
+      &lt;/mat-select&gt;
+    &lt;/td&gt;
+  &lt;/ng-container&gt;
+
+  &lt;tr mat-header-row *matHeaderRowDef&#x3D;&quot;displayedColumns&quot;&gt;&lt;/tr&gt;
+  &lt;tr mat-row (mouseover)&#x3D;&quot;mouseOverArc(row)&quot; (mouseout)&#x3D;&quot;mouseOutArc(row)&quot; *matRowDef&#x3D;&quot;let row; columns: displayedColumns;&quot;&gt;&lt;/tr&gt;
+&lt;/table&gt;
+&lt;br&gt;
+&lt;mat-paginator&gt;
+    #paginator
+    [pageSize]&#x3D;&quot;pageSize&quot;
+    [pageIndex]&#x3D;&quot;pageIndex&quot;
+    [length]&#x3D;&quot;totalRecords&quot;
+    [hidePageSize]&#x3D;&quot;true&quot;
+&lt;/mat-paginator&gt;
+&lt;div id&#x3D;&quot;divButton&quot;&gt;
+  &lt;button type&#x3D;&quot;button&quot; mat-raised-button color&#x3D;&quot;primary&quot; (click)&#x3D;&quot;checkSolution()&quot;&gt;Sauvegarder&lt;/button&gt;
+&lt;/div&gt;</code></pre>
+    </div>
+
+
+    <div class="tab-pane fade " id="tree">
+        <div id="tree-container"></div>
+        <div class="tree-legend">
+            <div class="title">
+                <b>Legend</b>
+            </div>
+            <div>
+                <div class="color htmlelement"></div><span>Html element</span>
+            </div>
+            <div>
+                <div class="color component"></div><span>Component</span>
+            </div>
+            <div>
+                <div class="color directive"></div><span>Html element with directive</span>
+            </div>
+        </div>
+    </div>
+
+    
+</div>
+
+<script src="../js/libs/vis.min.js"></script>
+<script src="../js/libs/htmlparser.js"></script>
+<script src="../js/libs/deep-iterator.js"></script>
+<script>
+        var COMPONENT_TEMPLATE = '<div><table mat-table [dataSource]="dataSource" class="mat-elevation-z8">  <!-- Number Column -->  <ng-container matColumnDef="number">    <th mat-header-cell *matHeaderCellDef>N°</th>    <td mat-cell *matCellDef="let arc">{{arc.index + 1}}</td>  </ng-container>  <!-- Origin Column -->  <ng-container matColumnDef="origin">    <th mat-header-cell *matHeaderCellDef>Départ</th>    <td mat-cell *matCellDef="let arc; let i = index">      <mat-select [(value)]="selectedOrigin[i]" (selectionChange)="arcChange(i)">        @for (city of cities; track city) {          <div *ngIf="arc.origin == city; else elseBlock"><mat-option selected value={{city}}>{{city}}</mat-option></div> <!-- to add "selected" on the right value-->          <ng-template #elseBlock><mat-option value={{city}}>{{city}}</mat-option></ng-template>        }      </mat-select>    </td>  </ng-container>  <!-- Destination Column -->  <ng-container matColumnDef="destination">    <th mat-header-cell *matHeaderCellDef>Arrivée</th>    <td mat-cell *matCellDef="let arc; let i = index">      <mat-select [(value)]="selectedDestination[i]" (selectionChange)="arcChange(i)">        @for (city of cities; track city) {          <div *ngIf="arc.destination == city; else elseBlock"><mat-option selected value={{city}}>{{city}}</mat-option></div> <!-- to add "selected" on the right value-->          <ng-template #elseBlock><mat-option value={{city}}>{{city}}</mat-option></ng-template>        }      </mat-select>    </td>  </ng-container>  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>  <tr mat-row (mouseover)="mouseOverArc(row)" (mouseout)="mouseOutArc(row)" *matRowDef="let row; columns: displayedColumns;"></tr></table><br><mat-paginator>    #paginator    [pageSize]="pageSize"    [pageIndex]="pageIndex"    [length]="totalRecords"    [hidePageSize]="true"</mat-paginator><div id="divButton">  <button type="button" mat-raised-button color="primary" (click)="checkSolution()">Sauvegarder</button></div></div>'
+    var COMPONENTS = [{'name': 'AppComponent', 'selector': 'app-root'},{'name': 'FormCohorteComponent', 'selector': 'app-form-cohorte'},{'name': 'TableArcComponent', 'selector': 'app-table-arc'}];
+    var DIRECTIVES = [];
+    var ACTUAL_COMPONENT = {'name': 'TableArcComponent'};
+</script>
+<script src="../js/tree.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                   </div><div class="search-results">
+    <div class="has-results">
+        <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+        <ul class="search-results-list"></ul>
+    </div>
+    <div class="no-results">
+        <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+    </div>
+</div>
+</div>
+               <!-- END CONTENT -->
+           </div>
+       </div>
+
+          <label class="dark-mode-switch">
+               <input type="checkbox">
+               <span class="slider">
+                    <svg class="slider-icon" viewBox="0 0 24 24" fill="none" height="20" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" width="20" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path>
+                    </svg>
+               </span>
+          </label>
+
+       <script>
+            var COMPODOC_CURRENT_PAGE_DEPTH = 1;
+            var COMPODOC_CURRENT_PAGE_CONTEXT = 'component';
+            var COMPODOC_CURRENT_PAGE_URL = 'TableArcComponent.html';
+            var MAX_SEARCH_RESULTS = 15;
+       </script>
+
+       <script src="../js/libs/custom-elements.min.js"></script>
+       <script src="../js/libs/lit-html.js"></script>
+
+       <script src="../js/menu-wc.js" defer></script>
+       <script nomodule src="../js/menu-wc_es5.js" defer></script>
+
+       <script src="../js/libs/bootstrap-native.js"></script>
+
+       <script src="../js/libs/es6-shim.min.js"></script>
+       <script src="../js/libs/EventDispatcher.js"></script>
+       <script src="../js/libs/promise.min.js"></script>
+       <script src="../js/libs/zepto.min.js"></script>
+
+       <script src="../js/compodoc.js"></script>
+
+       <script src="../js/tabs.js"></script>
+       <script src="../js/menu.js"></script>
+       <script src="../js/libs/clipboard.min.js"></script>
+       <script src="../js/libs/prism.js"></script>
+       <script src="../js/sourceCode.js"></script>
+          <script src="../js/search/search.js"></script>
+          <script src="../js/search/lunr.min.js"></script>
+          <script src="../js/search/search-lunr.js"></script>
+          <script src="../js/search/search_index.js"></script>
+       <script src="../js/lazy-load-graphs.js"></script>
+
+
+    </body>
+</html>
