@@ -8,8 +8,11 @@ import L, { LatLngExpression } from 'leaflet';
 import { __propKey } from 'tslib';
 import { ArcService } from '../arc.service';
 import { iconDefault, iconViolet } from '../include/leaflet-icons';
-import { Cohorte, Type, Tube, CustomPolyline } from '../include/interfaces';
+import { Cohorte, Type, Tube, Arc, Solution } from '../include/interfaces';
 
+/**
+ * FormCohorteComponent gère la sélection de la cohorte, du type et du tube voulu
+ */
 @Component({
   selector: 'app-form-cohorte',
   standalone: true,
@@ -18,33 +21,65 @@ import { Cohorte, Type, Tube, CustomPolyline } from '../include/interfaces';
   styleUrl: './form-cohorte.component.scss'
 })
 export class FormCohorteComponent {
+  /**
+   * Carte Leaflet du composant principal
+   */
   @Input() map!: L.Map;
+
+  /**
+   * Liste des marqueurs Leaflet de la carte (1 marqueur par ville)
+   */
   @Input() markersArray!: L.Marker[];
 
+  /**
+   * Marqueur de la ville de départ de la cohorte
+   */
   cohorteMarker: L.Marker | undefined = undefined;
 
+  /**
+   * Variable contenant la cohorte choisie dans le formulaire
+   */
   cohorte: Cohorte = {
     nbPatients: 0,
     city: "",
     types: []
   };
+
+  /**
+   * Variable contenant le type de tube choisi dans le formulaire
+   */
   type: Type = {
     name: "",
     tubes: []
   }
-  
+
+  /**
+   * Variable contenant le tube choisi dans le formulaire
+   */
   tube: Tube = {
     number: 0,
     volume: 0,
-    envoi: []
+    arcs: []
   }
 
-  solution = this.solutionService.getSolution();
+  /**
+   * Solution provenant de SolutionService (Initialisée en amont depuis le service même)
+   */
+  solution: Solution = this.solutionService.getSolution();
   
+  /**
+   * Constructeur du composant
+   * @param solutionService Service permettant de créer l'objet Solution
+   * @param arcService Service permettant de créér les arcs
+   */
   constructor(private solutionService:SolutionService, private arcService:ArcService){
     //this.solution = solutionService.solution;
   }
 
+  /**
+   * Gère la sélection d'une nouvelle cohorte dans le formulaire
+   * @param e Contient l'ancienne cohorte et la nouvelle choisie
+   */
   cohorteChange(e: MatSelectChange){
     var city:string = e.value.city;
     for (const marker of this.markersArray){
@@ -69,58 +104,47 @@ export class FormCohorteComponent {
     this.typeChange();
   }
 
+  /**
+   * Gère la sélection d'un nouveau type de tube dans le formulaire
+   */
   typeChange(){
     this.tube = {
       number: 0,
       volume: 0,
-      envoi: []
+      arcs: []
     }
     this.tubeChange();
   }
 
+  /**
+   * Gère la sélection d'un nouveau tube dans le formulaire
+   */
   tubeChange(){
     this.removeArcs();
-    var citiesPosition = this.solutionService.getCitiesPosition();
-    setTimeout(() => {
-      var data: CustomPolyline[] = [];
-      var lineIndex = 0;
-      for (const line of this.tube.envoi){
-        // Ugly line to work around "LatLngExpression is not assignable to number | any | undefined..."
-        var origin: LatLngExpression = [citiesPosition.get(line[0])![0], citiesPosition.get(line[0])![1]];
-        var destination: LatLngExpression = [citiesPosition.get(line[1])![0], citiesPosition.get(line[1])![1]];
-        var latlngs = [origin, destination];
-        var quantity = line[2];
-        var tubeNumber = this.tube.number || 1;
-        if(latlngs[0] != latlngs[1]){ // On ne dessine pas la flèche si départ = arrivée
-          data.push({
-            polyline: this.drawPolyline(this.map, latlngs, quantity, tubeNumber),
-            origin: line[0],
-            destination: line[1],
-            index: lineIndex
-          });
-          lineIndex++;
-        }
-      }
-      this.arcService.setPolylineArray(data);
-    },200);
+    this.drawPolylines(this.map, this.tube.arcs)
+    this.arcService.setPolylineArray(this.tube.arcs);
   }
 
+  /**
+   * Efface tous les arcs créés
+   */
   removeArcs(){
     this.map.eachLayer((layer:any) =>{
       if (layer instanceof L.Polyline) {
-        // Removes the Click Event Listener from this Polyline.
         this.map.removeLayer(layer);
       }
     });
   }
 
-  private drawPolyline(map:L.Map, latlngs: LatLngExpression[], quantity: Number, tubeNumber: number): L.Polyline{
-    var colors = ['red', 'blue', 'green'];
-
-    var polyline = L.polyline(latlngs, {color: colors[tubeNumber-1], weight: 5, opacity: 0.7}).arrowheads({size: "15px", opacity: 0.7, fill: false, yawn: 75,offsets: {end: '75px'}}).addTo(map);
-
-    polyline.bindTooltip(`<div>Quantité : ${ quantity }</div>`);
-
-    return polyline;
+  /**
+   * Dessine les arcs en entrée sur la carte
+   * @param map La carte sur laquelle les arcs doivent être ajoutés
+   * @param
+   */
+  private drawPolylines(map:L.Map, arcs: Arc[]){
+    for (const arc of arcs){
+      arc.polyline.bindTooltip(`<div>Quantité : ${ arc.quantity }</div>`);
+      arc.polyline.addTo(map);
+    }
   }
 }
