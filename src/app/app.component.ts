@@ -6,8 +6,6 @@ import { TableArcComponent } from './table-arc/table-arc.component';
 import { iconDefault } from './include/leaflet-icons';
 
 import * as L from 'leaflet';
-import "leaflet-polylinedecorator";
-import "leaflet-textpath";
 import { Solution } from './include/interfaces';
 
 L.Marker.prototype.options.icon = iconDefault;
