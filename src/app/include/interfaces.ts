@@ -40,12 +40,12 @@ export interface Tube {
     /**
      * Numéro du tube
      */
-    number: number | undefined,
+    number: number,
 
     /**
      * Volume / quantité du tube
      */
-    volume: number | undefined,
+    volume: number,
 
     // TODO: Faire une interface Envoi explicite
     /**
