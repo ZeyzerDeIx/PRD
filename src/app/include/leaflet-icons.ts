@@ -1,9 +1,23 @@
 import L from "leaflet";
 
+/**
+ * URL de l'icône par défaut
+ */
 const iconUrl = 'assets/images/marker-icon.png';
+
+/**
+ * URL de l'icône violette
+ */
 const iconVioletUrl = 'assets/images/marker-icon-violet.png';
+
+/**
+ * URL de l'ombre de l'icône 
+ */
 const shadowUrl = 'assets/images/marker-shadow.png';
 
+/**
+ * Icône par défaut des marqueurs Leaflet
+ */
 export const iconDefault = L.icon({
     iconUrl,
     shadowUrl,
@@ -14,6 +28,9 @@ export const iconDefault = L.icon({
     shadowSize: [41, 41]
 });
 
+/**
+ * Icône pour le marqueur de la cohorte
+ */
 export const iconViolet = L.icon({
 iconUrl : iconVioletUrl,
 shadowUrl,
