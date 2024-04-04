@@ -79,6 +79,11 @@ export class TableArcComponent implements OnInit{
   pageIndex = 0;
 
   /**
+   * Booléen pour contrôler l'affichage du bouton Sauvegarder
+   */
+  showSaveButton = false;
+
+  /**
    * Constructeur du composant
    * @param solutionService Service permettant de créer l'objet Solution
    * @param arcService Service permettant de créér les arcs
@@ -145,6 +150,13 @@ export class TableArcComponent implements OnInit{
         this.handleSaveErrors(error);
       }
     }
+    for (var id = 0; id < this.selectedDestination.length; id++){
+      if (this.selectedOrigin.at(id) == this.selectedDestination.at(id)){
+        error = "Veuillez sélectionner une ville de départ et d'arivée différente pour chaque arc !"
+        this.handleSaveErrors(error);
+      }
+    }
+    
     if(error == "Ok !"){
       this.handleSaveErrors(error);
     }
@@ -155,6 +167,7 @@ export class TableArcComponent implements OnInit{
    * @param error Message d'erreur à afficher
    */
   handleSaveErrors(error: string){
+    alert(error);
     console.log(error);
   }
 
@@ -192,6 +205,9 @@ export class TableArcComponent implements OnInit{
         this.dataSource = new MatTableDataSource<Arc>(polylineArray);
         this.totalRecords = this.polylineArray.length;
         this.dataSource.paginator = this.paginator;
+
+        this.showSaveButton = (this.polylineArray.length > 0);
+
       }
     );
   }
