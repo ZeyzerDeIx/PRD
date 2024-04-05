@@ -3,7 +3,7 @@
     <head>
         <meta charset="utf-8">
         <meta http-equiv="x-ua-compatible" content="ie=edge">
-        <title>prd documentation</title>
+        <title>Documentation PRD</title>
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
@@ -72,7 +72,7 @@
           </script>
 
         <div class="navbar navbar-default navbar-fixed-top d-block d-sm-none">
-            <a href="../" class="navbar-brand">prd documentation</a>
+            <a href="../" class="navbar-brand">Documentation PRD</a>
             <button type="button" class="btn btn-default btn-menu ion-ios-menu" id="btn-menu"></button>
         </div>
 
@@ -251,6 +251,9 @@
                                 <a href="#selectedOrigin" >selectedOrigin</a>
                             </li>
                             <li>
+                                <a href="#showSaveButton" >showSaveButton</a>
+                            </li>
+                            <li>
                                 <a href="#totalRecords" >totalRecords</a>
                             </li>
                         </ul>
@@ -306,7 +309,7 @@
                 </tr>
                         <tr>
                             <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="79" class="link-to-prism">src/app/table-arc/table-arc.component.ts:79</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="84" class="link-to-prism">src/app/table-arc/table-arc.component.ts:84</a></div>
                             </td>
                         </tr>
 
@@ -396,8 +399,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="115"
-                                    class="link-to-prism">src/app/table-arc/table-arc.component.ts:115</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="120"
+                                    class="link-to-prism">src/app/table-arc/table-arc.component.ts:120</a></div>
                         </td>
                     </tr>
 
@@ -470,8 +473,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="128"
-                                    class="link-to-prism">src/app/table-arc/table-arc.component.ts:128</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="133"
+                                    class="link-to-prism">src/app/table-arc/table-arc.component.ts:133</a></div>
                         </td>
                     </tr>
 
@@ -509,8 +512,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="157"
-                                    class="link-to-prism">src/app/table-arc/table-arc.component.ts:157</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="169"
+                                    class="link-to-prism">src/app/table-arc/table-arc.component.ts:169</a></div>
                         </td>
                     </tr>
 
@@ -583,8 +586,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="104"
-                                    class="link-to-prism">src/app/table-arc/table-arc.component.ts:104</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="109"
+                                    class="link-to-prism">src/app/table-arc/table-arc.component.ts:109</a></div>
                         </td>
                     </tr>
 
@@ -657,8 +660,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="93"
-                                    class="link-to-prism">src/app/table-arc/table-arc.component.ts:93</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="98"
+                                    class="link-to-prism">src/app/table-arc/table-arc.component.ts:98</a></div>
                         </td>
                     </tr>
 
@@ -731,8 +734,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="164"
-                                    class="link-to-prism">src/app/table-arc/table-arc.component.ts:164</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="177"
+                                    class="link-to-prism">src/app/table-arc/table-arc.component.ts:177</a></div>
                         </td>
                     </tr>
 
@@ -1130,6 +1133,37 @@
         <tbody>
             <tr>
                 <td class="col-md-4">
+                    <a name="showSaveButton"></a>
+                    <span class="name">
+                        <span ><b>showSaveButton</b></span>
+                        <a href="#showSaveButton"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>false</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="84" class="link-to-prism">src/app/table-arc/table-arc.component.ts:84</a></div>
+                        </td>
+                    </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Booléen pour contrôler l&#39;affichage du bouton Sauvegarder</p>
+</div>
+                </td>
+            </tr>
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
                     <a name="totalRecords"></a>
                     <span class="name">
                         <span ><b>totalRecords</b></span>
@@ -1250,6 +1284,11 @@ export class TableArcComponent implements OnInit{
   pageIndex &#x3D; 0;
 
   /**
+   * Booléen pour contrôler l&#x27;affichage du bouton Sauvegarder
+   */
+  showSaveButton &#x3D; false;
+
+  /**
    * Constructeur du composant
    * @param solutionService Service permettant de créer l&#x27;objet Solution
    * @param arcService Service permettant de créér les arcs
@@ -1316,6 +1355,13 @@ export class TableArcComponent implements OnInit{
         this.handleSaveErrors(error);
       }
     }
+    for (var id &#x3D; 0; id &lt; this.selectedDestination.length; id++){
+      if (this.selectedOrigin.at(id) &#x3D;&#x3D; this.selectedDestination.at(id)){
+        error &#x3D; &quot;Veuillez sélectionner une ville de départ et d&#x27;arivée différente pour chaque arc !&quot;
+        this.handleSaveErrors(error);
+      }
+    }
+    
     if(error &#x3D;&#x3D; &quot;Ok !&quot;){
       this.handleSaveErrors(error);
     }
@@ -1326,6 +1372,7 @@ export class TableArcComponent implements OnInit{
    * @param error Message d&#x27;erreur à afficher
    */
   handleSaveErrors(error: string){
+    alert(error);
     console.log(error);
   }
 
@@ -1363,6 +1410,9 @@ export class TableArcComponent implements OnInit{
         this.dataSource &#x3D; new MatTableDataSource&lt;Arc&gt;(polylineArray);
         this.totalRecords &#x3D; this.polylineArray.length;
         this.dataSource.paginator &#x3D; this.paginator;
+
+        this.showSaveButton &#x3D; (this.polylineArray.length &gt; 0);
+
       }
     );
   }

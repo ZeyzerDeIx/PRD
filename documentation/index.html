@@ -3,7 +3,7 @@
     <head>
         <meta charset="utf-8">
         <meta http-equiv="x-ua-compatible" content="ie=edge">
-        <title>prd documentation</title>
+        <title>Documentation PRD</title>
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
@@ -72,7 +72,7 @@
           </script>
 
         <div class="navbar navbar-default navbar-fixed-top d-block d-sm-none">
-            <a href="./" class="navbar-brand">prd documentation</a>
+            <a href="./" class="navbar-brand">Documentation PRD</a>
             <button type="button" class="btn btn-default btn-menu ion-ios-menu" id="btn-menu"></button>
         </div>
 
@@ -96,7 +96,11 @@ avec pour objectif de pouvoir modifier à sa guise les flux d&#39;échantillons 
 <p>Le projet est codé en TypeScript avec le framework Angular, ainsi que la bibliothèque Leaflet pour la gestion de la carte interactive.</p>
 <h2>Initialisation du projet</h2>
 <p>Après avoir pull le projet depuis le repository Git (<code>https://github.com/BethencourtFlorian/PRD</code>),<br>ouvrez un terminal et déplacez vous dans le dossier &quot;PRD&quot;.
-D&#39;ici, lancez la commande <code>npm install</code> pour installer toutes les dépendances du projet.<br>Ensuite la commande <code>ng serve</code> ouvrira un serveur de développement à l&#39;adresse <code>http://localhost:4200</code>.<br>Vous pouvez également lancer <code>ng serve --open</code>pour ouvrir l&#39;onglet automatiquement.  </p>
+D&#39;ici, lancez la commande <code>npm install</code> pour installer toutes les dépendances du projet.  </p>
+<p>La commande <code>ng serve</code> ouvrira un serveur de développement à l&#39;adresse <code>http://localhost:4200</code>.<br>Vous pouvez également lancer <code>ng serve --open</code> pour ouvrir l&#39;onglet automatiquement.  </p>
+<h2>Documentation</h2>
+<p>L&#39;entièreté du code est documentée, et le projet utilise l&#39;outil CompoDoc pour générer la documentation<br>sous la forme d&#39;un site web.<br>La commande <code>npm run compodoc</code> permet de regénérer la documentation et ouvre un serveur à l&#39;adresse <code>http://127.0.0.1:8080/</code>.
+Vous pouvez lancer <code>npm run compodoc generate</code> et <code>npm run compodoc serve</code> pour respectivement regénérer la documention et ouvrir le serveur.</p>
 
 
 

@@ -15,7 +15,7 @@ customElements.define('compodoc-menu', class extends HTMLElement {
         <nav>
             <ul class="list">
                 <li class="title">
-                    <a href="index.html" data-type="index-link">prd documentation</a>
+                    <a href="index.html" data-type="index-link">Documentation PRD</a>
                 </li>
 
                 <li class="divider"></li>
