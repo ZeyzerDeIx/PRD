@@ -47,7 +47,6 @@ export interface Tube {
      */
     volume: number,
 
-    // TODO: Faire une interface Envoi explicite
     /**
      * Liste d'arcs associés au tube
      */
