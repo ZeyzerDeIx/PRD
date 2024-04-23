@@ -48,8 +48,14 @@ export class SolutionService {
    * @param http Client HTTP permettant de faire les requêtes pour récupérer les données via les fichiers txt
    */
   constructor(protected http:HttpClient) {
-    this.citiesPosition = this.parseCitiesPosition();
-    this.solution = this.parseSolution();
+    this.citiesPosition = new Map();
+    this.solution = {
+      cities: [],
+      types: [],
+      cohortes: [],
+      demande: new Map<string, Map<string, number>>()
+    };
+    this.parseCitiesPosition();
   }
 
   /**
@@ -121,22 +127,23 @@ export class SolutionService {
    * Initialise le tableau des villes grâce aux données de la carte
    * @returns La liste des villes
    */
-  private parseCities(): City[]{
+  private parseCities(){
     var cities:City[] = [];
-    setTimeout(() => {
-      this.getMapData().subscribe((data:any) => {
-        for (const city of data.features) {
-          const name = city.properties.name;
-          const id = city.id; 
-          var cityToAdd: City = {
-            name: name,
-            id: id,
-            cohorte: false
-          }
-          cities.push(cityToAdd);
+    this.getMapData().subscribe((data:any) => {
+      for (const city of data.features) {
+        const name = city.properties.name;
+        const id = city.id; 
+        var cityToAdd: City = {
+          name: name,
+          id: id,
+          cohorte: false
         }
-      });
-    }, 200);
+        cities.push(cityToAdd);
+      }
+      this.solution.cities = cities;
+
+      this.parseSolution();
+    });
     
     return cities;
   }
@@ -145,37 +152,28 @@ export class SolutionService {
    * Initialise la position des marqueurs associés à chaque ville depuis les données de la carte
    * @returns La liste des positions des marqueurs associés à chaque ville
    */
-  private parseCitiesPosition(): Map<string, number[]>{
+  private parseCitiesPosition(){
     let citiesPosition: Map<string, number[]> = new Map();
-    setTimeout((() =>{
-      this.getMapData().subscribe((cities:any) => {
-        for (const city of cities.features) {
-          const lat = city.geometry.coordinates[0];
-          const lon = city.geometry.coordinates[1];
-          const name = city.properties.name; 
-          
-          citiesPosition.set(name, [lat,lon]);
-        }
-      });
-    }),100);
-    
-    return citiesPosition;
+    this.getMapData().subscribe((cities:any) => {
+      for (const city of cities.features) {
+        const lat = city.geometry.coordinates[0];
+        const lon = city.geometry.coordinates[1];
+        const name = city.properties.name; 
+        
+        citiesPosition.set(name, [lat,lon]);
+      }
+      this.citiesPosition = citiesPosition;
+      this.parseCities();
+    });
   }
 
   /**
    * Initialise la solution
    * @returns La solution proposée par le mèdle sous la forme d'un objet Solution
    */
-  private parseSolution(): Solution{
-    var solution:Solution = {
-      cities: this.parseCities(),
-      // TODO: Adapter en fonction du nombre de types donné par l'instance du modèle
-      types: this.types.slice(0,2),
-      cohortes: [],
-      demande: new Map<string, Map<string, number>>()
-    }
+  private parseSolution(){
+    this.solution.types = this.types.slice(0,2);
 
-    setTimeout(() =>{
       this.getInstance().subscribe(data => {
         var textLines = data.split('\n');
         var nbVilles = Number(textLines[0]);
@@ -184,10 +182,10 @@ export class SolutionService {
         var cohorteNbPatientsline = textLines[3].split('\t');
         for (var i = 0; i < nbCohortes; i++){
           var villeId = Number(cohorteVilleline[i]) - 1;
-          solution.cities[villeId].cohorte = true;
-          solution.cohortes.push({
+          this.solution.cities[villeId].cohorte = true;
+          this.solution.cohortes.push({
             nbPatients: Number(cohorteNbPatientsline[i]),
-            city: solution.cities[villeId].name,
+            city: this.solution.cities[villeId].name,
             types: []
           });
         }
@@ -196,13 +194,13 @@ export class SolutionService {
         var nbTubes = Number(textLines[5]);
         for(var i = 0; i < nbCohortes; i++){
           for(var j = 0; j < nbTypes; j++){
-            solution.cohortes[i].types.push({
+            this.solution.cohortes[i].types.push({
               name: this.types[j],
               tubes: []
             });
             var volumeTubesLine = textLines[6+i*nbCohortes+j].split('\t');
             for(var k = 0; k < nbTubes; k++){
-              solution.cohortes[i].types[j].tubes.push({
+              this.solution.cohortes[i].types[j].tubes.push({
                 number: k+1,
                 volume: Number(volumeTubesLine[k]),
                 arcs: []
@@ -213,65 +211,60 @@ export class SolutionService {
         }
 
         for(var i = 0; i < nbVilles; i++){
-          solution.demande.set(solution.cities[i].name, new Map<string, number>());
+          this.solution.demande.set(this.solution.cities[i].name, new Map<string, number>());
           var demandeLine = textLines[6+nbTypes*nbCohortes + i].split('\t');
           for(var j = 0; j < nbTypes; j++){
-            solution.demande.get(solution.cities[i].name)!.set(solution.types[j],Number(demandeLine[j]));
+            this.solution.demande.get(this.solution.cities[i].name)!.set(this.solution.types[j],Number(demandeLine[j]));
           }
         }
+        this.parseRepartitionTube(nbCohortes,nbTypes, nbTubes);
 
-        var indiceVilles = this.parseRepartitionTube();
-        var colors = ['red', 'blue', 'green'];
-
-        setTimeout(() =>{
-          for(var i = 0; i < nbCohortes; i++){
-            var villeCohorte = solution.cohortes[i].city;
-            for(var j = 0; j < nbTypes; j++){
-              for(var k = 0; k < nbTubes; k++){
-                var indice = i*nbTypes*nbTubes + j*nbTubes + k;
-                for(var l = 0; l < indiceVilles[indice].length; l++){
-                  var destination = this.findCityNameById(solution.cities, indiceVilles[indice][l]);
-                  var originPoint: LatLngExpression = [this.citiesPosition.get(villeCohorte)![0], this.citiesPosition.get(villeCohorte)![1]];
-                  var destinationPoint: LatLngExpression = [this.citiesPosition.get(destination)![0], this.citiesPosition.get(destination)![1]];
-                  var latlngs:LatLngExpression[] = [originPoint, destinationPoint];
-                  solution.cohortes[i].types[j].tubes[k].arcs.push({
-                    polyline: L.polyline(latlngs,{color: colors[solution.cohortes[i].types[j].tubes[k].number!-1], weight: 5, opacity: 0.7}).arrowheads({size: "15px", opacity: 0.7, fill: false, yawn: 75,offsets: {end: '75px'}}),
-                    origin: villeCohorte,
-                    destination: destination,
-                    index: l,
-                    // TODO: Remplir automatiquement avec les demandes de chaque ville et pas 0
-                    quantity: 0
-                  }); 
-                }
-              }
-            }
-          }
-        },1000);
       });
-    },300);
-    return solution;
   }
 
   /**
    * Retourne l'indice des villes associée à chaque tube proposée par le modèle (répartition par tubes)
    * @returns La liste des arcs
    */
-  private parseRepartitionTube(): number[][] {
+  private parseRepartitionTube(nbCohortes: number, nbTypes: number, nbTubes: number){
     var indiceVilles: number[][] = [];
-    setTimeout(() =>{
-      this.getInstanceSolution().subscribe(data =>{
-        var textLines = data.split('\n');
-        for(var i = 0; i < textLines.length; i++){
-          var line = textLines[i].split(' ');
-          var indiceVilleTube: number[] = [];
-          for(var j = 0; j < line.length; j++){
-              indiceVilleTube.push(Number(line[j]));
-          }
-          indiceVilles.push(indiceVilleTube);
+
+    this.getInstanceSolution().subscribe(data =>{
+      var textLines = data.split('\n');
+      for(var i = 0; i < textLines.length; i++){
+        var line = textLines[i].split(' ');
+        var indiceVilleTube: number[] = [];
+        for(var j = 0; j < line.length; j++){
+            indiceVilleTube.push(Number(line[j]));
         }
-      });
-    },100);
-    return indiceVilles;
+        indiceVilles.push(indiceVilleTube);
+      }
+
+      var colors = ['red', 'blue', 'green'];
+      for(var i = 0; i < nbCohortes; i++){
+        var villeCohorte = this.solution.cohortes[i].city;
+        for(var j = 0; j < nbTypes; j++){
+          for(var k = 0; k < nbTubes; k++){
+            var indice = i*nbTypes*nbTubes + j*nbTubes + k;
+            for(var l = 0; l < indiceVilles[indice].length; l++){
+              var destination = this.findCityNameById(this.solution.cities, indiceVilles[indice][l]);
+              var originPoint: LatLngExpression = [this.citiesPosition.get(villeCohorte)![0], this.citiesPosition.get(villeCohorte)![1]];
+              var destinationPoint: LatLngExpression = [this.citiesPosition.get(destination)![0], this.citiesPosition.get(destination)![1]];
+              var latlngs:LatLngExpression[] = [originPoint, destinationPoint];
+              this.solution.cohortes[i].types[j].tubes[k].arcs.push({
+                polyline: L.polyline(latlngs,{color: colors[this.solution.cohortes[i].types[j].tubes[k].number!-1], weight: 5, opacity: 0.7}).arrowheads({size: "15px", opacity: 0.7, fill: false, yawn: 75,offsets: {end: '75px'}}),
+                origin: villeCohorte,
+                destination: destination,
+                index: l,
+                // TODO: Remplir automatiquement avec les demandes de chaque ville et pas 0
+                quantity: 0
+              }); 
+            }
+          }
+        }
+      }
+      
+    });
   }
 
   /**

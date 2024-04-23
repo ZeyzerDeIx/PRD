@@ -97,7 +97,7 @@ export class TableArcComponent implements OnInit{
    */
   mouseOverArc(data: Arc){
     data.polyline.setStyle({
-      weight: 6,
+      weight: 6.5,
       opacity: 1
     })
   }
