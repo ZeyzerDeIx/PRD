@@ -5,7 +5,7 @@ import 'leaflet-arrowheads';
 import { Solution, City, Cohorte, Arc } from './include/interfaces';
 
 /**
- * Service gérant la construction de la solution
+ * Service gérant la construction de la solution. Attention, le service ne sera pas utilisable tant que son initialisation n'est pas terminée. Étant donné que celle ci est asynchrone pour pouvoir parser les ressources textuelles, il faudra s'assurer d'attendre la fin de l'initialisation avant tout usage.
  */
 @Injectable({
   providedIn: 'root'
@@ -61,6 +61,9 @@ export class SolutionService {
     this.initService();
   }
 
+  /**
+   * Initialise le service de manière synchrone. Une fois le processus terminé, getIsInitilized renverra true.
+   */
   private async initService(): Promise<void>
   {
     await this.parseCitiesPosition();
@@ -120,26 +123,23 @@ export class SolutionService {
    */
   public drawCities(map: L.Map, cities:City[]): L.Marker[]{ 
     var markersArray: L.Marker[] = [];
-    //setTimeout(() => {
-      for (const city of cities) {
-        // Ugly line to work around "LatLngExpression is not assignable to number | any | undefined..."
-        let latlngs:LatLngExpression = [this.citiesPosition.get(city.name)![0], this.citiesPosition.get(city.name)![1]];
+    for (const city of cities) {
+      // Ugly line to work around "LatLngExpression is not assignable to number | any | undefined..."
+      let latlngs:LatLngExpression = [this.citiesPosition.get(city.name)![0], this.citiesPosition.get(city.name)![1]];
 
-        const marker = L.marker(latlngs, {alt: city.name});
+      const marker = L.marker(latlngs, {alt: city.name});
 
-        // Ajout du marqueur à la cart
-        marker.addTo(map);
+      // Ajout du marqueur à la cart
+      marker.addTo(map);
 
-        markersArray.push(marker);
-      }
-    //}, 500);
+      markersArray.push(marker);
+    }
     
     return markersArray;
   }
 
   /**
    * Initialise le tableau des villes grâce aux données de la carte
-   * @returns La liste des villes
    */
   private async parseCities(): Promise<void>{
     var finish: boolean = false;
@@ -163,7 +163,6 @@ export class SolutionService {
 
   /**
    * Initialise la position des marqueurs associés à chaque ville depuis les données de la carte
-   * @returns La liste des positions des marqueurs associés à chaque ville
    */
   private async parseCitiesPosition(): Promise<void>{
     var finish: boolean = false;
@@ -178,13 +177,13 @@ export class SolutionService {
       finish = true;
     });
 
+
     while(!finish)
       await new Promise(resolve => setTimeout(resolve, 10));
   }
 
   /**
    * Initialise la solution
-   * @returns La solution proposée par le mèdle sous la forme d'un objet Solution
    */
   private async parseSolution(): Promise<void>{
     var finish: boolean = false;
@@ -262,13 +261,14 @@ export class SolutionService {
       }
       finish = true;
     });
+
     while(!finish)
       await new Promise(resolve => setTimeout(resolve, 10));
   }
 
   /**
-   * Retourne l'indice des villes associée à chaque tube proposée par le modèle (répartition par tubes)
-   * @returns La liste des arcs
+   * Retourne l'indice des villes associée à chaque tube proposée par le modèle (répartition par tubes) via le tableau passé par référence en paramètre
+   * @param indiceVilles Le tableau dans lequel ranger les résultats
    */
   private async parseRepartitionTube(indiceVilles: number[][]): Promise<void> {
     var finish: boolean = false;
