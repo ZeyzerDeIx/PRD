@@ -106,7 +106,7 @@ export class SolutionService {
    */
   public drawCities(map: L.Map, cities:City[]): L.Marker[]{ 
     var markersArray: L.Marker[] = [];
-    setTimeout(() => {
+    //setTimeout(() => {
       for (const city of cities) {
         // Ugly line to work around "LatLngExpression is not assignable to number | any | undefined..."
         let latlngs:LatLngExpression = [this.citiesPosition.get(city.name)![0], this.citiesPosition.get(city.name)![1]];
@@ -118,7 +118,7 @@ export class SolutionService {
 
         markersArray.push(marker);
       }
-    }, 500);
+    //}, 500);
     
     return markersArray;
   }

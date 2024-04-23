@@ -46,12 +46,14 @@ export class AppComponent implements OnInit {
   /**
    * Initialise toutes les valeurs du composant
    */
-  public ngOnInit(): void {
+  public async ngOnInit():  Promise<void> {
     this.loadMap();
+
+    while(this.solution.cities.length == 0)
+      await new Promise(resolve => setTimeout(resolve, 50));
+
     this.markersArray = this.solutionService.drawCities(this.map, this.solution.cities);
-    setTimeout(() => {
-      this.createMarkersPopup()
-    }, 500);
+    this.createMarkersPopup()
   }
 
   /**
