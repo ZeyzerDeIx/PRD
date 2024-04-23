@@ -43,6 +43,9 @@ export class SolutionService {
    */
   private solution: Solution;
 
+  /**
+   * Faux tant que le parsing des ressources n'est pas terminé
+   */
   private isInitialized: boolean = false;
 
   /**
@@ -53,7 +56,7 @@ export class SolutionService {
     this.citiesPosition = new Map();
     this.solution = {
       cities: [],
-      types: [],
+      types: this.types,
       cohortes: [],
       demande: new Map<string, Map<string, number>>()
     };
@@ -224,17 +227,14 @@ export class SolutionService {
         }
       }
 
-      for(var i = 0; i < nbVilles; i++){
-        this.solution.demande.set(this.solution.cities[i].name, new Map<string, number>());
-        var demandeLine = textLines[6+nbTypes*nbCohortes + i].split('\t');
-        for(var j = 0; j < nbTypes; j++){
-          this.solution.demande.get(this.solution.cities[i].name)!.set(this.solution.types[j],Number(demandeLine[j]));
-        }
-      }
+      var borneInf: number = 6+nbTypes*nbCohortes;
+      var lines: string[] = textLines.slice(borneInf,borneInf + nbVilles);
+      this.parseDemandes(lines,nbTypes,nbVilles);
 
 
       var indiceVilles: number[][] = [];
       await this.parseRepartitionTube(indiceVilles);
+
       var colors = ['red', 'blue', 'green'];
 
       for(var i = 0; i < nbCohortes; i++){
@@ -244,17 +244,15 @@ export class SolutionService {
             var indice = i*nbTypes*nbTubes + j*nbTubes + k;
             for(var l = 0; l < indiceVilles[indice].length; l++){
               var destination = this.findCityNameById(this.solution.cities, indiceVilles[indice][l]);
-              var originPoint: LatLngExpression = [this.citiesPosition.get(villeCohorte)![0], this.citiesPosition.get(villeCohorte)![1]];
-              var destinationPoint: LatLngExpression = [this.citiesPosition.get(destination)![0], this.citiesPosition.get(destination)![1]];
-              var latlngs:LatLngExpression[] = [originPoint, destinationPoint];
-              this.solution.cohortes[i].types[j].tubes[k].arcs.push({
-                polyline: L.polyline(latlngs,{color: colors[this.solution.cohortes[i].types[j].tubes[k].number!-1], weight: 5, opacity: 0.7}).arrowheads({size: "15px", opacity: 0.7, fill: false, yawn: 75,offsets: {end: '75px'}}),
-                origin: villeCohorte,
-                destination: destination,
-                index: l,
-                // TODO: Remplir automatiquement avec les demandes de chaque ville et pas 0
-                quantity: 0
-              }); 
+
+              var polylineColor = colors[this.solution.cohortes[i].types[j].tubes[k].number!-1];
+
+              var polyline = this.createPolyline(villeCohorte, destination,polylineColor);
+              
+              // TODO: Remplir automatiquement avec les demandes de chaque ville et pas 0
+              var arc = this.createArc(polyline,villeCohorte,destination,l,0);
+
+              this.solution.cohortes[i].types[j].tubes[k].arcs.push(arc); 
             }
           }
         }
@@ -264,6 +262,45 @@ export class SolutionService {
 
     while(!finish)
       await new Promise(resolve => setTimeout(resolve, 10));
+  }
+
+  private createPolyline(origin: string, destination: string, color: string): L.Polyline
+  {
+    var pos: Map<string,number[]> = this.citiesPosition;
+    
+    var originPoint: LatLngExpression = 
+    [pos.get(origin)![0], pos.get(origin)![1]];
+
+    var destinationPoint: LatLngExpression = 
+    [pos.get(destination)![0], pos.get(destination)![1]];
+
+    var latlngs:LatLngExpression[] = [originPoint, destinationPoint];
+
+    var polylineOptions = {color: color, weight: 5, opacity: 0.7};
+
+    return L.polyline(latlngs, polylineOptions)
+    .arrowheads({
+      size: "15px",
+      opacity: 0.7,
+      fill: false,
+      yawn: 75,
+      offsets: {end: '75px'}
+    });
+  }
+
+  private createArc(polyline: L.Polyline, origin: string, destination: string, index: number, quantity: number): Arc
+  {
+    return { polyline: polyline, origin: origin, destination: destination, index: index, quantity: quantity };
+  }
+
+  private parseDemandes(lines: string[], nbTypes: number, nbVilles: number): void{
+    for(var i = 0, s = this.solution; i < nbVilles; i++){
+        var ville: Map<string, number> = new Map();
+        var dem = lines[i].split('\t');
+        for(var j = 0; j < nbTypes; j++)
+          ville.set(s.types[j],Number(dem[j]));
+        s.demande.set(s.cities[i].name, ville);
+      }
   }
 
   /**
