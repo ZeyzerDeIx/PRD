@@ -202,7 +202,7 @@ export class InstanceService {
         this.instance.cities[villeId].cohorte = true;
         this.instance.cohortes.push({
           nbPatients: Number(cohorteNbPatientsline[i]),
-          city: this.instance.cities[villeId].name,
+          city: this.instance.cities[villeId],
           types: []
         });
       }
@@ -240,14 +240,14 @@ export class InstanceService {
       var colors = ['red', 'blue', 'green'];
 
       for(var i = 0; i < nbCohortes; i++){
-        var villeCohorte = this.instance.cohortes[i].city;
+        var villeCohorte: City = this.instance.cohortes[i].city;
         for(var j = 0; j < nbTypes; j++){
           for(var k = 0; k < nbTubes; k++){
             var indice = i*nbTypes*nbTubes + j*nbTubes + k;
             for(var l = 0; l < indiceVilles[indice].length; l++){
               var tube: Tube = this.instance.cohortes[i].types[j].tubes[k];
 
-              var destination = this.findCityNameById(this.instance.cities, indiceVilles[indice][l]);
+              var destination: City = this.findCityById(this.instance.cities, indiceVilles[indice][l]);
 
               var polylineColor = colors[this.instance.cohortes[i].types[j].tubes[k].number!-1];
 
@@ -268,15 +268,15 @@ export class InstanceService {
       await new Promise(resolve => setTimeout(resolve, 10));
   }
 
-  private createPolyline(origin: string, destination: string, color: string): L.Polyline
+  private createPolyline(origin: City, destination: City, color: string): L.Polyline
   {
     var pos: Map<string,number[]> = this.citiesPosition;
     
     var originPoint: LatLngExpression = 
-    [pos.get(origin)![0], pos.get(origin)![1]];
+    [pos.get(origin.name)![0], pos.get(origin.name)![1]];
 
     var destinationPoint: LatLngExpression = 
-    [pos.get(destination)![0], pos.get(destination)![1]];
+    [pos.get(destination.name)![0], pos.get(destination.name)![1]];
 
     var latlngs:LatLngExpression[] = [originPoint, destinationPoint];
 
@@ -292,7 +292,7 @@ export class InstanceService {
     });
   }
 
-  private createArc(polyline: L.Polyline, origin: string, destination: string, index: number, quantity: number, tube: Tube): Arc
+  private createArc(polyline: L.Polyline, origin: City, destination: City, index: number, quantity: number, tube: Tube): Arc
   {
     return { polyline: polyline, origin: origin, destination: destination, index: index, quantity: quantity, tube: tube };
   }
@@ -337,12 +337,12 @@ export class InstanceService {
    * @param id Le numéro de la ville à trouver
    * @returns Le nom de la ville correspondant à l'id donné en paramètre, sinon une chaîne vide si aucune ville ne correspond
    */
-  private findCityNameById(cities:City[], id:Number) : string {
+  private findCityById(cities:City[], id:Number) : City {
     for (const city of cities){
       if (city.id == id){
-        return city.name;
+        return city;
       }
     }
-    return "";
+    return { name: "", id: -1, cohorte: false };
   }
 }

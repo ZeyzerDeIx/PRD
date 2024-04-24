@@ -10,7 +10,7 @@ export interface Cohorte {
     /**
      * Ville de départ de la cohorte
      */
-    city: string,
+    city: City,
 
     /**
      * Types de tube de la cohorte
@@ -75,12 +75,12 @@ export interface Arc {
     /**
      * Nom de la ville de départ 
      */
-    origin: string,
+    origin: City,
 
     /**
      * Nom de la ville d'arrivée 
      */
-    destination: string,
+    destination: City,
 
     /**
      * Numéro de l'arc

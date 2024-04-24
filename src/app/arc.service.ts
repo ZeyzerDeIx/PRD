@@ -1,5 +1,5 @@
 import { EventEmitter, Injectable } from '@angular/core';
-import { Arc } from './include/interfaces';
+import { Arc, City } from './include/interfaces';
 
 /**
  * Service pour gérer les arcs de la carte
@@ -12,7 +12,7 @@ export class ArcService {
   /**
    * Ville de départ de la cohorte
    */
-  private cohorteCity: string = "";
+  private cohorteCity: City = { name: "", id: -1, cohorte: false };
 
   /**
    * Liste des arcs
@@ -33,7 +33,7 @@ export class ArcService {
    * Renvoie la ville de départ de la cohorte
    * @returns La ville de départ de la cohorte
    */
-  getCohorteCity(): string{
+  getCohorteCity(): City{
     return this.cohorteCity;
   }
 
@@ -41,7 +41,7 @@ export class ArcService {
    * Modifie la ville de départ de la cohorte
    * @param newCity La nouvelle ville de départ 
    */
-  setCohorteCity(newCity: string){
+  setCohorteCity(newCity: City){
     this.cohorteCity = newCity
   }
 

@@ -133,7 +133,7 @@ export class TableArcComponent implements OnInit{
   checkSolution(){
     var cohorteCity = this.arcService.getCohorteCity();
     var error = "Ok !"
-    if (this.selectedDestination.includes(cohorteCity)){
+    if (this.selectedDestination.includes(cohorteCity.name)){
       error = "La ville cohorte ne peut pas être dans les villes d'arrivée";
       this.handleSaveErrors(error);
     }
@@ -145,7 +145,7 @@ export class TableArcComponent implements OnInit{
       nbOccurences.set(city, nbOccurences.get(city)! + 1);
     });
     for (const city of this.cities){
-      if(city != cohorteCity && nbOccurences.get(city) != 1){
+      if(city != cohorteCity.name && nbOccurences.get(city) != 1){
         error = city + " ne doit apparaître qu'une seule et unique fois !"
         this.handleSaveErrors(error);
       }
@@ -189,11 +189,11 @@ export class TableArcComponent implements OnInit{
             indexToRemove = line.index; // remove the line cohorte -> cohorte  
           }
           else{
-            this.cities.indexOf(line.origin) === -1 ? this.cities.push(line.origin): null; // Push if not already present, else nothing
-            this.cities.indexOf(line.destination) === -1 ? this.cities.push(line.destination): null; // Push if not already present, else nothing
+            this.cities.indexOf(line.origin.name) === -1 ? this.cities.push(line.origin.name): null; // Push if not already present, else nothing
+            this.cities.indexOf(line.destination.name) === -1 ? this.cities.push(line.destination.name): null; // Push if not already present, else nothing
 
-            this.selectedOrigin.push(line.origin);
-            this.selectedDestination.push(line.destination); // Fill the arrays to not get an error from the cells in mat-table
+            this.selectedOrigin.push(line.origin.name);
+            this.selectedDestination.push(line.destination.name); // Fill the arrays to not get an error from the cells in mat-table
           }
         }
         if (indexToRemove != -1){

@@ -3,7 +3,7 @@
     <mat-label>Cohorte</mat-label>
     <mat-select [(value)]="cohorte" (selectionChange)="cohorteChange($event)">
       @for (cohorte of instance.cohortes; track cohorte) {
-        <mat-option [value]="cohorte">{{cohorte.city}}</mat-option>
+        <mat-option [value]="cohorte">{{cohorte.city.name}}</mat-option>
       }
     </mat-select>
   </mat-form-field>

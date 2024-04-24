@@ -8,7 +8,7 @@ import L, { LatLngExpression } from 'leaflet';
 import { __propKey } from 'tslib';
 import { ArcService } from '../arc.service';
 import { iconDefault, iconViolet } from '../include/leaflet-icons';
-import { Cohorte, Type, Tube, Arc, Instance } from '../include/interfaces';
+import { Cohorte, Type, Tube, Arc, Instance, City } from '../include/interfaces';
 
 /**
  * FormCohorteComponent gère la sélection de la cohorte, du type et du tube voulu
@@ -41,7 +41,7 @@ export class FormCohorteComponent {
    */
   cohorte: Cohorte = {
     nbPatients: 0,
-    city: "",
+    city: { name: "", id: -1, cohorte: false },
     types: []
   };
 
@@ -51,7 +51,7 @@ export class FormCohorteComponent {
   type: Type = {
     name: "",
     tubes: [],
-    cohorte: { nbPatients: 0, city: "", types: [] }
+    cohorte: { nbPatients: 0, city: { name: "", id: -1, cohorte: false }, types: [] }
   }
 
   /**
@@ -61,7 +61,7 @@ export class FormCohorteComponent {
     number: 0,
     volume: 0,
     arcs: [],
-    type: { name: "", tubes: [], cohorte: { nbPatients: 0, city: "", types: [] } }
+    type: { name: "", tubes: [], cohorte: { nbPatients: 0, city: { name: "", id: -1, cohorte: false }, types: [] } }
   }
 
   /**
@@ -83,9 +83,9 @@ export class FormCohorteComponent {
    * @param e Contient l'ancienne cohorte et la nouvelle choisie
    */
   cohorteChange(e: MatSelectChange){
-    var city:string = e.value.city;
+    var city:City = e.value.city;
     for (const marker of this.markersArray){
-      if(marker.options.alt == city){
+      if(marker.options.alt == city.name){
         if(this.cohorteMarker == undefined){
           this.cohorteMarker = marker;
           this.cohorteMarker.setIcon(iconViolet);
@@ -102,7 +102,7 @@ export class FormCohorteComponent {
     this.type = {
       name: "",
       tubes: [],
-      cohorte: { nbPatients: 0, city: "", types: [] }
+      cohorte: { nbPatients: 0, city: { name: "", id: -1, cohorte: false }, types: [] }
     }
     this.typeChange();
   }
@@ -115,7 +115,7 @@ export class FormCohorteComponent {
       number: 0,
       volume: 0,
       arcs: [],
-      type: { name: "", tubes: [], cohorte: { nbPatients: 0, city: "", types: [] } }
+      type: { name: "", tubes: [], cohorte: { nbPatients: 0, city: { name: "", id: -1, cohorte: false }, types: [] } }
     }
     this.tubeChange();
   }
