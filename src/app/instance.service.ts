@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import L, { LatLngExpression } from 'leaflet';
 import 'leaflet-arrowheads';
-import { Solution, City, Cohorte, Arc } from './include/interfaces';
+import { Instance, City, Cohorte, Arc, Tube } from './include/interfaces';
 
 /**
  * Service gérant la construction de la solution. Attention, le service ne sera pas utilisable tant que son initialisation n'est pas terminée. Étant donné que celle ci est asynchrone pour pouvoir parser les ressources textuelles, il faudra s'assurer d'attendre la fin de l'initialisation avant tout usage.
@@ -10,7 +10,7 @@ import { Solution, City, Cohorte, Arc } from './include/interfaces';
 @Injectable({
   providedIn: 'root'
 })
-export class SolutionService {
+export class InstanceService {
   // TODO: Les données de la carte (villes ect...) sont créées manuellement, peut-être pouvoir choisir la liste des villes ?
   /**
    * URL des données de la carte
@@ -41,7 +41,7 @@ export class SolutionService {
   /**
    * Contient la solution proposée par le modèle sous la forme d'un objet Solution
    */
-  private solution: Solution;
+  private instance: Instance;
 
   /**
    * Faux tant que le parsing des ressources n'est pas terminé
@@ -54,7 +54,7 @@ export class SolutionService {
    */
   constructor(protected http:HttpClient) {
     this.citiesPosition = new Map();
-    this.solution = {
+    this.instance = {
       cities: [],
       types: this.types,
       cohortes: [],
@@ -71,7 +71,7 @@ export class SolutionService {
   {
     await this.parseCitiesPosition();
     await this.parseCities();
-    await this.parseSolution();
+    await this.parseInstance();
 
     this.isInitialized = true;
   }
@@ -88,7 +88,7 @@ export class SolutionService {
    * Renvoie l'instance texte en entrée du modèle
    * @returns L'instance texte en entrée du modèle sous la forme d'un Observable
    */
-  private getInstance(){
+  private getInstanceData(){
     return this.http.get(this.instanceUrl, { responseType: 'text'});
   }
 
@@ -110,10 +110,10 @@ export class SolutionService {
 
   /**
    * Renvoie la solution proposée par le modèle
-   * @returns La solution proposée par le modèle sous la forme d'un objet Solution
+   * @returns La solution proposée par le modèle sous la forme d'un objet Instance
    */
-  public getSolution(): Solution{
-    return this.solution;
+  public getInstance(): Instance{
+    return this.instance;
   }
 
   public getIsInitialized(): boolean {return this.isInitialized;}
@@ -155,7 +155,7 @@ export class SolutionService {
           id: id,
           cohorte: false
         }
-        this.solution.cities.push(cityToAdd);
+        this.instance.cities.push(cityToAdd);
       }
       finish = true;
     });
@@ -188,10 +188,10 @@ export class SolutionService {
   /**
    * Initialise la solution
    */
-  private async parseSolution(): Promise<void>{
+  private async parseInstance(): Promise<void>{
     var finish: boolean = false;
 
-    this.getInstance().subscribe(async(data) => {
+    this.getInstanceData().subscribe(async(data) => {
       var textLines = data.split('\n');
       var nbVilles = Number(textLines[0]);
       var nbCohortes = Number(textLines[1]);
@@ -199,10 +199,10 @@ export class SolutionService {
       var cohorteNbPatientsline = textLines[3].split('\t');
       for (var i = 0; i < nbCohortes; i++){
         var villeId = Number(cohorteVilleline[i]) - 1;
-        this.solution.cities[villeId].cohorte = true;
-        this.solution.cohortes.push({
+        this.instance.cities[villeId].cohorte = true;
+        this.instance.cohortes.push({
           nbPatients: Number(cohorteNbPatientsline[i]),
-          city: this.solution.cities[villeId].name,
+          city: this.instance.cities[villeId].name,
           types: []
         });
       }
@@ -211,16 +211,18 @@ export class SolutionService {
       var nbTubes = Number(textLines[5]);
       for(var i = 0; i < nbCohortes; i++){
         for(var j = 0; j < nbTypes; j++){
-          this.solution.cohortes[i].types.push({
+          this.instance.cohortes[i].types.push({
             name: this.types[j],
-            tubes: []
+            tubes: [],
+            cohorte: this.instance.cohortes[i]
           });
           var volumeTubesLine = textLines[6+i*nbCohortes+j].split('\t');
           for(var k = 0; k < nbTubes; k++){
-            this.solution.cohortes[i].types[j].tubes.push({
+            this.instance.cohortes[i].types[j].tubes.push({
               number: k+1,
               volume: Number(volumeTubesLine[k]),
-              arcs: []
+              arcs: [],
+              type: this.instance.cohortes[i].types[j]
             });
 
           }
@@ -238,21 +240,23 @@ export class SolutionService {
       var colors = ['red', 'blue', 'green'];
 
       for(var i = 0; i < nbCohortes; i++){
-        var villeCohorte = this.solution.cohortes[i].city;
+        var villeCohorte = this.instance.cohortes[i].city;
         for(var j = 0; j < nbTypes; j++){
           for(var k = 0; k < nbTubes; k++){
             var indice = i*nbTypes*nbTubes + j*nbTubes + k;
             for(var l = 0; l < indiceVilles[indice].length; l++){
-              var destination = this.findCityNameById(this.solution.cities, indiceVilles[indice][l]);
+              var tube: Tube = this.instance.cohortes[i].types[j].tubes[k];
 
-              var polylineColor = colors[this.solution.cohortes[i].types[j].tubes[k].number!-1];
+              var destination = this.findCityNameById(this.instance.cities, indiceVilles[indice][l]);
+
+              var polylineColor = colors[this.instance.cohortes[i].types[j].tubes[k].number!-1];
 
               var polyline = this.createPolyline(villeCohorte, destination,polylineColor);
               
               // TODO: Remplir automatiquement avec les demandes de chaque ville et pas 0
-              var arc = this.createArc(polyline,villeCohorte,destination,l,0);
+              var arc = this.createArc(polyline,villeCohorte,destination,l,0,tube);
 
-              this.solution.cohortes[i].types[j].tubes[k].arcs.push(arc); 
+              tube.arcs.push(arc); 
             }
           }
         }
@@ -288,13 +292,13 @@ export class SolutionService {
     });
   }
 
-  private createArc(polyline: L.Polyline, origin: string, destination: string, index: number, quantity: number): Arc
+  private createArc(polyline: L.Polyline, origin: string, destination: string, index: number, quantity: number, tube: Tube): Arc
   {
-    return { polyline: polyline, origin: origin, destination: destination, index: index, quantity: quantity };
+    return { polyline: polyline, origin: origin, destination: destination, index: index, quantity: quantity, tube: tube };
   }
 
   private parseDemandes(lines: string[], nbTypes: number, nbVilles: number): void{
-    for(var i = 0, s = this.solution; i < nbVilles; i++){
+    for(var i = 0, s = this.instance; i < nbVilles; i++){
         var ville: Map<string, number> = new Map();
         var dem = lines[i].split('\t');
         for(var j = 0; j < nbTypes; j++)

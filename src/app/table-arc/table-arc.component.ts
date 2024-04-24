@@ -1,5 +1,5 @@
 import { ArcService } from '../arc.service';
-import { SolutionService } from '../solution.service';
+import { InstanceService } from '../instance.service';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
@@ -10,7 +10,7 @@ import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
 import { NgIf } from '@angular/common';
 import { LatLngExpression } from 'leaflet';
-import { Arc, Solution } from '../include/interfaces';
+import { Arc, Instance } from '../include/interfaces';
 
 /**
  * TableArcComponent gère la modification des arcs pour chaque tube
@@ -34,9 +34,9 @@ export class TableArcComponent implements OnInit{
   dataSource!: MatTableDataSource<Arc>;
 
   /**
-   * Solution provenant de SolutionService (Initialisée en amont depuis le service même)
+   * Instance provenant de InstanceService (Initialisée en amont depuis le service même)
    */
-  newSolution: Solution = this.solutionService.getSolution();
+  instance: Instance = this.instanceService.getInstance();
 
   /**
    * Tableau d'Arc contenant la liste des arcs 
@@ -85,10 +85,10 @@ export class TableArcComponent implements OnInit{
 
   /**
    * Constructeur du composant
-   * @param solutionService Service permettant de créer l'objet Solution
+   * @param instanceService Service permettant de créer l'objet Instance
    * @param arcService Service permettant de créér les arcs
    */
-  constructor(private arcService:ArcService, private solutionService:SolutionService){
+  constructor(private arcService:ArcService, private instanceService:InstanceService){
   }
 
   /**
@@ -120,7 +120,7 @@ export class TableArcComponent implements OnInit{
   arcChange(index: number){
     var newOrigin:string = this.selectedOrigin[index];
     var newDestination:string = this.selectedDestination[index];
-    var citiesPosition = this.solutionService.getCitiesPosition();
+    var citiesPosition = this.instanceService.getCitiesPosition();
     var newOriginCoord: LatLngExpression = [citiesPosition.get(newOrigin)![0], citiesPosition.get(newOrigin)![1]];
     var newDestinationCoord: LatLngExpression = [citiesPosition.get(newDestination)![0], citiesPosition.get(newDestination)![1]];
     this.polylineArray[index].polyline.setLatLngs([newOriginCoord, newDestinationCoord]);

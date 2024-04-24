@@ -30,7 +30,12 @@ export interface Type {
     /**
      * Tableau de Tube associés au type
      */
-    tubes: Tube[]
+    tubes: Tube[],
+
+    /**
+     * Cohorte à laquelle est associée le type
+     */
+    cohorte: Cohorte
 }
 
 /**
@@ -50,7 +55,12 @@ export interface Tube {
     /**
      * Liste d'arcs associés au tube
      */
-    arcs: Arc[]
+    arcs: Arc[],
+
+    /**
+     * type du tube
+     */
+    type: Type
 }
 
 /**
@@ -80,7 +90,12 @@ export interface Arc {
     /**
      * Flux envoyé de la ville origin à la ville destination
      */
-    quantity: number
+    quantity: number,
+
+    /**
+     * Tube auquel est rattaché l'arc
+     */
+    tube: Tube
 }
 
 /**
@@ -104,21 +119,21 @@ export interface City {
 }
 
 /**
- * Interface pour la solution
+ * Interface pour l'instance
  */
-export interface Solution {
+export interface Instance {
     /**
-     * Tableau des villes de la solution
+     * Tableau des villes de l'instance
      */
     cities: City[],
 
     /**
-     * Types de tube de la solution
+     * Types de tube de l'instance
      */
     types: string[],
 
     /**
-     * Cohortes de la solution
+     * Cohortes de l'instance
      */
     cohortes: Cohorte[],
 

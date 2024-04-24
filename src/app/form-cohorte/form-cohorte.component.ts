@@ -3,12 +3,12 @@ import {FormsModule} from '@angular/forms';
 import {MatInputModule} from '@angular/material/input';
 import {MatSelectChange, MatSelectModule} from '@angular/material/select';
 import {MatFormFieldModule} from '@angular/material/form-field';
-import { SolutionService } from '../solution.service';
+import { InstanceService } from '../instance.service';
 import L, { LatLngExpression } from 'leaflet';
 import { __propKey } from 'tslib';
 import { ArcService } from '../arc.service';
 import { iconDefault, iconViolet } from '../include/leaflet-icons';
-import { Cohorte, Type, Tube, Arc, Solution } from '../include/interfaces';
+import { Cohorte, Type, Tube, Arc, Instance } from '../include/interfaces';
 
 /**
  * FormCohorteComponent gère la sélection de la cohorte, du type et du tube voulu
@@ -50,7 +50,8 @@ export class FormCohorteComponent {
    */
   type: Type = {
     name: "",
-    tubes: []
+    tubes: [],
+    cohorte: { nbPatients: 0, city: "", types: [] }
   }
 
   /**
@@ -59,21 +60,22 @@ export class FormCohorteComponent {
   tube: Tube = {
     number: 0,
     volume: 0,
-    arcs: []
+    arcs: [],
+    type: { name: "", tubes: [], cohorte: { nbPatients: 0, city: "", types: [] } }
   }
 
   /**
-   * Solution provenant de SolutionService (Initialisée en amont depuis le service même)
+   * Instance provenant de InstanceService (Initialisée en amont depuis le service même)
    */
-  solution: Solution = this.solutionService.getSolution();
+  instance: Instance = this.instanceService.getInstance();
   
   /**
    * Constructeur du composant
-   * @param solutionService Service permettant de créer l'objet Solution
+   * @param instanceService Service permettant de créer l'objet Instance
    * @param arcService Service permettant de créér les arcs
    */
-  constructor(private solutionService:SolutionService, private arcService:ArcService){
-    //this.solution = solutionService.solution;
+  constructor(private instanceService:InstanceService, private arcService:ArcService){
+    //this.instance = instanceService.instance;
   }
 
   /**
@@ -99,7 +101,8 @@ export class FormCohorteComponent {
     this.arcService.setCohorteCity(city);
     this.type = {
       name: "",
-      tubes: []
+      tubes: [],
+      cohorte: { nbPatients: 0, city: "", types: [] }
     }
     this.typeChange();
   }
@@ -111,7 +114,8 @@ export class FormCohorteComponent {
     this.tube = {
       number: 0,
       volume: 0,
-      arcs: []
+      arcs: [],
+      type: { name: "", tubes: [], cohorte: { nbPatients: 0, city: "", types: [] } }
     }
     this.tubeChange();
   }

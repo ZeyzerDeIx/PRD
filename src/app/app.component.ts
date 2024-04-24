@@ -1,12 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpClientModule} from '@angular/common/http';
-import { SolutionService } from './solution.service';
+import { InstanceService } from './instance.service';
 import { FormCohorteComponent } from './form-cohorte/form-cohorte.component';
 import { TableArcComponent } from './table-arc/table-arc.component';
 import { iconDefault } from './include/leaflet-icons';
 
 import * as L from 'leaflet';
-import { Solution } from './include/interfaces';
+import { Instance } from './include/interfaces';
 
 L.Marker.prototype.options.icon = iconDefault;
 
@@ -29,7 +29,7 @@ export class AppComponent implements OnInit {
   /**
    * Solution provenant de SolutionService (Initialisée en amont depuis le service même)
    */
-  solution: Solution = this.solutionService.getSolution();
+  solution: Instance = this.instanceService.getInstance();
 
    /**
    * Liste des marqueurs Leaflet de la carte (1 marqueur par ville)
@@ -38,9 +38,9 @@ export class AppComponent implements OnInit {
 
   /**
    * Constructeur du composant
-   * @param solutionService Service permettant de créer l'objet Solution
+   * @param instanceService Service permettant de créer l'objet Solution
    */
-  constructor(private solutionService:SolutionService) {
+  constructor(private instanceService:InstanceService) {
   }
 
   /**
@@ -50,10 +50,10 @@ export class AppComponent implements OnInit {
     this.loadMap();
 
     //on attend que le solution service soit initialisé
-    while(!this.solutionService.getIsInitialized())
+    while(!this.instanceService.getIsInitialized())
       await new Promise(resolve => setTimeout(resolve, 10));
 
-    this.markersArray = this.solutionService.drawCities(this.map, this.solution.cities);
+    this.markersArray = this.instanceService.drawCities(this.map, this.solution.cities);
     this.createMarkersPopup()
   }
 
