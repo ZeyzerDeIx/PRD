@@ -29,7 +29,7 @@ export class AppComponent implements OnInit {
   /**
    * Solution provenant de SolutionService (Initialisée en amont depuis le service même)
    */
-  solution: Instance = this.instanceService.getInstance();
+  instance: Instance = this.instanceService.getInstance();
 
    /**
    * Liste des marqueurs Leaflet de la carte (1 marqueur par ville)
@@ -53,7 +53,7 @@ export class AppComponent implements OnInit {
     while(!this.instanceService.getIsInitialized())
       await new Promise(resolve => setTimeout(resolve, 10));
 
-    this.markersArray = this.instanceService.drawCities(this.map, this.solution.cities);
+    this.markersArray = this.instanceService.drawCities(this.map, this.instance.cities);
     this.createMarkersPopup()
   }
 
@@ -87,8 +87,8 @@ export class AppComponent implements OnInit {
                                     Demande : 
                                     <ul>`;
 
-      for (var i = 0; i < this.solution.types.length; i++){
-        popupContent += `<li>${ this.solution.types[i] } : ${ this.solution.demande.get(city)!.get(this.solution.types[i]) } mL</li>`
+      for (var i = 0; i < this.instance.types.length; i++){
+        popupContent += `<li>${ this.instance.types[i] } : ${ this.instance.demande.get(city)!.get(this.instance.types[i]) } mL</li>`
       }
 
       popupContent += `</ul></div>`

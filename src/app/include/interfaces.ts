@@ -118,6 +118,23 @@ export interface City {
     cohorte: boolean
 }
 
+export interface Solution {
+    /**
+     * Tableau des arcs de la solution
+     */
+    arcs: Arc[],
+
+    /**
+     * Instance à laquelle est rattachée la solution
+     */
+    instance: Instance | null,
+
+    /**
+     * Nombre d'alicotage
+     */
+    nbAlico: number
+}
+
 /**
  * Interface pour l'instance
  */
@@ -136,6 +153,11 @@ export interface Instance {
      * Cohortes de l'instance
      */
     cohortes: Cohorte[],
+
+    /**
+     * Solution de l'instance
+     */
+    solution: Solution | null,
 
     /**
      * Demande de chaque type de tube pour chaque ville

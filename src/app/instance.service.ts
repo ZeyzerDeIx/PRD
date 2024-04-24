@@ -48,6 +48,11 @@ export class InstanceService {
    */
   private isInitialized: boolean = false;
 
+  private nbTubes: number = 0;
+  private nbVilles: number = 0;
+  private nbTypes: number = 0;
+  private nbCohortes: number = 0;
+
   /**
    * Constructeur du service
    * @param http Client HTTP permettant de faire les requêtes pour récupérer les données via les fichiers txt
@@ -58,6 +63,7 @@ export class InstanceService {
       cities: [],
       types: this.types,
       cohortes: [],
+      solution: { arcs: [], instance: null, nbAlico: 0 },
       demande: new Map<string, Map<string, number>>()
     };
 
@@ -96,7 +102,7 @@ export class InstanceService {
    * Renvoie la solution texte proposée par le modèle
    * @returns La solution texte proposée par le modèle sous la forme d'un Observable
    */
-  private getInstanceSolution(){
+  private getInstanceSolutionData(){
     return this.http.get(this.instanceSolutionUrl, { responseType: 'text'});
   }
 
@@ -193,11 +199,11 @@ export class InstanceService {
 
     this.getInstanceData().subscribe(async(data) => {
       var textLines = data.split('\n');
-      var nbVilles = Number(textLines[0]);
-      var nbCohortes = Number(textLines[1]);
+      this.nbVilles = Number(textLines[0]);
+      this.nbCohortes = Number(textLines[1]);
       var cohorteVilleline = textLines[2].split('\t');
       var cohorteNbPatientsline = textLines[3].split('\t');
-      for (var i = 0; i < nbCohortes; i++){
+      for (var i = 0; i < this.nbCohortes; i++){
         var villeId = Number(cohorteVilleline[i]) - 1;
         this.instance.cities[villeId].cohorte = true;
         this.instance.cohortes.push({
@@ -207,17 +213,17 @@ export class InstanceService {
         });
       }
 
-      var nbTypes = Number(textLines[4]);
-      var nbTubes = Number(textLines[5]);
-      for(var i = 0; i < nbCohortes; i++){
-        for(var j = 0; j < nbTypes; j++){
+      this.nbTypes = Number(textLines[4]);
+      this.nbTubes = Number(textLines[5]);
+      for(var i = 0; i < this.nbCohortes; i++){
+        for(var j = 0; j < this.nbTypes; j++){
           this.instance.cohortes[i].types.push({
             name: this.types[j],
             tubes: [],
             cohorte: this.instance.cohortes[i]
           });
-          var volumeTubesLine = textLines[6+i*nbCohortes+j].split('\t');
-          for(var k = 0; k < nbTubes; k++){
+          var volumeTubesLine = textLines[6+i*this.nbCohortes+j].split('\t');
+          for(var k = 0; k < this.nbTubes; k++){
             this.instance.cohortes[i].types[j].tubes.push({
               number: k+1,
               volume: Number(volumeTubesLine[k]),
@@ -228,35 +234,53 @@ export class InstanceService {
           }
         }
       }
+      var borneInf: number = 6+this.nbTypes*this.nbCohortes;
+      var lines: string[] = textLines.slice(borneInf,borneInf + this.nbVilles);
+      await this.parseDemandes(lines,this.nbTypes,this.nbVilles);
+      await this.parseSolution();
+      
+      finish = true;
+    });
 
-      var borneInf: number = 6+nbTypes*nbCohortes;
-      var lines: string[] = textLines.slice(borneInf,borneInf + nbVilles);
-      this.parseDemandes(lines,nbTypes,nbVilles);
+    while(!finish)
+      await new Promise(resolve => setTimeout(resolve, 10));
+  }
 
+  private async parseSolution(): Promise<void>
+  {
+    var finish: boolean = false;
 
-      var indiceVilles: number[][] = [];
-      await this.parseRepartitionTube(indiceVilles);
+    //permet de passer les premières lignes (redondance des données)
+    var startAt: number = this.nbCohortes*this.nbTypes*this.nbTubes;
+    var colors = ['red', 'blue', 'green'];
 
-      var colors = ['red', 'blue', 'green'];
+    this.getInstanceSolutionData().subscribe(data =>{
+      this.instance.solution = { arcs: [], instance: this.instance, nbAlico: 0 };
+      //transforme le fichier en un tableau de string et ignore les premières lignes
+      var lines: string[] = data.split('\n').slice(startAt);
+      var index: number = 0;
+      for(var i = 0; i < this.nbCohortes; i++){
+        for(var j = 0; j < this.nbTypes; j++){
+          for(var k = 0; k < this.nbTubes; k++){
+            var tubeNum: number = i*this.nbTypes*this.nbTubes + j*this.nbTubes + k;
+            var tube: Tube = this.instance.cohortes[i].types[j].tubes[k];
+            var nbArcs: number = Number(lines[index++]);
+            for(var l = 0; l < nbArcs; l++){
 
-      for(var i = 0; i < nbCohortes; i++){
-        var villeCohorte: City = this.instance.cohortes[i].city;
-        for(var j = 0; j < nbTypes; j++){
-          for(var k = 0; k < nbTubes; k++){
-            var indice = i*nbTypes*nbTubes + j*nbTubes + k;
-            for(var l = 0; l < indiceVilles[indice].length; l++){
-              var tube: Tube = this.instance.cohortes[i].types[j].tubes[k];
+              var split: string[] = lines[index++].split('\t');
 
-              var destination: City = this.findCityById(this.instance.cities, indiceVilles[indice][l]);
+              var origin: City = this.findCityById(Number(split[0]));
+              var destination: City = this.findCityById(Number(split[1]));
 
               var polylineColor = colors[this.instance.cohortes[i].types[j].tubes[k].number!-1];
 
-              var polyline = this.createPolyline(villeCohorte, destination,polylineColor);
+              var polyline = this.createPolyline(origin, destination,polylineColor);
               
               // TODO: Remplir automatiquement avec les demandes de chaque ville et pas 0
-              var arc = this.createArc(polyline,villeCohorte,destination,l,0,tube);
+              var arc = this.createArc(polyline,origin,destination,l,0,tube);
 
-              tube.arcs.push(arc); 
+              tube.arcs.push(arc);
+              this.instance.solution.arcs.push(arc);
             }
           }
         }
@@ -314,7 +338,7 @@ export class InstanceService {
   private async parseRepartitionTube(indiceVilles: number[][]): Promise<void> {
     var finish: boolean = false;
 
-    this.getInstanceSolution().subscribe(data =>{
+    this.getInstanceSolutionData().subscribe(data =>{
       var textLines = data.split('\n');
       for(var i = 0; i < textLines.length; i++){
         var line = textLines[i].split(' ');
@@ -335,10 +359,10 @@ export class InstanceService {
    * Renvoie la ville associée à l'id donné en paramètre
    * @param cities Le tableau des villes à chercher
    * @param id Le numéro de la ville à trouver
-   * @returns Le nom de la ville correspondant à l'id donné en paramètre, sinon une chaîne vide si aucune ville ne correspond
+   * @returns La ville correspondant à l'id donné en paramètre, sinon une ville null si aucune ville ne correspond
    */
-  private findCityById(cities:City[], id:Number) : City {
-    for (const city of cities){
+  private findCityById(id:Number) : City {
+    for (const city of this.instance.cities){
       if (city.id == id){
         return city;
       }
