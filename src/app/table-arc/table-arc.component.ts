@@ -26,7 +26,7 @@ export class TableArcComponent implements OnInit{
   /**
    * Variable pour les titres des colonnes de l'objet MatTable
    */
-  displayedColumns: string[] = ['number', 'origin', 'destination'];
+  displayedColumns: string[] = ['number', 'origin', 'destination', 'quantity'];
 
   /**
    * Variable contenant les données des arcs pour remplir l'objet MatTable
