@@ -39,30 +39,17 @@ export class FormCohorteComponent {
   /**
    * Variable contenant la cohorte choisie dans le formulaire
    */
-  cohorte: Cohorte = {
-    nbPatients: 0,
-    city: { name: "", id: -1, cohorte: false },
-    types: []
-  };
+  cohorte: Cohorte = new Cohorte();
 
   /**
    * Variable contenant le type de tube choisi dans le formulaire
    */
-  type: Type = {
-    name: "",
-    tubes: [],
-    cohorte: { nbPatients: 0, city: { name: "", id: -1, cohorte: false }, types: [] }
-  }
+  type: Type = new Type();
 
   /**
    * Variable contenant le tube choisi dans le formulaire
    */
-  tube: Tube = {
-    number: 0,
-    volume: 0,
-    arcs: [],
-    type: { name: "", tubes: [], cohorte: { nbPatients: 0, city: { name: "", id: -1, cohorte: false }, types: [] } }
-  }
+  tube: Tube = new Tube();
 
   /**
    * Instance provenant de InstanceService (Initialisée en amont depuis le service même)
@@ -99,11 +86,7 @@ export class FormCohorteComponent {
       }
     }
     this.arcService.setCohorteCity(city);
-    this.type = {
-      name: "",
-      tubes: [],
-      cohorte: { nbPatients: 0, city: { name: "", id: -1, cohorte: false }, types: [] }
-    }
+    this.type = new Type();
     this.typeChange();
   }
 
@@ -111,12 +94,7 @@ export class FormCohorteComponent {
    * Gère la sélection d'un nouveau type de tube dans le formulaire
    */
   typeChange(){
-    this.tube = {
-      number: 0,
-      volume: 0,
-      arcs: [],
-      type: { name: "", tubes: [], cohorte: { nbPatients: 0, city: { name: "", id: -1, cohorte: false }, types: [] } }
-    }
+    this.tube = new Tube();
     this.tubeChange();
   }
 

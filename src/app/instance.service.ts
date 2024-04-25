@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import L, { LatLngExpression } from 'leaflet';
 import 'leaflet-arrowheads';
-import { Instance, City, Cohorte, Arc, Tube } from './include/interfaces';
+import { Instance, City, Cohorte, Arc, Tube, Solution } from './include/interfaces';
 
 /**
  * Service gérant la construction de la solution. Attention, le service ne sera pas utilisable tant que son initialisation n'est pas terminée. Étant donné que celle ci est asynchrone pour pouvoir parser les ressources textuelles, il faudra s'assurer d'attendre la fin de l'initialisation avant tout usage.
@@ -59,13 +59,7 @@ export class InstanceService {
    */
   constructor(protected http:HttpClient) {
     this.citiesPosition = new Map();
-    this.instance = {
-      cities: [],
-      types: this.types,
-      cohortes: [],
-      solution: { arcs: [], instance: null, nbAlico: 0 },
-      demande: new Map<string, Map<string, number>>()
-    };
+    this.instance = new Instance([], this.types);
 
     this.initService();
   }
@@ -138,7 +132,7 @@ export class InstanceService {
 
       const marker = L.marker(latlngs, {alt: city.name});
 
-      // Ajout du marqueur à la cart
+      // Ajout du marqueur à la carte
       marker.addTo(map);
 
       markersArray.push(marker);
@@ -156,11 +150,7 @@ export class InstanceService {
       for (const city of data.features) {
         const name = city.properties.name;
         const id = city.id; 
-        var cityToAdd: City = {
-          name: name,
-          id: id,
-          cohorte: false
-        }
+        var cityToAdd: City = new City(name,id);
         this.instance.cities.push(cityToAdd);
       }
       finish = true;
@@ -227,6 +217,7 @@ export class InstanceService {
             this.instance.cohortes[i].types[j].tubes.push({
               number: k+1,
               volume: Number(volumeTubesLine[k]),
+              consumed: 0,
               arcs: [],
               type: this.instance.cohortes[i].types[j]
             });
@@ -255,7 +246,7 @@ export class InstanceService {
     var colors = ['red', 'blue', 'green'];
 
     this.getInstanceSolutionData().subscribe(data =>{
-      this.instance.solution = { arcs: [], instance: this.instance, nbAlico: 0 };
+      this.instance.solution = new Solution([], this.instance);
       //transforme le fichier en un tableau de string et ignore les premières lignes
       var lines: string[] = data.split('\n').slice(startAt);
       var index: number = 0;
@@ -277,14 +268,15 @@ export class InstanceService {
               var polyline = this.createPolyline(origin, destination,polylineColor);
               
               // TODO: Remplir automatiquement avec les demandes de chaque ville et pas 0
-              var arc = this.createArc(polyline,origin,destination,l,0,tube);
-
+              var arc = this.createArc(polyline,origin,destination,l,tube);
+              arc.origin.arcs.push(arc);
               tube.arcs.push(arc);
               this.instance.solution.arcs.push(arc);
             }
           }
         }
       }
+      this.caculateArcsQuantities();
       finish = true;
     });
 
@@ -292,8 +284,15 @@ export class InstanceService {
       await new Promise(resolve => setTimeout(resolve, 10));
   }
 
-  private createPolyline(origin: City, destination: City, color: string): L.Polyline
-  {
+  private caculateArcsQuantities(): void{
+    //TODO
+    //for(var i = 0; this.instance.solution.arcs)
+  }
+
+  /*
+   * Créer une Polyline
+   */
+  private createPolyline(origin: City, destination: City, color: string): L.Polyline{
     var pos: Map<string,number[]> = this.citiesPosition;
     
     var originPoint: LatLngExpression = 
@@ -316,18 +315,17 @@ export class InstanceService {
     });
   }
 
-  private createArc(polyline: L.Polyline, origin: City, destination: City, index: number, quantity: number, tube: Tube): Arc
-  {
-    return { polyline: polyline, origin: origin, destination: destination, index: index, quantity: quantity, tube: tube };
+  private createArc(polyline: L.Polyline, origin: City, destination: City, index: number, tube: Tube): Arc{
+    return { polyline: polyline, origin: origin, destination: destination, index: index, quantity: 0, tube: tube };
   }
 
   private parseDemandes(lines: string[], nbTypes: number, nbVilles: number): void{
-    for(var i = 0, s = this.instance; i < nbVilles; i++){
+    for(var i = 0, inst = this.instance; i < nbVilles; i++){
         var ville: Map<string, number> = new Map();
         var dem = lines[i].split('\t');
         for(var j = 0; j < nbTypes; j++)
-          ville.set(s.types[j],Number(dem[j]));
-        s.demande.set(s.cities[i].name, ville);
+          ville.set(inst.types[j],Number(dem[j]));
+        inst.demande.set(inst.cities[i].name, ville);
       }
   }
 
@@ -367,6 +365,6 @@ export class InstanceService {
         return city;
       }
     }
-    return { name: "", id: -1, cohorte: false };
+    return { name: "", id: -1, cohorte: false, arcs: [] };
   }
 }

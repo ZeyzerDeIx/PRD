@@ -1,166 +1,232 @@
 /**
  * Interface pour une cohorte
  */
-export interface Cohorte {
+export class Cohorte {
     /**
      * Nombre de patients de la cohorte
      */
-    nbPatients: number | undefined,
+    nbPatients: number | undefined;
 
     /**
      * Ville de départ de la cohorte
      */
-    city: City,
+    city: City;
 
     /**
      * Types de tube de la cohorte
      */
-    types: Type[]
+    types: Type[];
+
+    constructor(nbPatients: number | undefined = undefined, city: City = new City(), types: Type[] = []) {
+        this.nbPatients = nbPatients;
+        this.city = city;
+        this.types = types;
+    }
 }
 
 /**
  * Interface pour un type de tube
  */
-export interface Type {
+export class Type {
     /**
      * Nom du type de tube
      */
-    name: string,
+    name: string;
 
     /**
      * Tableau de Tube associés au type
      */
-    tubes: Tube[],
+    tubes: Tube[];
 
     /**
      * Cohorte à laquelle est associée le type
      */
-    cohorte: Cohorte
+    cohorte: Cohorte;
+
+    constructor(name: string = '', tubes: Tube[] = [], cohorte: Cohorte = new Cohorte()) {
+        this.name = name;
+        this.tubes = tubes;
+        this.cohorte = cohorte;
+    }
 }
 
 /**
  * Interface pour un tube / échantillon sanguin / prélèvement
  */
-export interface Tube {
+export class Tube {
     /**
      * Numéro du tube
      */
-    number: number,
+    number: number;
 
     /**
      * Volume / quantité du tube
      */
-    volume: number,
+    volume: number;
+
+    /**
+     * Volume consommé
+     */
+    consumed: number;
 
     /**
      * Liste d'arcs associés au tube
      */
-    arcs: Arc[],
+    arcs: Arc[];
 
     /**
      * type du tube
      */
-    type: Type
+    type: Type;
+
+    constructor(number: number = 0, volume: number = 0, consumed: number = 0, arcs: Arc[] = [], type: Type = new Type()) {
+        this.number = number;
+        this.volume = volume;
+        this.consumed = consumed;
+        this.arcs = arcs;
+        this.type = type;
+    }
 }
 
 /**
  * Interface pour un arc
  */
-export interface Arc {
+export class Arc {
     /**
      * Objet Polyline de Leaflet, i.e. l'arc dessiné sur la carte
      */
-    polyline: L.Polyline,
+    polyline: L.Polyline;
 
     /**
      * Nom de la ville de départ 
      */
-    origin: City,
+    origin: City;
 
     /**
      * Nom de la ville d'arrivée 
      */
-    destination: City,
+    destination: City;
 
     /**
      * Numéro de l'arc
      */
-    index: number,
+    index: number;
 
     /**
      * Flux envoyé de la ville origin à la ville destination
      */
-    quantity: number,
+    quantity: number;
 
     /**
      * Tube auquel est rattaché l'arc
      */
-    tube: Tube
+    tube: Tube;
+
+    constructor(polyline: L.Polyline, origin: City = new City(), destination: City = new City(), index: number = 0, quantity: number = 0, tube: Tube = new Tube()) {
+        this.polyline = polyline;
+        this.origin = origin;
+        this.destination = destination;
+        this.index = index;
+        this.quantity = quantity;
+        this.tube = tube;
+    }
 }
 
 /**
  * Interface pour une ville
  */
-export interface City {
+export class City {
     /**
      * Nom de la ville
      */
-    name: string,
+    name: string;
 
     /**
      * Indice de la ville
      */
-    id: number,
+    id: number;
 
     /**
      * Indique si la ville est une cohorte ou non
      */
-    cohorte: boolean
+    cohorte: boolean;
+
+    /**
+     * Tableau des arcs de la ville
+     */
+    arcs: Arc[];
+
+    constructor(name: string = '', id: number = 0, cohorte: boolean = false, arcs: Arc[] = []) {
+        this.name = name;
+        this.id = id;
+        this.cohorte = cohorte;
+        this.arcs = arcs;
+    }
 }
 
-export interface Solution {
+export class Solution {
     /**
      * Tableau des arcs de la solution
      */
-    arcs: Arc[],
+    arcs: Arc[];
 
     /**
      * Instance à laquelle est rattachée la solution
      */
-    instance: Instance | null,
+    instance: Instance | null;
 
     /**
      * Nombre d'alicotage
      */
-    nbAlico: number
+    nbAlico: number;
+
+    constructor(arcs: Arc[] = [], instance: Instance | null = null, nbAlico: number = 0) {
+        this.arcs = arcs;
+        this.instance = instance;
+        this.nbAlico = nbAlico;
+    }
 }
 
 /**
  * Interface pour l'instance
  */
-export interface Instance {
+export class Instance {
     /**
      * Tableau des villes de l'instance
      */
-    cities: City[],
+    cities: City[];
 
     /**
      * Types de tube de l'instance
      */
-    types: string[],
+    types: string[];
 
     /**
      * Cohortes de l'instance
      */
-    cohortes: Cohorte[],
+    cohortes: Cohorte[];
 
     /**
      * Solution de l'instance
      */
-    solution: Solution | null,
+    solution: Solution | null;
 
     /**
      * Demande de chaque type de tube pour chaque ville
      */
     demande: Map<string, Map<string, number>>;
+
+    constructor(
+        cities: City[] = [],
+        types: string[] = [],
+        cohortes: Cohorte[] = [],
+        solution: Solution | null = null,
+        demande: Map<string, Map<string, number>> = new Map()
+    ) {
+        this.cities = cities;
+        this.types = types;
+        this.cohortes = cohortes;
+        this.solution = solution;
+        this.demande = demande;
+    }
 }

@@ -12,7 +12,7 @@ export class ArcService {
   /**
    * Ville de départ de la cohorte
    */
-  private cohorteCity: City = { name: "", id: -1, cohorte: false };
+  private cohorteCity: City = { name: "", id: -1, cohorte: false, arcs: [] };
 
   /**
    * Liste des arcs
