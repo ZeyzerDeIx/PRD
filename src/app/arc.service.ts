@@ -1,5 +1,5 @@
 import { EventEmitter, Injectable } from '@angular/core';
-import { Arc, City } from './include/interfaces';
+import { Arc, City } from './include/modelClasses';
 
 /**
  * Service pour gérer les arcs de la carte

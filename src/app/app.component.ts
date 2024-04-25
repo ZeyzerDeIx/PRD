@@ -6,7 +6,7 @@ import { TableArcComponent } from './table-arc/table-arc.component';
 import { iconDefault } from './include/leaflet-icons';
 
 import * as L from 'leaflet';
-import { Instance } from './include/interfaces';
+import { Instance } from './include/modelClasses';
 
 L.Marker.prototype.options.icon = iconDefault;
 

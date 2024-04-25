@@ -8,7 +8,7 @@ import L, { LatLngExpression } from 'leaflet';
 import { __propKey } from 'tslib';
 import { ArcService } from '../arc.service';
 import { iconDefault, iconViolet } from '../include/leaflet-icons';
-import { Cohorte, Type, Tube, Arc, Instance, City } from '../include/interfaces';
+import { Cohorte, Type, Tube, Arc, Instance, City } from '../include/modelClasses';
 
 /**
  * FormCohorteComponent gère la sélection de la cohorte, du type et du tube voulu

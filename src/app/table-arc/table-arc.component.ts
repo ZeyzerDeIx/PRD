@@ -10,7 +10,7 @@ import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
 import { NgIf } from '@angular/common';
 import { LatLngExpression } from 'leaflet';
-import { Arc, Instance } from '../include/interfaces';
+import { Arc, Instance } from '../include/modelClasses';
 
 /**
  * TableArcComponent gère la modification des arcs pour chaque tube
