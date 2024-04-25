@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import L, { LatLngExpression } from 'leaflet';
 import 'leaflet-arrowheads';
-import { Instance, City, Cohorte, Arc, Tube, Solution } from './include/modelClasses';
+import { Instance, City, Cohorte, Arc, Tube, Solution, Type } from './include/modelClasses';
 
 /**
  * Service gérant la construction de la solution. Attention, le service ne sera pas utilisable tant que son initialisation n'est pas terminée. Étant donné que celle ci est asynchrone pour pouvoir parser les ressources textuelles, il faudra s'assurer d'attendre la fin de l'initialisation avant tout usage.
@@ -65,42 +65,6 @@ export class InstanceService {
   }
 
   /**
-   * Initialise le service de manière synchrone. Une fois le processus terminé, getIsInitilized renverra true.
-   */
-  private async initService(): Promise<void>
-  {
-    await this.parseCitiesPosition();
-    await this.parseCities();
-    await this.parseInstance();
-
-    this.isInitialized = true;
-  }
-
-  /**
-   * Renvoie les données de la carte
-   * @returns Les données de la carte sous la forme d'un Observable
-   */
-  private getMapData(){
-    return this.http.get(this.mapDataUrl);
-  }
-
-  /** 
-   * Renvoie l'instance texte en entrée du modèle
-   * @returns L'instance texte en entrée du modèle sous la forme d'un Observable
-   */
-  private getInstanceData(){
-    return this.http.get(this.instanceUrl, { responseType: 'text'});
-  }
-
-  /**
-   * Renvoie la solution texte proposée par le modèle
-   * @returns La solution texte proposée par le modèle sous la forme d'un Observable
-   */
-  private getInstanceSolutionData(){
-    return this.http.get(this.instanceSolutionUrl, { responseType: 'text'});
-  }
-
-  /**
    * Renvoie la position des marqueurs de chaque ville
    * @returns Un tableau contenant la position des marqueurs associés à chaque ville
    */
@@ -139,6 +103,50 @@ export class InstanceService {
     }
     
     return markersArray;
+  }
+
+
+
+  //------------------------------------------------------------//
+  //--------------------------PRIVATE---------------------------//
+  //------------------------------------------------------------//
+
+
+
+  /**
+   * Initialise le service de manière synchrone. Une fois le processus terminé, getIsInitilized renverra true.
+   */
+  private async initService(): Promise<void>
+  {
+    await this.parseCitiesPosition();
+    await this.parseCities();
+    await this.parseInstance();
+
+    this.isInitialized = true;
+  }
+
+  /**
+   * Renvoie les données de la carte
+   * @returns Les données de la carte sous la forme d'un Observable
+   */
+  private getMapData(){
+    return this.http.get(this.mapDataUrl);
+  }
+
+  /** 
+   * Renvoie l'instance texte en entrée du modèle
+   * @returns L'instance texte en entrée du modèle sous la forme d'un Observable
+   */
+  private getInstanceData(){
+    return this.http.get(this.instanceUrl, { responseType: 'text'});
+  }
+
+  /**
+   * Renvoie la solution texte proposée par le modèle
+   * @returns La solution texte proposée par le modèle sous la forme d'un Observable
+   */
+  private getInstanceSolutionData(){
+    return this.http.get(this.instanceSolutionUrl, { responseType: 'text'});
   }
 
   /**
@@ -182,7 +190,7 @@ export class InstanceService {
   }
 
   /**
-   * Initialise la solution
+   * Initialise l'instance en parsant le fichier instance
    */
   private async parseInstance(): Promise<void>{
     var finish: boolean = false;
@@ -207,11 +215,7 @@ export class InstanceService {
       this.nbTubes = Number(textLines[5]);
       for(var i = 0; i < this.nbCohortes; i++){
         for(var j = 0; j < this.nbTypes; j++){
-          this.instance.cohortes[i].types.push({
-            name: this.types[j],
-            tubes: [],
-            cohorte: this.instance.cohortes[i]
-          });
+          this.instance.cohortes[i].types.push(new Type(this.types[j],[],this.instance.cohortes[i]));
           var volumeTubesLine = textLines[6+i*this.nbCohortes+j].split('\t');
           for(var k = 0; k < this.nbTubes; k++){
             this.instance.cohortes[i].types[j].tubes.push({
@@ -227,7 +231,7 @@ export class InstanceService {
       }
       var borneInf: number = 6+this.nbTypes*this.nbCohortes;
       var lines: string[] = textLines.slice(borneInf,borneInf + this.nbVilles);
-      await this.parseDemandes(lines,this.nbTypes,this.nbVilles);
+      await this.parseDemandes(lines);
       await this.parseSolution();
       
       finish = true;
@@ -237,6 +241,9 @@ export class InstanceService {
       await new Promise(resolve => setTimeout(resolve, 10));
   }
 
+  /**
+   * Initialise la solution de l'instance en parsant le fichier solution
+   */
   private async parseSolution(): Promise<void>
   {
     var finish: boolean = false;
@@ -268,7 +275,7 @@ export class InstanceService {
               var polyline = this.createPolyline(origin, destination,polylineColor);
               
               // TODO: Remplir automatiquement avec les demandes de chaque ville et pas 0
-              var arc = this.createArc(polyline,origin,destination,l,tube);
+              var arc = new Arc(polyline,origin,destination,l,0,tube);
               arc.origin.arcs.push(arc);
               tube.arcs.push(arc);
               this.instance.solution.arcs.push(arc);
@@ -284,13 +291,47 @@ export class InstanceService {
       await new Promise(resolve => setTimeout(resolve, 10));
   }
 
+  /**
+   * Calcul et met à jour les quantités qui circulents dans chaque arc de la solution
+   */
   private caculateArcsQuantities(): void{
-    //TODO
-    //for(var i = 0; this.instance.solution.arcs)
+    var arcs: Arc[] = this.instance.solution!.arcs;
+    for(var i = 0; i < arcs.length; i++){
+      arcs[i].quantity = this.requiredVolumeRecursive(arcs[i].destination, arcs[i].tube.type);
+    }
   }
 
-  /*
+  /**
+   * Calcul le volume demandé par une ville <b><u>et ses succeusseurs</u></b> pour le type de tube donnée en paramètre
+   * @param city La ville dont on souhaite connaitre la demande
+   * @param type Le type de tube dont on souhaite connaitre la demande
+   */
+  private requiredVolumeRecursive(city: City, type: Type): number{
+    var volume: number = this.requiredVolume(city,type);
+    for(var i = 0; i < city.arcs.length; i++){
+      if(city.arcs[i].tube.type == type){
+        var dest: City = city.arcs[i].destination;
+        volume += this.requiredVolumeRecursive(dest,type);
+      }
+    }
+    return volume;
+  }
+
+  /**
+   * Calcul le volume demandé par une ville pour le type de tube donnée en paramètre
+   * @param city La ville dont on souhaite connaitre la demande
+   * @param type Le type de tube dont on souhaite connaitre la demande
+   */
+  private requiredVolume(city: City, type: Type): number{
+    var cityDem: Map<string, number> = this.instance.demande.get(city.name) as Map<string, number>;
+    return cityDem.get(type.name) as number;
+  }
+
+  /**
    * Créer une Polyline
+   * @param origin La ville d'origine de l'arc/la polyline
+   * @param destination La ville de destination de l'arc/la polyline
+   * @param color La couleur d'affichage de la polyline
    */
   private createPolyline(origin: City, destination: City, color: string): L.Polyline{
     var pos: Map<string,number[]> = this.citiesPosition;
@@ -303,27 +344,27 @@ export class InstanceService {
 
     var latlngs:LatLngExpression[] = [originPoint, destinationPoint];
 
-    var polylineOptions = {color: color, weight: 5, opacity: 0.7};
+    var polylineOptions = {color: color, weight: 4, opacity: 0.5};
 
     return L.polyline(latlngs, polylineOptions)
     .arrowheads({
-      size: "15px",
-      opacity: 0.7,
+      size: "25px",
+      opacity: 0.5,
       fill: false,
       yawn: 75,
       offsets: {end: '75px'}
     });
   }
 
-  private createArc(polyline: L.Polyline, origin: City, destination: City, index: number, tube: Tube): Arc{
-    return { polyline: polyline, origin: origin, destination: destination, index: index, quantity: 0, tube: tube };
-  }
-
-  private parseDemandes(lines: string[], nbTypes: number, nbVilles: number): void{
-    for(var i = 0, inst = this.instance; i < nbVilles; i++){
+  /**
+   * Initialise la liste des demandes en parsant le texte fourni
+   * @param lines Les lignes à parser
+   */
+  private parseDemandes(lines: string[]): void{
+    for(var i = 0, inst = this.instance; i < this.nbVilles; i++){
         var ville: Map<string, number> = new Map();
         var dem = lines[i].split('\t');
-        for(var j = 0; j < nbTypes; j++)
+        for(var j = 0; j < this.nbTypes; j++)
           ville.set(inst.types[j],Number(dem[j]));
         inst.demande.set(inst.cities[i].name, ville);
       }
@@ -355,9 +396,8 @@ export class InstanceService {
 
   /**
    * Renvoie la ville associée à l'id donné en paramètre
-   * @param cities Le tableau des villes à chercher
    * @param id Le numéro de la ville à trouver
-   * @returns La ville correspondant à l'id donné en paramètre, sinon une ville null si aucune ville ne correspond
+   * @returns La ville correspondant à l'id donné en paramètre, sinon une ville par defaut si aucune ville ne correspond
    */
   private findCityById(id:Number) : City {
     for (const city of this.instance.cities){
@@ -365,6 +405,6 @@ export class InstanceService {
         return city;
       }
     }
-    return { name: "", id: -1, cohorte: false, arcs: [] };
+    return new City();
   }
 }
