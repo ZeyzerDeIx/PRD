@@ -79,12 +79,15 @@ export class Tube {
      */
     type: Type;
 
-    constructor(number: number = 0, volume: number = 0, consumed: number = 0, arcs: Arc[] = [], type: Type = new Type()) {
+    nbAlico: number;
+
+    constructor(number: number = -1, volume: number = 0, consumed: number = 0, arcs: Arc[] = [], type: Type = new Type(), nbAlico: number = 0) {
         this.number = number;
         this.volume = volume;
         this.consumed = consumed;
         this.arcs = arcs;
         this.type = type;
+        this.nbAlico = nbAlico;
     }
 }
 

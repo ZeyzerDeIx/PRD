@@ -3,6 +3,7 @@ import { HttpClientModule} from '@angular/common/http';
 import { InstanceService } from './instance.service';
 import { FormCohorteComponent } from './form-cohorte/form-cohorte.component';
 import { TableArcComponent } from './table-arc/table-arc.component';
+import { DataDisplayerComponent } from './data-displayer/data-displayer.component';
 import { iconDefault } from './include/leaflet-icons';
 
 import * as L from 'leaflet';
@@ -17,7 +18,7 @@ L.Marker.prototype.options.icon = iconDefault;
   selector: 'app-root',
   standalone: true,
   templateUrl: './app.component.html',
-  imports: [HttpClientModule, FormCohorteComponent, TableArcComponent],
+  imports: [HttpClientModule, FormCohorteComponent, TableArcComponent, DataDisplayerComponent],
   styleUrls: ['./app.component.css'],
 })
 export class AppComponent implements OnInit {

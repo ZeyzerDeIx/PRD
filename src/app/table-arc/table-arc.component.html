@@ -41,6 +41,7 @@
   <tr mat-row (mouseover)="mouseOverArc(row)" (mouseout)="mouseOutArc(row)" *matRowDef="let row; columns: displayedColumns;"></tr>
 </table>
 <br>
+
 <mat-paginator>
     #paginator
     [pageSize]="pageSize"
@@ -48,6 +49,7 @@
     [length]="totalRecords"
     [hidePageSize]="true"
 </mat-paginator>
+
 <div id="divButton">
   <button type="button" mat-raised-button color="primary" (click)="checkSolution()">Sauvegarder</button>
 </div>

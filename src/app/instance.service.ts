@@ -218,13 +218,8 @@ export class InstanceService {
           this.instance.cohortes[i].types.push(new Type(this.types[j],[],this.instance.cohortes[i]));
           var volumeTubesLine = textLines[6+i*this.nbCohortes+j].split('\t');
           for(var k = 0; k < this.nbTubes; k++){
-            this.instance.cohortes[i].types[j].tubes.push({
-              number: k+1,
-              volume: Number(volumeTubesLine[k]),
-              consumed: 0,
-              arcs: [],
-              type: this.instance.cohortes[i].types[j]
-            });
+            var tube: Tube = new Tube(k+1, Number(volumeTubesLine[k]), 0, [], this.instance.cohortes[i].types[j]);
+            this.instance.cohortes[i].types[j].tubes.push(tube);
 
           }
         }
@@ -244,8 +239,7 @@ export class InstanceService {
   /**
    * Initialise la solution de l'instance en parsant le fichier solution
    */
-  private async parseSolution(): Promise<void>
-  {
+  private async parseSolution(): Promise<void>{
     var finish: boolean = false;
 
     //permet de passer les premières lignes (redondance des données)
@@ -284,6 +278,7 @@ export class InstanceService {
         }
       }
       this.caculateArcsQuantities();
+      this.caculateAlicotagesNb();
       finish = true;
     });
 
@@ -298,6 +293,24 @@ export class InstanceService {
     var arcs: Arc[] = this.instance.solution!.arcs;
     for(var i = 0; i < arcs.length; i++){
       arcs[i].quantity = this.requiredVolumeRecursive(arcs[i].destination, arcs[i].tube.type);
+    }
+  }
+
+  private caculateAlicotagesNb(): void{
+    for(let city of this.instance.cities){
+      var nbOfArcsbyTube: Map<Tube, number> = new Map();
+      for(let arc of city.arcs){
+        if(!nbOfArcsbyTube.has(arc.tube))
+          nbOfArcsbyTube.set(arc.tube, 0);
+        var curVal: number = nbOfArcsbyTube.get(arc.tube) as number;
+        nbOfArcsbyTube.set(arc.tube, curVal+1);
+      }
+      for(let [key, value] of nbOfArcsbyTube){
+        if(value > 1 && this.instance.solution != null){
+          this.instance.solution.nbAlico += value-1;
+          key.nbAlico += value-1;
+        }
+      }
     }
   }
 

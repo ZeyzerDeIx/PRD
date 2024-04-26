@@ -9,6 +9,7 @@ import { __propKey } from 'tslib';
 import { ArcService } from '../arc.service';
 import { iconDefault, iconViolet } from '../include/leaflet-icons';
 import { Cohorte, Type, Tube, Arc, Instance, City } from '../include/modelClasses';
+import { DataService } from '../data.service';
 
 /**
  * FormCohorteComponent gère la sélection de la cohorte, du type et du tube voulu
@@ -60,8 +61,9 @@ export class FormCohorteComponent {
    * Constructeur du composant
    * @param instanceService Service permettant de créer l'objet Instance
    * @param arcService Service permettant de créér les arcs
+   * @param dataService Service permettant de communiquer les données importantes à afficher
    */
-  constructor(private instanceService:InstanceService, private arcService:ArcService){
+  constructor(private instanceService:InstanceService, private arcService:ArcService, private dataService: DataService){
     //this.instance = instanceService.instance;
   }
 
@@ -105,6 +107,7 @@ export class FormCohorteComponent {
     this.removeArcs();
     this.drawPolylines(this.map, this.tube.arcs)
     this.arcService.setPolylineArray(this.tube.arcs);
+    this.dataService.setSelectedTube(this.tube);
   }
 
   /**

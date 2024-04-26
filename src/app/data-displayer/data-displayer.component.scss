@@ -1,0 +1,30 @@
+.info-box {
+    background-color: #f0f0f0; /* Couleur de fond */
+    border: 1px solid #ccc; /* Bordure */
+    padding: 8px; /* Espacement intérieur */
+    border-radius: 5px; /* Coins arrondis */
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1); /* Ombre */
+    color: #333; /* Couleur du texte */
+}
+
+.info-box h2 {
+    font-size: 1.2em; /* Taille de police */
+    margin-bottom: 2px; /* Marge inférieure pour l'espacement */
+    text-align: center;
+}
+
+.info-container {
+    display: flex; /* Utiliser flexbox */
+}
+
+.info {
+    flex: 1;
+    margin-top: 10px; /* Marge supérieure pour l'espacement entre les éléments */
+    background-color: #ffffff; /* Couleur de fond */
+    border: 1px solid #ccc; /* Bordure */
+    padding: 5px; /* Espacement intérieur */
+    border-radius: 5px; /* Coins arrondis */
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1); /* Ombre */
+    text-align: center;
+    margin-inline: 3px;
+}
