@@ -9,12 +9,14 @@
 
 .info-box h2 {
     font-size: 1.2em; /* Taille de police */
+    margin-top: 5px; /* Marge supérieure pour l'espacement */
     margin-bottom: 2px; /* Marge inférieure pour l'espacement */
     text-align: center;
 }
 
 .info-container {
     display: flex; /* Utiliser flexbox */
+    flex-wrap: wrap; /* Permettre le passage à la ligne */
 }
 
 .info {
@@ -27,4 +29,43 @@
     box-shadow: 0 0 5px rgba(0, 0, 0, 0.1); /* Ombre */
     text-align: center;
     margin-inline: 3px;
+}
+
+.summary-label {
+  display: block; /* Afficher en tant que bloc */
+  cursor: pointer;
+  padding: 4px; /* Ajouter du rembourrage pour une zone cliquable plus grande */
+  width: 100%; /* Adapter la largeur à celle de l'info-box */
+}
+
+
+.summary-arrow {
+  display: inline-block;
+  transform: rotate(0deg);
+  transition: transform 0.3s ease;
+}
+
+#toggleInfo:checked ~ .info-content {
+  max-height: 500px;
+}
+
+#toggleInfo:checked ~ .summary-label .summary-arrow {
+  transform: rotate(90deg);
+}
+
+.info-content {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.3s ease;
+}
+
+.visually-hidden {
+  position: absolute;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  height: 1px;
+  width: 1px;
+  margin: -1px;
+  padding: 0;
+  border: 0;
 }

@@ -75,17 +75,23 @@ export class Tube {
     arcs: Arc[];
 
     /**
+     * Liste des villes associées au tube
+     */
+    cities: City[];
+
+    /**
      * type du tube
      */
     type: Type;
 
     nbAlico: number;
 
-    constructor(number: number = -1, volume: number = 0, consumed: number = 0, arcs: Arc[] = [], type: Type = new Type(), nbAlico: number = 0) {
+    constructor(number: number = -1, volume: number = 0, consumed: number = 0, arcs: Arc[] = [], cities: City[] = [], type: Type = new Type(), nbAlico: number = 0) {
         this.number = number;
         this.volume = volume;
         this.consumed = consumed;
         this.arcs = arcs;
+        this.cities = cities;
         this.type = type;
         this.nbAlico = nbAlico;
     }

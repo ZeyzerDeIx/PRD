@@ -4,12 +4,12 @@ import { Component, OnInit } from '@angular/core';
 import { InstanceService } from '../instance.service';
 import { Instance, Tube } from '../include/modelClasses';
 import { DataService } from '../data.service';
-import { NgIf } from '@angular/common';
+import { NgIf, NgFor } from '@angular/common';
 
 @Component({
   selector: 'app-data-displayer',
   standalone: true,
-  imports: [NgIf],
+  imports: [NgIf, NgFor],
   templateUrl: './data-displayer.component.html',
   styleUrls: ['./data-displayer.component.scss']
 })
@@ -20,6 +20,15 @@ export class DataDisplayerComponent implements OnInit {
    */
   instance: Instance = this.instanceService.getInstance();
   selectedTube: Tube = new Tube();
+  isInfoBoxOpen: boolean = false;
+
+  get toggleButtonText(): string {
+    return this.isInfoBoxOpen ? 'Fermer' : 'Afficher';
+  }
+
+  toggleInfoBox(event: any) {
+    this.isInfoBoxOpen = event.target.checked;
+  }
 
   /**
    * Constructeur du composant

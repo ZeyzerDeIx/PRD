@@ -218,7 +218,7 @@ export class InstanceService {
           this.instance.cohortes[i].types.push(new Type(this.types[j],[],this.instance.cohortes[i]));
           var volumeTubesLine = textLines[6+i*this.nbCohortes+j].split('\t');
           for(var k = 0; k < this.nbTubes; k++){
-            var tube: Tube = new Tube(k+1, Number(volumeTubesLine[k]), 0, [], this.instance.cohortes[i].types[j]);
+            var tube: Tube = new Tube(k+1, Number(volumeTubesLine[k]), 0, [], [], this.instance.cohortes[i].types[j]);
             this.instance.cohortes[i].types[j].tubes.push(tube);
 
           }
@@ -243,13 +243,15 @@ export class InstanceService {
     var finish: boolean = false;
 
     //permet de passer les premières lignes (redondance des données)
-    var startAt: number = this.nbCohortes*this.nbTypes*this.nbTubes;
+    var separator: number = this.nbCohortes*this.nbTypes*this.nbTubes;
     var colors = ['red', 'blue', 'green'];
 
     this.getInstanceSolutionData().subscribe(data =>{
       this.instance.solution = new Solution([], this.instance);
-      //transforme le fichier en un tableau de string et ignore les premières lignes
-      var lines: string[] = data.split('\n').slice(startAt);
+      //transforme le fichier en un tableau de string
+      var lines: string[] = data.split('\n');
+      this.parseTubesCities(lines.slice(0, separator));
+      lines = lines.slice(separator);
       var index: number = 0;
       for(var i = 0; i < this.nbCohortes; i++){
         for(var j = 0; j < this.nbTypes; j++){
@@ -284,6 +286,20 @@ export class InstanceService {
 
     while(!finish)
       await new Promise(resolve => setTimeout(resolve, 10));
+  }
+
+  private parseTubesCities(lines: string[]): void{
+    for(var i = 0; i < this.nbCohortes; i++){
+      for(var j = 0; j < this.nbTypes; j++){
+        for(var k = 0; k < this.nbTubes; k++){
+          var tubeNum: number = i*this.nbTypes*this.nbTubes + j*this.nbTubes + k;
+          var tube: Tube = this.instance.cohortes[i].types[j].tubes[k];
+          for(let id of lines[tubeNum].split("\t").slice(4)){
+            tube.cities.push(this.findCityById(Number(id)));
+          }
+        }
+      }
+    }
   }
 
   /**
