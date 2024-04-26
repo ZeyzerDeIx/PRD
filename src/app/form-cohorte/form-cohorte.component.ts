@@ -78,11 +78,13 @@ export class FormCohorteComponent {
         if(this.cohorteMarker == undefined){
           this.cohorteMarker = marker;
           this.cohorteMarker.setIcon(iconViolet);
+          city.selected = true;
         }
         else{
           this.cohorteMarker.setIcon(iconDefault); // Reset the previous marker icon
           this.cohorteMarker = marker;
           this.cohorteMarker.setIcon(iconViolet); // Change the current marker
+          city.selected = false;
         }
         
       }

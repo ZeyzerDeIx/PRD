@@ -96,6 +96,9 @@ export class InstanceService {
 
       const marker = L.marker(latlngs, {alt: city.name});
 
+      // Ajout du marqueur à la ville
+      city.marker = marker;
+
       // Ajout du marqueur à la carte
       marker.addTo(map);
 

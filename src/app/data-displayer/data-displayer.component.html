@@ -3,7 +3,7 @@
   <label for="toggleInfo" class="summary-label">
     <span class="summary-arrow">&#9658;</span> {{ toggleButtonText }} les détails
   </label>
-  <div class="info-content">
+  <div #infoContent class="info-content" [style.max-height.px]="infoBoxHeight">
     <h2>Nombre d'alicotages</h2>
     <div class="info-container">
       <div class="info">Solution: {{ instance?.solution?.nbAlico }}</div>
@@ -14,7 +14,7 @@
       <h2>Tube utilisé à</h2>
       <div class="info-container">
         <div *ngFor="let city of selectedTube.cities">
-          <div class="info">{{ city.name }}</div>
+          <div class="info" (mouseenter)="toggleCityEmphathize(city)" (mouseleave)="toggleCityEmphathize(city,false)">{{ city.name }}</div>
         </div>
       </div>
     </div>

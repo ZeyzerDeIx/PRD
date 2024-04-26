@@ -1,3 +1,5 @@
+import L, { Marker } from 'leaflet';
+
 /**
  * Interface pour une cohorte
  */
@@ -165,11 +167,23 @@ export class City {
      */
     arcs: Arc[];
 
-    constructor(name: string = '', id: number = 0, cohorte: boolean = false, arcs: Arc[] = []) {
+    /**
+     * Indique si la ville est selectionnée (seulement pour les cohortes)
+     */
+    selected: boolean;
+
+    /**
+     * Marqueur de la ville sur la carte
+     */
+    marker: L.Marker|null;
+
+    constructor(name: string = '', id: number = 0, cohorte: boolean = false, arcs: Arc[] = [], selected: boolean = false, marker = null) {
         this.name = name;
         this.id = id;
         this.cohorte = cohorte;
         this.arcs = arcs;
+        this.selected = selected;
+        this.marker = marker;
     }
 }
 
