@@ -47,3 +47,19 @@ button:disabled {
 /* Importing Bootstrap SCSS file. */
 // TODO : Tu peux utiliser bootstrap si tu le souhaites, il est déjà installé normalement
 //@import 'bootstrap/scss/bootstrap';
+
+/* Masque la barre de défilement native */
+html, body {
+    scrollbar-width: none; /* Pour Firefox */
+    -ms-overflow-style: none; /* Pour IE et Edge */
+}
+
+/* Pour les navigateurs autres que Firefox */
+body::-webkit-scrollbar {
+    display: none;
+}
+
+/* Force le défilement sur l'axe Y */
+body {
+    overflow-y: scroll;
+}
