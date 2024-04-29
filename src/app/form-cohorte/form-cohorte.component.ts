@@ -72,23 +72,22 @@ export class FormCohorteComponent {
    * @param e Contient l'ancienne cohorte et la nouvelle choisie
    */
   cohorteChange(e: MatSelectChange){
+    //Réinitialiser la cohorte actuellement selectionnée
+    for(let cohorte of this.instance.cohortes)
+      cohorte.city.selected = false;
+
     var city:City = e.value.city;
     for (const marker of this.markersArray){
       if(marker.options.alt == city.name){
-        if(this.cohorteMarker == undefined){
-          this.cohorteMarker = marker;
-          this.cohorteMarker.setIcon(iconViolet);
-          city.selected = true;
-        }
-        else{
+        if(this.cohorteMarker != undefined)
           this.cohorteMarker.setIcon(iconDefault); // Reset the previous marker icon
-          this.cohorteMarker = marker;
-          this.cohorteMarker.setIcon(iconViolet); // Change the current marker
-          city.selected = false;
-        }
-        
+
+        this.cohorteMarker = marker;
+        this.cohorteMarker.setIcon(iconViolet); // Change the current marker
+        city.selected = true;
       }
     }
+    
     this.arcService.setCohorteCity(city);
     this.type = new Type();
     this.typeChange();
