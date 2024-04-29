@@ -10,8 +10,8 @@
 <div *ngIf="tableIsActive">
   <div id="divButton">
     <div>
-      <button mat-raised-button color="primary" (click)="paginator.previousPage()"><</button>
-      <button mat-raised-button color="primary" (click)="paginator.nextPage()">></button>
+      <button [disabled]="!paginator.hasPreviousPage()" mat-raised-button color="primary" (click)="paginator.previousPage()"><</button>
+      <button [disabled]="!paginator.hasNextPage()" mat-raised-button color="primary" (click)="paginator.nextPage()">></button>
     </div>
     <div class="info-box" *ngIf="pageEvent && pageEvent.pageIndex; else elseBlock">
       {{pageEvent.pageIndex * pageEvent.pageSize + 1}}
