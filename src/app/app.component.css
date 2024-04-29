@@ -1,20 +1,38 @@
 #map {
-    height: 650px;
-    width: 70%;
-    max-width: 700px;
+  position: absolute;
+  height: 96%;
+  width: 58%;
+  max-width: 800px;
+  border-radius: 25px;
+  margin-left: 1%;
+  margin-right: 1%;
+  border: 1px solid #ccc; /* Bordure */
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.1); /* Ombre */
 }
 
 .app-container-div{
   display: flex;
   flex-direction: row;
   width: 100%;
-  justify-content: space-evenly;
+  padding-top: 1%;
+  justify-content: space-between;
 }
 
 .forms {
-  width: 30%;
+  position: absolute;
+  right: 0px;
+  height: 96%;
+  width: 40%;
+  overflow-y: scroll;
+  overflow-x: hidden;
   display: flex;
   flex-direction: column;
+  border: solid 1px #ccc;
+  border-right: none;
+  border-radius: 10px;
+  padding: 15px;
+  scrollbar-width: thin;
+  background-color: #dddddd;
 }
 
 #formCohorte{

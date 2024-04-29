@@ -13,3 +13,16 @@
 ::ng-deep .mat-mdc-paginator-page-size, ::ng-deep .mat-mdc-paginator-range-label{
     display: none !important;
 }
+
+.full-width{
+    width: 100%;
+}
+
+.info-box {
+    background-color: #f0f0f0; /* Couleur de fond */
+    border: 1px solid #ccc; /* Bordure */
+    padding: 8px; /* Espacement intérieur */
+    border-radius: 5px; /* Coins arrondis */
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1); /* Ombre */
+    color: #333; /* Couleur du texte */
+}

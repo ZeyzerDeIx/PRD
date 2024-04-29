@@ -1,13 +1,13 @@
 import { ArcService } from '../arc.service';
 import { InstanceService } from '../instance.service';
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, AfterViewInit, ViewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
-import { MatPaginator } from '@angular/material/paginator';
+import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { NgIf } from '@angular/common';
 import { LatLngExpression } from 'leaflet';
 import { Arc, Instance } from '../include/modelClasses';
@@ -22,7 +22,7 @@ import { Arc, Instance } from '../include/modelClasses';
   templateUrl: './table-arc.component.html',
   styleUrl: './table-arc.component.scss'
 })
-export class TableArcComponent implements OnInit{
+export class TableArcComponent implements AfterViewInit{
   /**
    * Variable pour les titres des colonnes de l'objet MatTable
    */
@@ -71,7 +71,7 @@ export class TableArcComponent implements OnInit{
   /**
    * Nombre d'arcs par page du tableau d'arcs
    */
-  pageSize = 10;
+  pageSize = 4;
 
   /**
    * Numéro de la page du tableau d'arcs
@@ -79,9 +79,12 @@ export class TableArcComponent implements OnInit{
   pageIndex = 0;
 
   /**
-   * Booléen pour contrôler l'affichage du bouton Sauvegarder
+   * Booléen pour contrôler l'affichage des boutons Sauvegarder et +
    */
-  showSaveButton = false;
+  tableIsActive = false;
+
+  // MatPaginator event
+  pageEvent: PageEvent = new PageEvent();
 
   /**
    * Constructeur du composant
@@ -174,7 +177,7 @@ export class TableArcComponent implements OnInit{
   /**
    * Initialise toutes les valeurs du composant
    */
-  ngOnInit(){
+  ngAfterViewInit(){
     this.arcService.polylineUpdated.subscribe(
       (polylineArray) => {
         this.cities = [];
@@ -206,7 +209,7 @@ export class TableArcComponent implements OnInit{
         this.totalRecords = this.polylineArray.length;
         this.dataSource.paginator = this.paginator;
 
-        this.showSaveButton = (this.polylineArray.length > 0);
+        this.tableIsActive = (this.polylineArray.length > 0);
 
       }
     );

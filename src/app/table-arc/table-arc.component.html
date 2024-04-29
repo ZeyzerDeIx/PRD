@@ -1,13 +1,57 @@
-<table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+<mat-paginator
+  #paginator
+  [pageSize]="pageSize"
+  [pageIndex]="pageIndex"
+  [length]="totalRecords"
+  [hidePageSize]="true"
+  (page)="pageEvent = $event"
+  style="display: none;">
+</mat-paginator>
+<div *ngIf="tableIsActive">
+  <div id="divButton">
+    <div>
+      <button mat-raised-button color="primary" (click)="paginator.previousPage()"><</button>
+      <button mat-raised-button color="primary" (click)="paginator.nextPage()">></button>
+    </div>
+    <div class="info-box" *ngIf="pageEvent && pageEvent.pageIndex; else elseBlock">
+      {{pageEvent.pageIndex * pageEvent.pageSize + 1}}
+      -
+      {{
+        ((pageEvent.pageIndex+1) * pageEvent.pageSize + 1) > totalRecords?
+      totalRecords:
+      ((pageEvent.pageIndex+1) * pageEvent.pageSize + 1)
+      }}
+      / {{totalRecords}}
+    </div>
+    <ng-template #elseBlock>
+    <!-- Le code à exécuter si la condition n'est pas remplie -->
+      <div class="info-box">
+        1 - {{pageSize>totalRecords?totalRecords:pageSize}} / {{totalRecords}}
+      </div>
+    </ng-template>
+    <div *ngIf="tableIsActive">
+      <button type="button" mat-raised-button color="primary" (click)="checkSolution()">Sauvegarder</button>
+    </div>
+  </div>
 
-  <!-- Origin Column -->
+  <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+
+    <!-- Origin Column -->
   <ng-container matColumnDef="origin">
     <th mat-header-cell *matHeaderCellDef>Départ</th>
-    <td mat-cell *matCellDef="let arc; let i = index">
-      <mat-select [(value)]="selectedOrigin[i]" (selectionChange)="arcChange(i)">
+    <td mat-cell *matCellDef="let arc">
+      <mat-select
+        [(value)]="selectedOrigin[arc.index]"
+        (selectionChange)="arcChange(arc.index)"
+      >
         @for (city of cities; track city) {
-          <div *ngIf="arc.origin == city; else elseBlock"><mat-option selected value={{city}}>{{city}}</mat-option></div> <!-- to add "selected" on the right value-->
-          <ng-template #elseBlock><mat-option value={{city}}>{{city}}</mat-option></ng-template>
+        <div *ngIf="arc.origin == city; else elseBlock">
+          <mat-option selected value="{{ city }}">{{ city }}</mat-option>
+        </div>
+        <!-- to add "selected" on the right value-->
+        <ng-template #elseBlock
+          ><mat-option value="{{ city }}">{{ city }}</mat-option></ng-template
+        >
         }
       </mat-select>
     </td>
@@ -16,35 +60,33 @@
   <!-- Destination Column -->
   <ng-container matColumnDef="destination">
     <th mat-header-cell *matHeaderCellDef>Arrivée</th>
-    <td mat-cell *matCellDef="let arc; let i = index">
-      <mat-select [(value)]="selectedDestination[i]" (selectionChange)="arcChange(i)">
+    <td mat-cell *matCellDef="let arc">
+      <mat-select
+        [(value)]="selectedDestination[arc.index]"
+        (selectionChange)="arcChange(arc.index)"
+      >
         @for (city of cities; track city) {
-          <div *ngIf="arc.destination == city; else elseBlock"><mat-option selected value={{city}}>{{city}}</mat-option></div> <!-- to add "selected" on the right value-->
-          <ng-template #elseBlock><mat-option value={{city}}>{{city}}</mat-option></ng-template>
+        <div *ngIf="arc.destination == city; else elseBlock">
+          <mat-option selected value="{{ city }}">{{ city }}</mat-option>
+        </div>
+        <!-- to add "selected" on the right value-->
+        <ng-template #elseBlock
+          ><mat-option value="{{ city }}">{{ city }}</mat-option></ng-template
+        >
         }
       </mat-select>
     </td>
   </ng-container>
 
-  <!-- Quantity Column -->
-  <ng-container matColumnDef="quantity">
-    <th mat-header-cell *matHeaderCellDef>Quantité</th>
-    <td mat-cell *matCellDef="let arc">{{arc.quantity}}</td>
-  </ng-container>
+    <!-- Quantity Column -->
+    <ng-container matColumnDef="quantity">
+      <th mat-header-cell *matHeaderCellDef>Quantité</th>
+      <td mat-cell *matCellDef="let arc">{{arc.quantity}}</td>
+    </ng-container>
 
-  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-  <tr mat-row (mouseover)="mouseOverArc(row)" (mouseout)="mouseOutArc(row)" *matRowDef="let row; columns: displayedColumns;"></tr>
-</table>
-<br>
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row (mouseover)="mouseOverArc(row)" (mouseout)="mouseOutArc(row)" *matRowDef="let row; columns: displayedColumns;"></tr>
+  </table>
 
-<div id="divButton">
-<mat-paginator>
-    #paginator
-    [pageSize]="pageSize"
-    [pageIndex]="pageIndex"
-    [length]="totalRecords"
-    [hidePageSize]="true"
-</mat-paginator>
-
-<button type="button" mat-raised-button color="primary" (click)="checkSolution()">Sauvegarder</button>
+  <button type="button" class="full-width" mat-raised-button color="primary">+</button>
 </div>
