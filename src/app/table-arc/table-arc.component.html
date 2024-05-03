@@ -88,5 +88,5 @@
     <tr mat-row (mouseover)="mouseOverArc(row)" (mouseout)="mouseOutArc(row)" *matRowDef="let row; columns: displayedColumns;"></tr>
   </table>
 
-  <button type="button" class="full-width" mat-raised-button color="primary">+</button>
+  <button type="button" class="full-width" mat-raised-button color="primary" (click)="addArc()">+</button>
 </div>

@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpClientModule} from '@angular/common/http';
 import { InstanceService } from './instance.service';
+import { ArcService } from './arc.service';
 import { FormCohorteComponent } from './form-cohorte/form-cohorte.component';
 import { TableArcComponent } from './table-arc/table-arc.component';
 import { DataDisplayerComponent } from './data-displayer/data-displayer.component';
@@ -41,7 +42,7 @@ export class AppComponent implements OnInit {
    * Constructeur du composant
    * @param instanceService Service permettant de créer l'objet Solution
    */
-  constructor(private instanceService:InstanceService) {
+  constructor(private instanceService:InstanceService, private arcService: ArcService) {
   }
 
   /**
@@ -76,6 +77,8 @@ export class AppComponent implements OnInit {
     tiles.addTo(this.map);
 
     this.map.setMaxBounds(this.map.getBounds());
+
+    this.arcService.map = this.map;
   }
 
   /**

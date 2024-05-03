@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import L, { LatLngExpression } from 'leaflet';
 import 'leaflet-arrowheads';
 import { Instance, City, Cohorte, Arc, Tube, Solution, Type } from './include/modelClasses';
+import { ArcService } from './arc.service';
 
 /**
  * Service gérant la construction de la solution. Attention, le service ne sera pas utilisable tant que son initialisation n'est pas terminée. Étant donné que celle ci est asynchrone pour pouvoir parser les ressources textuelles, il faudra s'assurer d'attendre la fin de l'initialisation avant tout usage.
@@ -52,12 +53,13 @@ export class InstanceService {
   private nbVilles: number = 0;
   private nbTypes: number = 0;
   private nbCohortes: number = 0;
+  public colors: string[] = ['red', 'blue', 'green'];
 
   /**
    * Constructeur du service
    * @param http Client HTTP permettant de faire les requêtes pour récupérer les données via les fichiers txt
    */
-  constructor(protected http:HttpClient) {
+  constructor(protected http:HttpClient, private arcService: ArcService) {
     this.citiesPosition = new Map();
     this.instance = new Instance([], this.types);
 
@@ -247,7 +249,6 @@ export class InstanceService {
 
     //permet de passer les premières lignes (redondance des données)
     var separator: number = this.nbCohortes*this.nbTypes*this.nbTubes;
-    var colors = ['red', 'blue', 'green'];
 
     this.getInstanceSolutionData().subscribe(data =>{
       this.instance.solution = new Solution([], this.instance);
@@ -269,11 +270,10 @@ export class InstanceService {
               var origin: City = this.findCityById(Number(split[0]));
               var destination: City = this.findCityById(Number(split[1]));
 
-              var polylineColor = colors[this.instance.cohortes[i].types[j].tubes[k].number!-1];
+              var polylineColor = this.colors[this.instance.cohortes[i].types[j].tubes[k].number!-1];
 
-              var polyline = this.createPolyline(origin, destination,polylineColor);
+              var polyline = this.arcService.createPolyline(origin, destination,polylineColor, this.citiesPosition);
               
-              // TODO: Remplir automatiquement avec les demandes de chaque ville et pas 0
               var arc = new Arc(polyline,origin,destination,l,0,tube);
               arc.origin.arcs.push(arc);
               tube.arcs.push(arc);
@@ -308,7 +308,7 @@ export class InstanceService {
   /**
    * Calcul et met à jour les quantités qui circulents dans chaque arc de la solution
    */
-  private caculateArcsQuantities(): void{
+  public caculateArcsQuantities(): void{
     var arcs: Arc[] = this.instance.solution!.arcs;
     for(var i = 0; i < arcs.length; i++){
       arcs[i].quantity = this.requiredVolumeRecursive(arcs[i].destination, arcs[i].tube.type);
@@ -359,34 +359,7 @@ export class InstanceService {
     return cityDem.get(type.name) as number;
   }
 
-  /**
-   * Créer une Polyline
-   * @param origin La ville d'origine de l'arc/la polyline
-   * @param destination La ville de destination de l'arc/la polyline
-   * @param color La couleur d'affichage de la polyline
-   */
-  private createPolyline(origin: City, destination: City, color: string): L.Polyline{
-    var pos: Map<string,number[]> = this.citiesPosition;
-    
-    var originPoint: LatLngExpression = 
-    [pos.get(origin.name)![0], pos.get(origin.name)![1]];
-
-    var destinationPoint: LatLngExpression = 
-    [pos.get(destination.name)![0], pos.get(destination.name)![1]];
-
-    var latlngs:LatLngExpression[] = [originPoint, destinationPoint];
-
-    var polylineOptions = {color: color, weight: 4, opacity: 0.5};
-
-    return L.polyline(latlngs, polylineOptions)
-    .arrowheads({
-      size: "25px",
-      opacity: 0.5,
-      fill: false,
-      yawn: 75,
-      offsets: {end: '75px'}
-    });
-  }
+  
 
   /**
    * Initialise la liste des demandes en parsant le texte fourni
@@ -431,7 +404,7 @@ export class InstanceService {
    * @param id Le numéro de la ville à trouver
    * @returns La ville correspondant à l'id donné en paramètre, sinon une ville par defaut si aucune ville ne correspond
    */
-  private findCityById(id:Number) : City {
+  public findCityById(id:Number) : City {
     for (const city of this.instance.cities){
       if (city.id == id){
         return city;

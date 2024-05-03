@@ -106,7 +106,7 @@ export class FormCohorteComponent {
    */
   tubeChange(){
     this.removeArcs();
-    this.drawPolylines(this.map, this.tube.arcs)
+    this.arcService.drawPolylines(this.tube.arcs)
     this.arcService.setPolylineArray(this.tube.arcs);
     this.dataService.setSelectedTube(this.tube);
   }
@@ -116,21 +116,9 @@ export class FormCohorteComponent {
    */
   removeArcs(){
     this.map.eachLayer((layer:any) =>{
-      if (layer instanceof L.Polyline) {
+      if (layer instanceof L.Polyline)
         this.map.removeLayer(layer);
-      }
     });
   }
 
-  /**
-   * Dessine les arcs en entrée sur la carte
-   * @param map La carte sur laquelle les arcs doivent être ajoutés
-   * @param
-   */
-  private drawPolylines(map:L.Map, arcs: Arc[]){
-    for (const arc of arcs){
-      arc.polyline.bindTooltip(`<div>Quantité : ${ arc.quantity }</div>`);
-      arc.polyline.addTo(map);
-    }
-  }
 }

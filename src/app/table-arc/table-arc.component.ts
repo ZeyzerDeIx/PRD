@@ -10,7 +10,8 @@ import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { NgIf } from '@angular/common';
 import { LatLngExpression } from 'leaflet';
-import { Arc, Instance } from '../include/modelClasses';
+import { Arc, Instance, City, Tube } from '../include/modelClasses';
+import { DataService } from '../data.service';
 
 /**
  * TableArcComponent gère la modification des arcs pour chaque tube
@@ -23,6 +24,7 @@ import { Arc, Instance } from '../include/modelClasses';
   styleUrl: './table-arc.component.scss'
 })
 export class TableArcComponent implements AfterViewInit{
+
   /**
    * Variable pour les titres des colonnes de l'objet MatTable
    */
@@ -91,7 +93,7 @@ export class TableArcComponent implements AfterViewInit{
    * @param instanceService Service permettant de créer l'objet Instance
    * @param arcService Service permettant de créér les arcs
    */
-  constructor(private arcService:ArcService, private instanceService:InstanceService){
+  constructor(private arcService:ArcService, private instanceService:InstanceService, private dataService: DataService){
   }
 
   /**
@@ -174,6 +176,32 @@ export class TableArcComponent implements AfterViewInit{
     console.log(error);
   }
 
+  addArc(){
+    var citiesPosition = this.instanceService.getCitiesPosition();
+
+    var co: City = this.arcService.getCohorteCity();
+    var newOriginCoord: LatLngExpression =
+    [citiesPosition.get(co.name)![0],
+      citiesPosition.get(co.name)![1]];
+
+    var newDestinationCoord: LatLngExpression = 
+    [citiesPosition.get(co.name)![0],
+      citiesPosition.get(co.name)![1]];
+
+    var tube: Tube = this.dataService.getSelectedTube();
+
+    var polylineColor = this.instanceService.colors[tube.number-1];
+
+    var polyline = this.arcService.createPolyline(co, co, polylineColor, citiesPosition);
+    
+    var arc = new Arc(polyline,co,co,this.polylineArray.length,0,tube);
+    arc.polyline.setLatLngs([newOriginCoord, newDestinationCoord]);
+
+    this.arcService.addArc(arc);
+
+    this.paginator.lastPage();
+  }
+
   /**
    * Initialise toutes les valeurs du composant
    */
@@ -186,31 +214,35 @@ export class TableArcComponent implements AfterViewInit{
         var cityCohorte = this.arcService.getCohorteCity();
         var indexToRemove = -1;
         for (const line of polylineArray){
-          if (line.destination == cityCohorte){
-            /* TODO : Je sais pas trop quoi faire de la ligne Cohorte à Cohorte, 
-            pour l'instant je l'enlève mais c'est pas forcément le meilleur */
-            indexToRemove = line.index; // remove the line cohorte -> cohorte  
-          }
-          else{
-            this.cities.indexOf(line.origin.name) === -1 ? this.cities.push(line.origin.name): null; // Push if not already present, else nothing
-            this.cities.indexOf(line.destination.name) === -1 ? this.cities.push(line.destination.name): null; // Push if not already present, else nothing
+          this.cities.indexOf(line.origin.name) === -1 ? this.cities.push(line.origin.name): null; // Push if not already present, else nothing
+          this.cities.indexOf(line.destination.name) === -1 ? this.cities.push(line.destination.name): null; // Push if not already present, else nothing
 
-            this.selectedOrigin.push(line.origin.name);
-            this.selectedDestination.push(line.destination.name); // Fill the arrays to not get an error from the cells in mat-table
-          }
+          this.selectedOrigin.push(line.origin.name);
+          this.selectedDestination.push(line.destination.name); // Fill the arrays to not get an error from the cells in mat-table
         }
-        if (indexToRemove != -1){
-          // TODO : Il faudrait aussi update les line.index après une suppression
-          polylineArray.splice(indexToRemove,1);
 
-        }
+
         this.polylineArray = polylineArray;
+
+        this.instance.solution!.arcs = polylineArray;
+
+        try{
+          this.instanceService.caculateArcsQuantities();
+        } catch(error: any){
+          if(error instanceof RangeError)
+            alert("La solution proposée n'est pas conforme. En conséquence, toutes les quantités des arcs ne sont pas actualisées.");
+          else
+            alert("Une erreur indeterminé s'est produite lors du calcul des quantités des arcs.");
+        }
+
+        if(polylineArray.length != this.polylineArray.length)
+          this.arcService.drawPolylines(polylineArray);
+
         this.dataSource = new MatTableDataSource<Arc>(polylineArray);
         this.totalRecords = this.polylineArray.length;
         this.dataSource.paginator = this.paginator;
 
         this.tableIsActive = (this.polylineArray.length > 0);
-
       }
     );
   }

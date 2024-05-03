@@ -1,5 +1,6 @@
 import { EventEmitter, Injectable } from '@angular/core';
-import { Arc, City } from './include/modelClasses';
+import { Arc, City, Instance } from './include/modelClasses';
+import L, { LatLngExpression } from 'leaflet';
 
 /**
  * Service pour gérer les arcs de la carte
@@ -8,6 +9,7 @@ import { Arc, City } from './include/modelClasses';
   providedIn: 'root'
 })
 export class ArcService {
+  map: L.Map | undefined = undefined;
 
   /**
    * Ville de départ de la cohorte
@@ -58,10 +60,65 @@ export class ArcService {
    * @param data La nouvelle liste d'arcs
    */
   setPolylineArray(data:Arc[]){
-    //console.log(data);
     this.polylineArray = data;
     this.polylineUpdated.emit(this.polylineArray);
   }
 
-  
+  addArc(arc: Arc){
+    this.polylineArray.push(arc);
+    if(this.map != undefined)
+      arc.polyline.addTo(this.map);
+    arc.origin.arcs.push(arc);
+    arc.polyline.bindTooltip(`<div>Quantité : ?</div>`);
+    this.polylineUpdated.emit(this.polylineArray);
+  }
+
+  /**
+   * Créer une Polyline
+   * @param origin La ville d'origine de l'arc/la polyline
+   * @param destination La ville de destination de l'arc/la polyline
+   * @param color La couleur d'affichage de la polyline
+   */
+  public createPolyline(origin: City, destination: City, color: string, pos: Map<string,number[]>): L.Polyline{
+    
+    var originPoint: LatLngExpression = 
+    [pos.get(origin.name)![0], pos.get(origin.name)![1]];
+
+    var destinationPoint: LatLngExpression = 
+    [pos.get(destination.name)![0], pos.get(destination.name)![1]];
+
+    var latlngs:LatLngExpression[] = [originPoint, destinationPoint];
+
+    var polylineOptions = {color: color, weight: 4, opacity: 0.5};
+
+    return L.polyline(latlngs, polylineOptions)
+    .arrowheads({
+      size: "25px",
+      opacity: 0.5,
+      fill: false,
+      yawn: 75,
+      offsets: {end: '75px'}
+    });
+  }
+
+  /**
+   * Dessine les arcs en entrée sur la carte
+   * @param arcs les arcs déssiner
+   */
+  public drawPolylines(arcs: Arc[]){
+    if(this.map == undefined) return;
+
+    for (const arc of arcs)
+      arc.polyline.addTo(this.map);
+    this.updatePolylineQuantities(arcs);
+  }
+
+  /**
+   * Update les quantité affiché sur les arcs de la carte
+   * @param arcs les arcs dont la quantité est à update
+   */
+  public updatePolylineQuantities(arcs: Arc[]){
+    for (const arc of arcs)
+      arc.polyline.bindTooltip(`<div>Quantité : ${ arc.quantity }</div>`);
+  }
 }

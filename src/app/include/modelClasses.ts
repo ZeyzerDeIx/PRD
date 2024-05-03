@@ -163,7 +163,7 @@ export class City {
     cohorte: boolean;
 
     /**
-     * Tableau des arcs de la ville
+     * Tableau des arcs partants de la ville
      */
     arcs: Arc[];
 
