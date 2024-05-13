@@ -412,4 +412,18 @@ export class InstanceService {
     }
     return new City();
   }
+
+  /**
+   * Renvoie la ville associée au nom donné en paramètre
+   * @param name Le nom de la ville à trouver
+   * @returns La ville correspondant au nom donné en paramètre, sinon une ville par defaut si aucune ville ne correspond
+   */
+  public findCityByName(name: string) : City {
+    for (const city of this.instance.cities){
+      if (city.name == name){
+        return city;
+      }
+    }
+    return new City();
+  }
 }

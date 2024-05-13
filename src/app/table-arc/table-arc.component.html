@@ -42,7 +42,7 @@
       <td mat-cell *matCellDef="let arc">
         <mat-select
           [value]="arc.origin.name"
-          (selectionChange)="arcChange(arc)"
+          (selectionChange)="arcOrigChange(arc, $event.value)"
         >
           @for (city of instance.cities; track city) {
             <mat-option value="{{ city.name }}">{{ city.name }}</mat-option>
@@ -57,7 +57,7 @@
       <td mat-cell *matCellDef="let arc">
         <mat-select
           [value]="arc.destination.name"
-          (selectionChange)="arcChange(arc)"
+          (selectionChange)="arcDestChange(arc, $event.value)"
         >
           @for (city of instance.cities; track city) {
             <mat-option value="{{ city.name }}">{{ city.name }}</mat-option>

@@ -72,6 +72,12 @@ export class ArcService {
     arc.polyline.bindTooltip(`<div>Quantité : ?</div>`);
   }
 
+  public modifyArc(arcIndex: number, newCoords: LatLngExpression[]): void{
+    this.polylineArray[arcIndex].polyline.setLatLngs(newCoords);
+
+    this.polylineUpdated.emit(this.polylineArray);
+  }
+
   public deleteArc(arc: Arc){
     if(this.map != undefined)
       this.map.removeLayer(arc.polyline);

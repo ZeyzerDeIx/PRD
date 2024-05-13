@@ -103,11 +103,21 @@ export class TableArcComponent implements AfterViewInit{
     })
   }
 
+  public arcDestChange(arc: Arc, newDestName: string): void{
+    arc.destination = this.instanceService.findCityByName(newDestName);
+    this.arcChange(arc);
+  }
+
+  public arcOrigChange(arc: Arc, newOrigName: string): void{
+    arc.origin = this.instanceService.findCityByName(newOrigName);
+    this.arcChange(arc);
+  }
+
   /**
    * Modifie l'arc dessiné sur la carte avec les valeurs sélectionnées dans le tableau d'arcs
    * @param index: Indice de l'arc à modifier
    */
-  arcChange(arc: Arc){
+  private arcChange(arc: Arc){
     const citiesPos = this.instanceService.getCitiesPosition();
 
     const orig: number[] = citiesPos.get(arc.origin.name)!;
@@ -116,7 +126,9 @@ export class TableArcComponent implements AfterViewInit{
     const newOrigCoord: LatLngExpression = [orig[0], orig[1]];
     const newDestCoord: LatLngExpression = [dest[0], dest[1]];
 
-    this.polylineArray[arc.index].polyline.setLatLngs([newOrigCoord, newDestCoord]);
+    const newCoords: LatLngExpression[] = [newOrigCoord, newDestCoord];
+
+    this.arcService.modifyArc(arc.index, newCoords);
   }
 
   // TODO : La fonction marche mais elle ne fait que afficher le résultat dans la console
@@ -203,8 +215,7 @@ export class TableArcComponent implements AfterViewInit{
           else alert("Une erreur indeterminé s'est produite lors du calcul des quantités des arcs.");
         }
 
-        if(polylineArray.length != this.polylineArray.length)
-          this.arcService.drawPolylines(polylineArray);
+        this.arcService.drawPolylines(polylineArray);
 
         this.dataSource = new MatTableDataSource<Arc>(polylineArray);
         this.totalRecords = this.polylineArray.length;
