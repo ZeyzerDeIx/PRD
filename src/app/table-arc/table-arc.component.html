@@ -37,51 +37,50 @@
   <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
 
     <!-- Origin Column -->
-  <ng-container matColumnDef="origin">
-    <th mat-header-cell *matHeaderCellDef>Départ</th>
-    <td mat-cell *matCellDef="let arc">
-      <mat-select
-        [(value)]="selectedOrigin[arc.index]"
-        (selectionChange)="arcChange(arc.index)"
-      >
-        @for (city of cities; track city) {
-        <div *ngIf="arc.origin == city; else elseBlock">
-          <mat-option selected value="{{ city }}">{{ city }}</mat-option>
-        </div>
-        <!-- to add "selected" on the right value-->
-        <ng-template #elseBlock
-          ><mat-option value="{{ city }}">{{ city }}</mat-option></ng-template
+    <ng-container matColumnDef="origin">
+      <th mat-header-cell *matHeaderCellDef>Départ</th>
+      <td mat-cell *matCellDef="let arc">
+        <mat-select
+          [value]="arc.origin.name"
+          (selectionChange)="arcChange(arc)"
         >
-        }
-      </mat-select>
-    </td>
-  </ng-container>
+          @for (city of instance.cities; track city) {
+            <mat-option value="{{ city.name }}">{{ city.name }}</mat-option>
+          }
+        </mat-select>
+      </td>
+    </ng-container>
 
-  <!-- Destination Column -->
-  <ng-container matColumnDef="destination">
-    <th mat-header-cell *matHeaderCellDef>Arrivée</th>
-    <td mat-cell *matCellDef="let arc">
-      <mat-select
-        [(value)]="selectedDestination[arc.index]"
-        (selectionChange)="arcChange(arc.index)"
-      >
-        @for (city of cities; track city) {
-        <div *ngIf="arc.destination == city; else elseBlock">
-          <mat-option selected value="{{ city }}">{{ city }}</mat-option>
-        </div>
-        <!-- to add "selected" on the right value-->
-        <ng-template #elseBlock
-          ><mat-option value="{{ city }}">{{ city }}</mat-option></ng-template
+    <!-- Destination Column -->
+    <ng-container matColumnDef="destination">
+      <th mat-header-cell *matHeaderCellDef>Arrivée</th>
+      <td mat-cell *matCellDef="let arc">
+        <mat-select
+          [value]="arc.destination.name"
+          (selectionChange)="arcChange(arc)"
         >
-        }
-      </mat-select>
-    </td>
-  </ng-container>
+          @for (city of instance.cities; track city) {
+            <mat-option value="{{ city.name }}">{{ city.name }}</mat-option>
+          }
+        </mat-select>
+      </td>
+    </ng-container>
 
     <!-- Quantity Column -->
     <ng-container matColumnDef="quantity">
       <th mat-header-cell *matHeaderCellDef>Quantité</th>
       <td mat-cell *matCellDef="let arc">{{arc.quantity}}</td>
+    </ng-container>
+
+    <!-- Delete Column -->
+    <ng-container matColumnDef="delete">
+      <th mat-header-cell *matHeaderCellDef></th>
+      <td mat-cell *matCellDef="let arc">
+        <button mat-raised-button color="warn"
+        (click)="deleteArc(arc)">
+          <i class="material-icons">delete</i>
+        </button>
+      </td>
     </ng-container>
 
     <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>

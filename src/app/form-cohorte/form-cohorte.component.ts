@@ -106,9 +106,9 @@ export class FormCohorteComponent {
    */
   tubeChange(){
     this.removeArcs();
-    this.arcService.drawPolylines(this.tube.arcs)
-    this.arcService.setPolylineArray(this.tube.arcs);
     this.dataService.setSelectedTube(this.tube);
+    this.arcService.setPolylineArray(this.tube.arcs);
+    this.arcService.drawPolylines(this.tube.arcs)
   }
 
   /**

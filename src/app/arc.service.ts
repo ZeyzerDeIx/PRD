@@ -70,6 +70,18 @@ export class ArcService {
       arc.polyline.addTo(this.map);
     arc.origin.arcs.push(arc);
     arc.polyline.bindTooltip(`<div>Quantité : ?</div>`);
+  }
+
+  public deleteArc(arc: Arc){
+    if(this.map != undefined)
+      this.map.removeLayer(arc.polyline);
+
+    var index: number = arc.origin.arcs.indexOf(arc);
+    if(index != -1) arc.origin.arcs.splice(index, 1);
+
+    index = this.polylineArray.indexOf(arc);
+    if(index != -1) this.polylineArray.splice(index, 1);
+    
     this.polylineUpdated.emit(this.polylineArray);
   }
 

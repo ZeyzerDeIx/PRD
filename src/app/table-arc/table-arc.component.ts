@@ -28,7 +28,7 @@ export class TableArcComponent implements AfterViewInit{
   /**
    * Variable pour les titres des colonnes de l'objet MatTable
    */
-  displayedColumns: string[] = ['origin', 'destination', 'quantity'];
+  displayedColumns: string[] = ['origin', 'destination', 'quantity', 'delete'];
 
   /**
    * Variable contenant les données des arcs pour remplir l'objet MatTable
@@ -44,21 +44,6 @@ export class TableArcComponent implements AfterViewInit{
    * Tableau d'Arc contenant la liste des arcs 
    */
   polylineArray: Arc[] = [];
-
-  /**
-   * Tableau contenant le nom des villes attribuées à un tube
-   */
-  cities: string[] = [];
-
-  /**
-   * Tableau contenant les villes de départ des arcs d'un tube
-   */
-  selectedOrigin: string[] = [];
-
-  /**
-   * Tableau contenant les villes d'arrivée des arcs d'un tube
-   */
-  selectedDestination: string[] = [];
 
   /**
    * Le paginateur du composant
@@ -122,13 +107,16 @@ export class TableArcComponent implements AfterViewInit{
    * Modifie l'arc dessiné sur la carte avec les valeurs sélectionnées dans le tableau d'arcs
    * @param index: Indice de l'arc à modifier
    */
-  arcChange(index: number){
-    var newOrigin:string = this.selectedOrigin[index];
-    var newDestination:string = this.selectedDestination[index];
-    var citiesPosition = this.instanceService.getCitiesPosition();
-    var newOriginCoord: LatLngExpression = [citiesPosition.get(newOrigin)![0], citiesPosition.get(newOrigin)![1]];
-    var newDestinationCoord: LatLngExpression = [citiesPosition.get(newDestination)![0], citiesPosition.get(newDestination)![1]];
-    this.polylineArray[index].polyline.setLatLngs([newOriginCoord, newDestinationCoord]);
+  arcChange(arc: Arc){
+    const citiesPos = this.instanceService.getCitiesPosition();
+
+    const orig: number[] = citiesPos.get(arc.origin.name)!;
+    const dest: number[] = citiesPos.get(arc.destination.name)!;
+
+    const newOrigCoord: LatLngExpression = [orig[0], orig[1]];
+    const newDestCoord: LatLngExpression = [dest[0], dest[1]];
+
+    this.polylineArray[arc.index].polyline.setLatLngs([newOrigCoord, newDestCoord]);
   }
 
   // TODO : La fonction marche mais elle ne fait que afficher le résultat dans la console
@@ -138,7 +126,7 @@ export class TableArcComponent implements AfterViewInit{
   checkSolution(){
     var cohorteCity = this.arcService.getCohorteCity();
     var error = "Ok !"
-    if (this.selectedDestination.includes(cohorteCity.name)){
+    /*if (this.selectedDestination.includes(cohorteCity.name)){
       error = "La ville cohorte ne peut pas être dans les villes d'arrivée";
       this.handleSaveErrors(error);
     }
@@ -160,11 +148,15 @@ export class TableArcComponent implements AfterViewInit{
         error = "Veuillez sélectionner une ville de départ et d'arivée différente pour chaque arc !"
         this.handleSaveErrors(error);
       }
-    }
+    }*/
     
     if(error == "Ok !"){
       this.handleSaveErrors(error);
     }
+  }
+
+  public deleteArc(arc: Arc){
+    this.arcService.deleteArc(arc);
   }
 
   /**
@@ -177,26 +169,16 @@ export class TableArcComponent implements AfterViewInit{
   }
 
   addArc(){
-    var citiesPosition = this.instanceService.getCitiesPosition();
-
-    var co: City = this.arcService.getCohorteCity();
-    var newOriginCoord: LatLngExpression =
-    [citiesPosition.get(co.name)![0],
-      citiesPosition.get(co.name)![1]];
-
-    var newDestinationCoord: LatLngExpression = 
-    [citiesPosition.get(co.name)![0],
-      citiesPosition.get(co.name)![1]];
-
-    var tube: Tube = this.dataService.getSelectedTube();
-
-    var polylineColor = this.instanceService.colors[tube.number-1];
-
-    var polyline = this.arcService.createPolyline(co, co, polylineColor, citiesPosition);
+    const citiesPos = this.instanceService.getCitiesPosition();
+    const co: City = this.arcService.getCohorteCity();
+    const coPos: number[] = citiesPos.get(co.name)!;
+    const newCoord: LatLngExpression = [coPos[0], coPos[1]];
+    const tube: Tube = this.dataService.getSelectedTube();
+    const polylineColor = this.instanceService.colors[tube.number-1];
+    const polyline = this.arcService.createPolyline(co, co, polylineColor, citiesPos);
     
     var arc = new Arc(polyline,co,co,this.polylineArray.length,0,tube);
-    arc.polyline.setLatLngs([newOriginCoord, newDestinationCoord]);
-
+    arc.polyline.setLatLngs([newCoord, newCoord]);
     this.arcService.addArc(arc);
 
     this.paginator.lastPage();
@@ -208,31 +190,17 @@ export class TableArcComponent implements AfterViewInit{
   ngAfterViewInit(){
     this.arcService.polylineUpdated.subscribe(
       (polylineArray) => {
-        this.cities = [];
-        this.selectedOrigin = [];
-        this.selectedDestination = [];
-        var cityCohorte = this.arcService.getCohorteCity();
-        var indexToRemove = -1;
-        for (const line of polylineArray){
-          this.cities.indexOf(line.origin.name) === -1 ? this.cities.push(line.origin.name): null; // Push if not already present, else nothing
-          this.cities.indexOf(line.destination.name) === -1 ? this.cities.push(line.destination.name): null; // Push if not already present, else nothing
-
-          this.selectedOrigin.push(line.origin.name);
-          this.selectedDestination.push(line.destination.name); // Fill the arrays to not get an error from the cells in mat-table
-        }
-
-
         this.polylineArray = polylineArray;
 
         this.instance.solution!.arcs = polylineArray;
 
+        //TODO à remplacer par un ErrorService et un composant d'affichage
         try{
           this.instanceService.caculateArcsQuantities();
         } catch(error: any){
-          if(error instanceof RangeError)
+          if(error instanceof Error)
             alert("La solution proposée n'est pas conforme. En conséquence, toutes les quantités des arcs ne sont pas actualisées.");
-          else
-            alert("Une erreur indeterminé s'est produite lors du calcul des quantités des arcs.");
+          else alert("Une erreur indeterminé s'est produite lors du calcul des quantités des arcs.");
         }
 
         if(polylineArray.length != this.polylineArray.length)
@@ -242,7 +210,7 @@ export class TableArcComponent implements AfterViewInit{
         this.totalRecords = this.polylineArray.length;
         this.dataSource.paginator = this.paginator;
 
-        this.tableIsActive = (this.polylineArray.length > 0);
+        this.tableIsActive = (this.dataService.getSelectedTube().number != -1);
       }
     );
   }
