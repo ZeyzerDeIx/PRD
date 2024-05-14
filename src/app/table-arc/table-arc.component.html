@@ -13,22 +13,12 @@
       <button [disabled]="!paginator.hasPreviousPage()" mat-raised-button color="primary" (click)="paginator.previousPage()"><</button>
       <button [disabled]="!paginator.hasNextPage()" mat-raised-button color="primary" (click)="paginator.nextPage()">></button>
     </div>
-    <div class="info-box" *ngIf="pageEvent && pageEvent.pageIndex; else elseBlock">
-      {{pageEvent.pageIndex * pageEvent.pageSize + 1}}
+    <div class="info-box">
+      {{ paginator.pageIndex * paginator.pageSize + min(totalRecords,1) }}
       -
-      {{
-        ((pageEvent.pageIndex+1) * pageEvent.pageSize + 1) > totalRecords?
-      totalRecords:
-      ((pageEvent.pageIndex+1) * pageEvent.pageSize + 1)
-      }}
-      / {{totalRecords}}
+      {{ min(totalRecords,((paginator.pageIndex+1) * paginator.pageSize)) }}
+      / {{ totalRecords }}
     </div>
-    <ng-template #elseBlock>
-    <!-- Le code à exécuter si la condition n'est pas remplie -->
-      <div class="info-box">
-        1 - {{pageSize>totalRecords?totalRecords:pageSize}} / {{totalRecords}}
-      </div>
-    </ng-template>
     <div *ngIf="tableIsActive">
       <button type="button" mat-raised-button color="primary" (click)="checkSolution()">Sauvegarder</button>
     </div>
@@ -68,13 +58,13 @@
 
     <!-- Quantity Column -->
     <ng-container matColumnDef="quantity">
-      <th mat-header-cell *matHeaderCellDef>Quantité</th>
+      <th mat-header-cell *matHeaderCellDef width="5%">Flux</th>
       <td mat-cell *matCellDef="let arc">{{arc.quantity}}</td>
     </ng-container>
 
     <!-- Delete Column -->
     <ng-container matColumnDef="delete">
-      <th mat-header-cell *matHeaderCellDef></th>
+      <th mat-header-cell *matHeaderCellDef width="5%">Supprimer</th>
       <td mat-cell *matCellDef="let arc">
         <button mat-raised-button color="warn"
         (click)="deleteArc(arc)">

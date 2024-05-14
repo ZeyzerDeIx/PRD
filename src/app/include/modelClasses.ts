@@ -86,15 +86,21 @@ export class Tube {
      */
     type: Type;
 
+    /**
+     * Nombre d'alicotage du tube
+     */
     nbAlico: number;
 
-    constructor(number: number = -1, volume: number = 0, consumed: number = 0, arcs: Arc[] = [], cities: City[] = [], type: Type = new Type(), nbAlico: number = 0) {
+    solution: Solution;
+
+    constructor(number: number = -1, volume: number = 0, consumed: number = 0, arcs: Arc[] = [], cities: City[] = [], type: Type = new Type(), solution: Solution = new Solution(), nbAlico: number = 0) {
         this.number = number;
         this.volume = volume;
         this.consumed = consumed;
         this.arcs = arcs;
         this.cities = cities;
         this.type = type;
+        this.solution = solution;
         this.nbAlico = nbAlico;
     }
 }
@@ -119,11 +125,6 @@ export class Arc {
     destination: City;
 
     /**
-     * Numéro de l'arc
-     */
-    index: number;
-
-    /**
      * Flux envoyé de la ville origin à la ville destination
      */
     quantity: number;
@@ -133,11 +134,10 @@ export class Arc {
      */
     tube: Tube;
 
-    constructor(polyline: L.Polyline, origin: City = new City(), destination: City = new City(), index: number = 0, quantity: number = 0, tube: Tube = new Tube()) {
+    constructor(polyline: L.Polyline, origin: City = new City(), destination: City = new City(), quantity: number = 0, tube: Tube = new Tube()) {
         this.polyline = polyline;
         this.origin = origin;
         this.destination = destination;
-        this.index = index;
         this.quantity = quantity;
         this.tube = tube;
     }
@@ -188,10 +188,6 @@ export class City {
 }
 
 export class Solution {
-    /**
-     * Tableau des arcs de la solution
-     */
-    arcs: Arc[];
 
     /**
      * Instance à laquelle est rattachée la solution
@@ -203,8 +199,7 @@ export class Solution {
      */
     nbAlico: number;
 
-    constructor(arcs: Arc[] = [], instance: Instance | null = null, nbAlico: number = 0) {
-        this.arcs = arcs;
+    constructor(instance: Instance | null = null, nbAlico: number = 0) {
         this.instance = instance;
         this.nbAlico = nbAlico;
     }

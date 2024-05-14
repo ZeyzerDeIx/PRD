@@ -70,10 +70,22 @@ export class ArcService {
       arc.polyline.addTo(this.map);
     arc.origin.arcs.push(arc);
     arc.polyline.bindTooltip(`<div>Quantité : ?</div>`);
+
+    this.polylineUpdated.emit(this.polylineArray);
   }
 
-  public modifyArc(arcIndex: number, newCoords: LatLngExpression[]): void{
-    this.polylineArray[arcIndex].polyline.setLatLngs(newCoords);
+  public setArcOrigin(arc: Arc, newOrig: City): void{
+    this.remArcIfIn(arc, arc.origin.arcs);
+    newOrig.arcs.push(arc);
+    arc.origin = newOrig;
+  }
+
+  public setArcDestination(arc: Arc, newDest: City): void{
+    arc.destination = newDest;
+  }
+
+  public modifyArc(arc: Arc, newCoords: LatLngExpression[]): void{
+    arc.polyline.setLatLngs(newCoords);
 
     this.polylineUpdated.emit(this.polylineArray);
   }
@@ -82,13 +94,18 @@ export class ArcService {
     if(this.map != undefined)
       this.map.removeLayer(arc.polyline);
 
-    var index: number = arc.origin.arcs.indexOf(arc);
-    if(index != -1) arc.origin.arcs.splice(index, 1);
-
-    index = this.polylineArray.indexOf(arc);
-    if(index != -1) this.polylineArray.splice(index, 1);
+    this.remArcIfIn(arc, arc.origin.arcs);
+    this.remArcIfIn(arc, this.polylineArray);
+    this.remArcIfIn(arc, arc.tube.arcs);
     
     this.polylineUpdated.emit(this.polylineArray);
+  }
+
+  private remArcIfIn(arc: Arc, arcs: Arc[]): void{
+    console.log("try to remove:\n", arc,"\nfrom:\n", arcs);
+    const index: number = arcs.indexOf(arc);
+    if(index != -1) arcs.splice(index, 1);
+    console.log(arcs);
   }
 
   /**

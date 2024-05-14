@@ -223,7 +223,7 @@ export class InstanceService {
           this.instance.cohortes[i].types.push(new Type(this.types[j],[],this.instance.cohortes[i]));
           var volumeTubesLine = textLines[6+i*this.nbCohortes+j].split('\t');
           for(var k = 0; k < this.nbTubes; k++){
-            var tube: Tube = new Tube(k+1, Number(volumeTubesLine[k]), 0, [], [], this.instance.cohortes[i].types[j]);
+            var tube: Tube = new Tube(k+1, Number(volumeTubesLine[k]), 0, [], [], this.instance.cohortes[i].types[j], this.instance.solution!);
             this.instance.cohortes[i].types[j].tubes.push(tube);
 
           }
@@ -251,7 +251,7 @@ export class InstanceService {
     var separator: number = this.nbCohortes*this.nbTypes*this.nbTubes;
 
     this.getInstanceSolutionData().subscribe(data =>{
-      this.instance.solution = new Solution([], this.instance);
+      this.instance.solution = new Solution(this.instance);
       //transforme le fichier en un tableau de string
       var lines: string[] = data.split('\n');
       this.parseTubesCities(lines.slice(0, separator));
@@ -274,10 +274,9 @@ export class InstanceService {
 
               var polyline = this.arcService.createPolyline(origin, destination,polylineColor, this.citiesPosition);
               
-              var arc = new Arc(polyline,origin,destination,l,0,tube);
+              var arc = new Arc(polyline,origin,destination,l,tube);
               arc.origin.arcs.push(arc);
               tube.arcs.push(arc);
-              this.instance.solution.arcs.push(arc);
             }
           }
         }
@@ -309,9 +308,9 @@ export class InstanceService {
    * Calcul et met à jour les quantités qui circulents dans chaque arc de la solution
    */
   public caculateArcsQuantities(): void{
-    var arcs: Arc[] = this.instance.solution!.arcs;
+    var arcs: Arc[] = this.arcService.getPolylineArray();
     for(var i = 0; i < arcs.length; i++){
-      arcs[i].quantity = this.requiredVolumeRecursive(arcs[i].destination, arcs[i].tube.type);
+      arcs[i].quantity = this.requiredVolumeRecursive(arcs[i].destination, arcs[i].tube);
     }
   }
 
@@ -338,12 +337,12 @@ export class InstanceService {
    * @param city La ville dont on souhaite connaitre la demande
    * @param type Le type de tube dont on souhaite connaitre la demande
    */
-  private requiredVolumeRecursive(city: City, type: Type): number{
-    var volume: number = this.requiredVolume(city,type);
+  private requiredVolumeRecursive(city: City, tube: Tube, recursion: number = 0): number{
+    var volume: number = this.requiredVolume(city,tube);
     for(var i = 0; i < city.arcs.length; i++){
-      if(city.arcs[i].tube.type == type){
+      if(city.arcs[i].tube == tube){
         var dest: City = city.arcs[i].destination;
-        volume += this.requiredVolumeRecursive(dest,type);
+        volume += this.requiredVolumeRecursive(dest,tube, recursion+1);
       }
     }
     return volume;
@@ -354,9 +353,9 @@ export class InstanceService {
    * @param city La ville dont on souhaite connaitre la demande
    * @param type Le type de tube dont on souhaite connaitre la demande
    */
-  private requiredVolume(city: City, type: Type): number{
+  private requiredVolume(city: City, tube: Tube): number{
     var cityDem: Map<string, number> = this.instance.demande.get(city.name) as Map<string, number>;
-    return cityDem.get(type.name) as number;
+    return cityDem.get(tube.type.name) as number;
   }
 
   

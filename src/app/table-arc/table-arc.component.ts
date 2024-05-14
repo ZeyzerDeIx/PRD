@@ -104,12 +104,14 @@ export class TableArcComponent implements AfterViewInit{
   }
 
   public arcDestChange(arc: Arc, newDestName: string): void{
-    arc.destination = this.instanceService.findCityByName(newDestName);
+    var newDest: City = this.instanceService.findCityByName(newDestName);
+    this.arcService.setArcDestination(arc, newDest);
     this.arcChange(arc);
   }
 
   public arcOrigChange(arc: Arc, newOrigName: string): void{
-    arc.origin = this.instanceService.findCityByName(newOrigName);
+    var newOrig: City = this.instanceService.findCityByName(newOrigName);
+    this.arcService.setArcOrigin(arc, newOrig);
     this.arcChange(arc);
   }
 
@@ -128,7 +130,31 @@ export class TableArcComponent implements AfterViewInit{
 
     const newCoords: LatLngExpression[] = [newOrigCoord, newDestCoord];
 
-    this.arcService.modifyArc(arc.index, newCoords);
+    this.arcService.modifyArc(arc, newCoords);
+  }
+
+  public deleteArc(arc: Arc){
+    this.arcService.deleteArc(arc);
+  }
+
+  min(a:number, b:number): number{
+    return a>b? b: a;
+  }
+
+  addArc(){
+    const citiesPos = this.instanceService.getCitiesPosition();
+    const co: City = this.arcService.getCohorteCity();
+    const coPos: number[] = citiesPos.get(co.name)!;
+    const newCoord: LatLngExpression = [coPos[0], coPos[1]];
+    const tube: Tube = this.dataService.getSelectedTube();
+    const polylineColor = this.instanceService.colors[tube.number-1];
+    const polyline = this.arcService.createPolyline(co, co, polylineColor, citiesPos);
+    
+    var arc = new Arc(polyline,co,co,this.polylineArray.length,tube);
+    arc.polyline.setLatLngs([newCoord, newCoord]);
+    this.arcService.addArc(arc);
+
+    this.paginator.lastPage();
   }
 
   // TODO : La fonction marche mais elle ne fait que afficher le résultat dans la console
@@ -138,6 +164,14 @@ export class TableArcComponent implements AfterViewInit{
   checkSolution(){
     var cohorteCity = this.arcService.getCohorteCity();
     var error = "Ok !"
+
+    try{
+      this.instanceService.caculateArcsQuantities();
+    } catch(error: any){
+      if(error instanceof Error)
+        alert("La solution proposée n'est pas conforme. En conséquence, toutes les quantités des arcs ne sont pas actualisées.");
+      else alert("Une erreur indeterminé s'est produite lors du calcul des quantités des arcs.");
+    }
     /*if (this.selectedDestination.includes(cohorteCity.name)){
       error = "La ville cohorte ne peut pas être dans les villes d'arrivée";
       this.handleSaveErrors(error);
@@ -167,10 +201,6 @@ export class TableArcComponent implements AfterViewInit{
     }
   }
 
-  public deleteArc(arc: Arc){
-    this.arcService.deleteArc(arc);
-  }
-
   /**
    * Affiche un message d'erreur quand l'utilisateur essaie de sauvegarder une solution infaisable
    * @param error Message d'erreur à afficher
@@ -178,22 +208,6 @@ export class TableArcComponent implements AfterViewInit{
   handleSaveErrors(error: string){
     alert(error);
     console.log(error);
-  }
-
-  addArc(){
-    const citiesPos = this.instanceService.getCitiesPosition();
-    const co: City = this.arcService.getCohorteCity();
-    const coPos: number[] = citiesPos.get(co.name)!;
-    const newCoord: LatLngExpression = [coPos[0], coPos[1]];
-    const tube: Tube = this.dataService.getSelectedTube();
-    const polylineColor = this.instanceService.colors[tube.number-1];
-    const polyline = this.arcService.createPolyline(co, co, polylineColor, citiesPos);
-    
-    var arc = new Arc(polyline,co,co,this.polylineArray.length,0,tube);
-    arc.polyline.setLatLngs([newCoord, newCoord]);
-    this.arcService.addArc(arc);
-
-    this.paginator.lastPage();
   }
 
   /**
@@ -204,15 +218,11 @@ export class TableArcComponent implements AfterViewInit{
       (polylineArray) => {
         this.polylineArray = polylineArray;
 
-        this.instance.solution!.arcs = polylineArray;
-
         //TODO à remplacer par un ErrorService et un composant d'affichage
         try{
           this.instanceService.caculateArcsQuantities();
         } catch(error: any){
-          if(error instanceof Error)
-            alert("La solution proposée n'est pas conforme. En conséquence, toutes les quantités des arcs ne sont pas actualisées.");
-          else alert("Une erreur indeterminé s'est produite lors du calcul des quantités des arcs.");
+          console.error("Impossible de calculer les flux des arcs!");
         }
 
         this.arcService.drawPolylines(polylineArray);
