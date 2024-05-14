@@ -58,7 +58,7 @@ export class TableArcComponent implements AfterViewInit{
   /**
    * Nombre d'arcs par page du tableau d'arcs
    */
-  pageSize = 4;
+  pageSize = 6;
 
   /**
    * Numéro de la page du tableau d'arcs
@@ -69,9 +69,6 @@ export class TableArcComponent implements AfterViewInit{
    * Booléen pour contrôler l'affichage des boutons Sauvegarder et +
    */
   tableIsActive = false;
-
-  // MatPaginator event
-  pageEvent: PageEvent = new PageEvent();
 
   /**
    * Constructeur du composant
@@ -131,10 +128,14 @@ export class TableArcComponent implements AfterViewInit{
     const newCoords: LatLngExpression[] = [newOrigCoord, newDestCoord];
 
     this.arcService.modifyArc(arc, newCoords);
+
+    this.dataService.tubeUpdated();
   }
 
   public deleteArc(arc: Arc){
     this.arcService.deleteArc(arc);
+
+    this.dataService.tubeUpdated();
   }
 
   min(a:number, b:number): number{
@@ -142,6 +143,7 @@ export class TableArcComponent implements AfterViewInit{
   }
 
   addArc(){
+
     const citiesPos = this.instanceService.getCitiesPosition();
     const co: City = this.arcService.getCohorteCity();
     const coPos: number[] = citiesPos.get(co.name)!;
@@ -153,8 +155,9 @@ export class TableArcComponent implements AfterViewInit{
     var arc = new Arc(polyline,co,co,this.polylineArray.length,tube);
     arc.polyline.setLatLngs([newCoord, newCoord]);
     this.arcService.addArc(arc);
-
     this.paginator.lastPage();
+
+    this.dataService.tubeUpdated();
   }
 
   // TODO : La fonction marche mais elle ne fait que afficher le résultat dans la console

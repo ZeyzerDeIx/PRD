@@ -19,4 +19,8 @@ export class DataService {
   public getSelectedTube(): Tube{
     return this.selectedTube;
   }
+
+  public tubeUpdated(): void{
+    this.selectedTubeUpdate.emit(this.selectedTube);
+  }
 }

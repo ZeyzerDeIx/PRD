@@ -46,11 +46,49 @@ export class DataDisplayerComponent implements OnInit {
 
   ngOnInit(): void {
     this.dataService.selectedTubeUpdate.subscribe(this.onSelectedTubeUpdate.bind(this));
-    this.dataService.selectedTubeUpdate.subscribe(this.onSelectedTubeUpdate);
   }
 
   private onSelectedTubeUpdate(newTube: Tube){
     this.selectedTube = newTube;
+    this.updateTubeCities();
+    this.caculateAlicotagesNb();
+  }
+
+  private updateTubeCities(): void{
+    this.selectedTube.cities = [];
+    for(let arc of this.selectedTube.arcs){
+      if(!this.selectedTube.cities.includes(arc.origin)){
+        this.selectedTube.cities.push(arc.origin);
+      }
+      if(!this.selectedTube.cities.includes(arc.destination)){
+        this.selectedTube.cities.push(arc.destination);
+      }
+    }
+  }
+
+  private caculateAlicotagesNb(): void{
+    if(this.instance.solution != null)
+      this.instance.solution.nbAlico = 0;
+    for(let cohorte of this.instance.cohortes)
+      for(let type of cohorte.types)
+        for(let tube of type.tubes)
+          tube.nbAlico = 0;
+
+    for(let city of this.instance.cities){
+      var nbOfArcsbyTube: Map<Tube, number> = new Map();
+      for(let arc of city.arcs){
+        if(!nbOfArcsbyTube.has(arc.tube))
+          nbOfArcsbyTube.set(arc.tube, 0);
+        var curVal: number = nbOfArcsbyTube.get(arc.tube) as number;
+        nbOfArcsbyTube.set(arc.tube, curVal+1);
+      }
+      for(let [key, value] of nbOfArcsbyTube){
+        if(value > 1 && this.instance.solution != null){
+          this.instance.solution.nbAlico += value-1;
+          key.nbAlico += value-1;
+        }
+      }
+    }
   }
 
   public toggleCityEmphathize(city: City, emph: boolean = true):void{

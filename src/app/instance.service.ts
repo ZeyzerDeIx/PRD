@@ -282,7 +282,6 @@ export class InstanceService {
         }
       }
       this.caculateArcsQuantities();
-      this.caculateAlicotagesNb();
       finish = true;
     });
 
@@ -311,24 +310,6 @@ export class InstanceService {
     var arcs: Arc[] = this.arcService.getPolylineArray();
     for(var i = 0; i < arcs.length; i++){
       arcs[i].quantity = this.requiredVolumeRecursive(arcs[i].destination, arcs[i].tube);
-    }
-  }
-
-  private caculateAlicotagesNb(): void{
-    for(let city of this.instance.cities){
-      var nbOfArcsbyTube: Map<Tube, number> = new Map();
-      for(let arc of city.arcs){
-        if(!nbOfArcsbyTube.has(arc.tube))
-          nbOfArcsbyTube.set(arc.tube, 0);
-        var curVal: number = nbOfArcsbyTube.get(arc.tube) as number;
-        nbOfArcsbyTube.set(arc.tube, curVal+1);
-      }
-      for(let [key, value] of nbOfArcsbyTube){
-        if(value > 1 && this.instance.solution != null){
-          this.instance.solution.nbAlico += value-1;
-          key.nbAlico += value-1;
-        }
-      }
     }
   }
 

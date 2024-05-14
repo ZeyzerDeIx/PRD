@@ -17,7 +17,8 @@ export class ArcService {
   private cohorteCity: City = new City();
 
   /**
-   * Liste des arcs
+   * Liste des arcs du tube courrant
+   * NB: Il s'agit d'une référence, toute modification entrainerat une modification de la liste arcs du tube.
    */
   private polylineArray: Arc[] = [];
 
@@ -69,7 +70,6 @@ export class ArcService {
     if(this.map != undefined)
       arc.polyline.addTo(this.map);
     arc.origin.arcs.push(arc);
-    arc.polyline.bindTooltip(`<div>Quantité : ?</div>`);
 
     this.polylineUpdated.emit(this.polylineArray);
   }
@@ -102,10 +102,8 @@ export class ArcService {
   }
 
   private remArcIfIn(arc: Arc, arcs: Arc[]): void{
-    console.log("try to remove:\n", arc,"\nfrom:\n", arcs);
     const index: number = arcs.indexOf(arc);
     if(index != -1) arcs.splice(index, 1);
-    console.log(arcs);
   }
 
   /**
@@ -154,6 +152,6 @@ export class ArcService {
    */
   public updatePolylineQuantities(arcs: Arc[]){
     for (const arc of arcs)
-      arc.polyline.bindTooltip(`<div>Quantité : ${ arc.quantity }</div>`);
+      arc.polyline.bindTooltip(`<div>Flux : ${ arc.quantity }</div>`);
   }
 }
