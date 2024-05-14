@@ -70,6 +70,7 @@ export class ArcService {
     if(this.map != undefined)
       arc.polyline.addTo(this.map);
     arc.origin.outgoing_arcs.push(arc);
+    arc.destination.incomming_arcs.push(arc);
 
     this.polylineUpdated.emit(this.polylineArray);
   }
@@ -81,6 +82,8 @@ export class ArcService {
   }
 
   public setArcDestination(arc: Arc, newDest: City): void{
+    this.remArcIfIn(arc, arc.destination.incomming_arcs);
+    newDest.incomming_arcs.push(arc);
     arc.destination = newDest;
   }
 
@@ -95,6 +98,7 @@ export class ArcService {
       this.map.removeLayer(arc.polyline);
 
     this.remArcIfIn(arc, arc.origin.outgoing_arcs);
+    this.remArcIfIn(arc, arc.destination.incomming_arcs);
     this.remArcIfIn(arc, this.polylineArray);
     this.remArcIfIn(arc, arc.tube.arcs);
     

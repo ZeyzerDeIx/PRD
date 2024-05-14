@@ -276,6 +276,7 @@ export class InstanceService {
               
               var arc = new Arc(polyline,origin,destination,l,tube);
               arc.origin.outgoing_arcs.push(arc);
+              arc.destination.incomming_arcs.push(arc);
               tube.arcs.push(arc);
             }
           }
