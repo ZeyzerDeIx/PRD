@@ -76,7 +76,7 @@ export class DataDisplayerComponent implements OnInit {
 
     for(let city of this.instance.cities){
       var nbOfArcsbyTube: Map<Tube, number> = new Map();
-      for(let arc of city.arcs){
+      for(let arc of city.outgoing_arcs){
         if(!nbOfArcsbyTube.has(arc.tube))
           nbOfArcsbyTube.set(arc.tube, 0);
         var curVal: number = nbOfArcsbyTube.get(arc.tube) as number;

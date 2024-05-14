@@ -275,7 +275,7 @@ export class InstanceService {
               var polyline = this.arcService.createPolyline(origin, destination,polylineColor, this.citiesPosition);
               
               var arc = new Arc(polyline,origin,destination,l,tube);
-              arc.origin.arcs.push(arc);
+              arc.origin.outgoing_arcs.push(arc);
               tube.arcs.push(arc);
             }
           }
@@ -320,9 +320,9 @@ export class InstanceService {
    */
   private requiredVolumeRecursive(city: City, tube: Tube, recursion: number = 0): number{
     var volume: number = this.requiredVolume(city,tube);
-    for(var i = 0; i < city.arcs.length; i++){
-      if(city.arcs[i].tube == tube){
-        var dest: City = city.arcs[i].destination;
+    for(var i = 0; i < city.outgoing_arcs.length; i++){
+      if(city.outgoing_arcs[i].tube == tube){
+        var dest: City = city.outgoing_arcs[i].destination;
         volume += this.requiredVolumeRecursive(dest,tube, recursion+1);
       }
     }

@@ -165,7 +165,7 @@ export class City {
     /**
      * Tableau des arcs partants de la ville
      */
-    arcs: Arc[];
+    outgoing_arcs: Arc[];
 
     /**
      * Indique si la ville est selectionnée (seulement pour les cohortes)
@@ -177,11 +177,11 @@ export class City {
      */
     marker: L.Marker|null;
 
-    constructor(name: string = '', id: number = 0, cohorte: boolean = false, arcs: Arc[] = [], selected: boolean = false, marker = null) {
+    constructor(name: string = '', id: number = 0, cohorte: boolean = false, outgoing_arcs: Arc[] = [], selected: boolean = false, marker = null) {
         this.name = name;
         this.id = id;
         this.cohorte = cohorte;
-        this.arcs = arcs;
+        this.outgoing_arcs = outgoing_arcs;
         this.selected = selected;
         this.marker = marker;
     }
