@@ -44,10 +44,19 @@ export class DataDisplayerComponent implements OnInit {
   constructor(private instanceService:InstanceService, private dataService: DataService){
   }
 
-  ngOnInit(): void {
+  async ngOnInit(): Promise<void> {
     this.dataService.selectedTubeUpdate.subscribe(this.onSelectedTubeUpdate.bind(this));
+
+    //on attend que le solution service soit initialisé
+    while(!this.instanceService.getIsInitialized())
+      await new Promise(resolve => setTimeout(resolve, 10));
+    
+    this.caculateAlicotagesNb();
   }
 
+  /**
+   * Est appelé à chaque fois que le tube selectionné est update
+   */
   private onSelectedTubeUpdate(newTube: Tube){
     this.selectedTube = newTube;
     this.updateTubeCities();

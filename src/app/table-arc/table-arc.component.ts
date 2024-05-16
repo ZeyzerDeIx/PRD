@@ -167,18 +167,10 @@ export class TableArcComponent implements AfterViewInit{
     var cohorteCity = this.arcService.getCohorteCity();
     var error = "Ok !"
 
-    try{
-      this.instanceService.caculateArcsQuantities();
-    } catch(error: any){
-      if(error instanceof Error)
-        alert("La solution proposée n'est pas conforme. En conséquence, toutes les quantités des arcs ne sont pas actualisées.");
-      else alert("Une erreur indeterminé s'est produite lors du calcul des quantités des arcs.");
-    }
-
     for(let arc of this.polylineArray){
       if(arc.destination == cohorteCity){
         error = "La ville cohorte ne peut pas être dans les villes d'arrivée";
-        this.handleSaveErrors(error);
+        return this.handleSaveErrors(error);
       }
     }
 
@@ -213,13 +205,22 @@ export class TableArcComponent implements AfterViewInit{
     }
   }
 
+  /**
+   * Vérifie que les arcs entrants d'une ville remplissent bien les deux critères suivants:
+   * <ul>
+   * <li>Les arcs entrants proviennent tous de tubes différents.</li>
+   * <li>Au moins un des arcs entrant peut satisfaire pleinement la demande.</li>
+   * </ul>
+   * @param arcs La liste des arcs entrants de la ville
+   * @returns Un message d'erreur si une des condition n'est pas respéctée, sinon le message contient "Ok !".
+   */
   private checkIncommingArcs(arcs: Arc[]): string{
 
     //on commence par vérifier que tous les arcs proviennent bien de tubes différents
     var tubes: Tube[] = [];
     for(let arc of arcs){
       if(tubes.includes(arc.tube))
-        return arc.destination.name + " est la destination de plusieurs flux d'un même tube. Cela est interdit.";
+        return arc.destination.name + " est la destination de plusieurs flux d'un même tube (le n°" + arc.tube.number + "). Cela est interdit.";
 
       tubes.push(arc.tube);
     }
