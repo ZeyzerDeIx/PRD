@@ -134,12 +134,14 @@ export class Arc {
      */
     tube: Tube;
 
-    constructor(polyline: L.Polyline, origin: City = new City(), destination: City = new City(), quantity: number = 0, tube: Tube = new Tube()) {
+    constructor(polyline: L.Polyline, origin: City = new City(), destination: City = new City(), tube: Tube = new Tube(), quantity: number = 0) {
         this.polyline = polyline;
         this.origin = origin;
         this.destination = destination;
-        this.quantity = quantity;
         this.tube = tube;
+        this.quantity = quantity;
+        this.origin.outgoing_arcs.push(this);
+        this.destination.incomming_arcs.push(this);
     }
 }
 

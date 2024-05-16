@@ -254,29 +254,35 @@ export class InstanceService {
       this.instance.solution = new Solution(this.instance);
       //transforme le fichier en un tableau de string
       var lines: string[] = data.split('\n');
+
+      //on parse les lignes contenant les villes visitées par chaque tube
       this.parseTubesCities(lines.slice(0, separator));
+
+      //on retire les lignes déjà traité
       lines = lines.slice(separator);
-      var index: number = 0;
-      for(var i = 0; i < this.nbCohortes; i++){
-        for(var j = 0; j < this.nbTypes; j++){
-          for(var k = 0; k < this.nbTubes; k++){
-            var tubeNum: number = i*this.nbTypes*this.nbTubes + j*this.nbTubes + k;
-            var tube: Tube = this.instance.cohortes[i].types[j].tubes[k];
-            var nbArcs: number = Number(lines[index++]);
-            for(var l = 0; l < nbArcs; l++){
 
-              var split: string[] = lines[index++].split('\t');
+      //l'index de la ligne en cours de traitement
+      var curLineIndex: number = 0;
 
-              var origin: City = this.findCityById(Number(split[0]));
-              var destination: City = this.findCityById(Number(split[1]));
+      for(let cohorte of this.instance.cohortes){
+        for(let type of cohorte.types){
+          for(let tube of type.tubes){
+            var nbArcs: number = Number(lines[curLineIndex++]);
 
-              var polylineColor = this.colors[this.instance.cohortes[i].types[j].tubes[k].number!-1];
+            for(var i = 0; i < nbArcs; i++){
+              var split: string[] = lines[curLineIndex++].split('\t');
 
-              var polyline = this.arcService.createPolyline(origin, destination,polylineColor, this.citiesPosition);
+              //villes de départ et d'arrivée de l'arc
+              var orig: City = this.findCityById(Number(split[0]));
+              var dest: City = this.findCityById(Number(split[1]));
+
+              //couleur de la polyline de l'arc
+              var color = this.colors[tube.number!-1];
+
+              //polyline de l'arc (élément visuel affiché sur la carte)
+              var polyline = this.arcService.createPolyline(orig, dest,color,this.citiesPosition);
               
-              var arc = new Arc(polyline,origin,destination,l,tube);
-              arc.origin.outgoing_arcs.push(arc);
-              arc.destination.incomming_arcs.push(arc);
+              var arc = new Arc(polyline,orig,dest,tube);
               tube.arcs.push(arc);
             }
           }
@@ -290,6 +296,10 @@ export class InstanceService {
       await new Promise(resolve => setTimeout(resolve, 10));
   }
 
+  /**
+   * Initialise les villes associées à chaque tube en parsant les lignes en entrées.
+   * @param lines Les lignes contenants les villes parcourues par les tubes (les premières lignes du fichier solution) sous forme d'un tableau de string.
+   */
   private parseTubesCities(lines: string[]): void{
     for(var i = 0; i < this.nbCohortes; i++){
       for(var j = 0; j < this.nbTypes; j++){

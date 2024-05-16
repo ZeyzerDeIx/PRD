@@ -149,13 +149,12 @@ export class TableArcComponent implements AfterViewInit{
     const coPos: number[] = citiesPos.get(co.name)!;
     const newCoord: LatLngExpression = [coPos[0], coPos[1]];
     const tube: Tube = this.dataService.getSelectedTube();
-    const polylineColor = this.instanceService.colors[tube.number-1];
-    const polyline = this.arcService.createPolyline(co, co, polylineColor, citiesPos);
+    const color = this.instanceService.colors[tube.number-1];
+    const polyline = this.arcService.createPolyline(co, co, color, citiesPos);
     
-    var arc = new Arc(polyline,co,co,this.polylineArray.length,tube);
+    var arc = new Arc(polyline,co,co,tube);
     arc.polyline.setLatLngs([newCoord, newCoord]);
     this.arcService.addArc(arc);
-    this.paginator.lastPage();
 
     this.dataService.tubeUpdated();
   }
@@ -175,11 +174,21 @@ export class TableArcComponent implements AfterViewInit{
         alert("La solution proposée n'est pas conforme. En conséquence, toutes les quantités des arcs ne sont pas actualisées.");
       else alert("Une erreur indeterminé s'est produite lors du calcul des quantités des arcs.");
     }
-    /*if (this.selectedDestination.includes(cohorteCity.name)){
-      error = "La ville cohorte ne peut pas être dans les villes d'arrivée";
-      this.handleSaveErrors(error);
+
+    for(let arc of this.polylineArray){
+      if(arc.destination == cohorteCity){
+        error = "La ville cohorte ne peut pas être dans les villes d'arrivée";
+        this.handleSaveErrors(error);
+      }
     }
-    var nbOccurences = new Map<string, number>();
+
+    for(let city of this.instance.cities){
+      if(city.incomming_arcs.length > 1){
+        error = this.checkIncommingArcs(city.incomming_arcs);
+        if(error != "Ok !") return this.handleSaveErrors(error);
+      }
+    }
+    /*var nbOccurences = new Map<string, number>();
     this.cities.forEach(city => {
       nbOccurences.set(city, 0);
     });
@@ -202,6 +211,27 @@ export class TableArcComponent implements AfterViewInit{
     if(error == "Ok !"){
       this.handleSaveErrors(error);
     }
+  }
+
+  private checkIncommingArcs(arcs: Arc[]): string{
+
+    //on commence par vérifier que tous les arcs proviennent bien de tubes différents
+    var tubes: Tube[] = [];
+    for(let arc of arcs){
+      if(tubes.includes(arc.tube))
+        return arc.destination.name + " est la destination de plusieurs flux d'un même tube. Cela est interdit.";
+
+      tubes.push(arc.tube);
+    }
+
+    //si on arrive ici c'est que tous les arcs proviennent bien de tubes différents
+
+    //on vérifie que parmis tous les arcs entrants, il y en a au moins un qui peut entièrement satisfaire la demande de la ville
+    for(let arc of arcs){
+      if(arc.quantity < this.instanceService.requiredVolume(arc.destination, arc.tube.type))
+        return "Ok !";
+    }
+    return "Aucun arc entrant de " + arcs[0].destination.name + "ne contient un assez grand volume pour satisfaire la demande.";
   }
 
   /**

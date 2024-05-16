@@ -69,8 +69,6 @@ export class ArcService {
     this.polylineArray.push(arc);
     if(this.map != undefined)
       arc.polyline.addTo(this.map);
-    arc.origin.outgoing_arcs.push(arc);
-    arc.destination.incomming_arcs.push(arc);
 
     this.polylineUpdated.emit(this.polylineArray);
   }
