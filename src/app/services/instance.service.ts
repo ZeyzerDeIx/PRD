@@ -6,7 +6,10 @@ import { Instance, City, Cohorte, Arc, Tube, Solution, Type } from '../include/m
 import { ArcService } from './arc.service';
 
 /**
- * Service gérant la construction de la solution. Attention, le service ne sera pas utilisable tant que son initialisation n'est pas terminée. Étant donné que celle ci est asynchrone pour pouvoir parser les ressources textuelles, il faudra s'assurer d'attendre la fin de l'initialisation avant tout usage.
+ * Service gérant la construction de l'instance et de sa solution.
+ * 
+ * <strong>Attention</strong>, le service ne sera pas utilisable tant que son initialisation n'est pas terminée. Étant donné que celle-ci est asynchrone pour pouvoir parser les ressources textuelles, il faudra s'assurer d'attendre la fin de l'initialisation avant tout usage.
+ * Pour ce faire, il faut utiliser la méthode getIsInitialized().
  */
 @Injectable({
   providedIn: 'root'
@@ -319,9 +322,8 @@ export class InstanceService {
    * Calcul et met à jour les quantités qui circulents dans chaque arc de la solution
    */
   public caculateArcsQuantities(): void{
-    var arcs: Arc[] = this.arcService.getPolylineArray();
-    for(var i = 0; i < arcs.length; i++)
-      arcs[i].quantity = this.requiredVolumeRecursive(arcs[i].destination, arcs[i].tube);
+    for(let arc of this.arcService.getPolylineArray())
+      arc.quantity = this.requiredVolumeRecursive(arc.destination, arc.tube);
   }
 
   /**
