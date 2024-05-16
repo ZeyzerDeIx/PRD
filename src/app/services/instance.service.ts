@@ -58,6 +58,7 @@ export class InstanceService {
   /**
    * Constructeur du service
    * @param http Client HTTP permettant de faire les requêtes pour récupérer les données via les fichiers txt
+   * @param arcService Permet l'injection du ArcService dans ce service
    */
   constructor(protected http:HttpClient, private arcService: ArcService) {
     this.citiesPosition = new Map();
@@ -169,6 +170,7 @@ export class InstanceService {
       finish = true;
     });
 
+    //permet d'attendre que l'execution soit terminée pour que tout se déroulent dans l'ordre
     while(!finish)
       await new Promise(resolve => setTimeout(resolve, 10));
   }
@@ -189,7 +191,7 @@ export class InstanceService {
       finish = true;
     });
 
-
+    //permet d'attendre que l'execution soit terminée pour que tout se déroulent dans l'ordre
     while(!finish)
       await new Promise(resolve => setTimeout(resolve, 10));
   }
@@ -200,6 +202,7 @@ export class InstanceService {
   private async parseInstance(): Promise<void>{
     var finish: boolean = false;
 
+    //on attend la récupération des données de l'instance stockées sur le serveur pour éxécuter les traîtements
     this.getInstanceData().subscribe(async(data) => {
       var textLines = data.split('\n');
       this.nbVilles = Number(textLines[0]);
@@ -237,6 +240,7 @@ export class InstanceService {
       finish = true;
     });
 
+    //permet d'attendre que l'execution soit terminée pour que tout se déroulent dans l'ordre
     while(!finish)
       await new Promise(resolve => setTimeout(resolve, 10));
   }
@@ -267,6 +271,7 @@ export class InstanceService {
       for(let cohorte of this.instance.cohortes){
         for(let type of cohorte.types){
           for(let tube of type.tubes){
+            //la première lignes pour chaque tube contient le nombres d'arcs de ce tube
             var nbArcs: number = Number(lines[curLineIndex++]);
 
             for(var i = 0; i < nbArcs; i++){
@@ -292,6 +297,7 @@ export class InstanceService {
       finish = true;
     });
 
+    //permet d'attendre que l'execution soit terminée pour que tout se déroulent dans l'ordre
     while(!finish)
       await new Promise(resolve => setTimeout(resolve, 10));
   }
@@ -301,17 +307,12 @@ export class InstanceService {
    * @param lines Les lignes contenants les villes parcourues par les tubes (les premières lignes du fichier solution) sous forme d'un tableau de string.
    */
   private parseTubesCities(lines: string[]): void{
-    for(var i = 0; i < this.nbCohortes; i++){
-      for(var j = 0; j < this.nbTypes; j++){
-        for(var k = 0; k < this.nbTubes; k++){
-          var tubeNum: number = i*this.nbTypes*this.nbTubes + j*this.nbTubes + k;
-          var tube: Tube = this.instance.cohortes[i].types[j].tubes[k];
-          for(let id of lines[tubeNum].split("\t").slice(4)){
+    var tubeNum: number = 0;
+    for(let cohorte of this.instance.cohortes)
+      for(let type of cohorte.types)
+        for(let tube of type.tubes)
+          for(let id of lines[tubeNum++].split("\t").slice(4))
             tube.cities.push(this.findCityById(Number(id)));
-          }
-        }
-      }
-    }
   }
 
   /**
@@ -319,9 +320,8 @@ export class InstanceService {
    */
   public caculateArcsQuantities(): void{
     var arcs: Arc[] = this.arcService.getPolylineArray();
-    for(var i = 0; i < arcs.length; i++){
+    for(var i = 0; i < arcs.length; i++)
       arcs[i].quantity = this.requiredVolumeRecursive(arcs[i].destination, arcs[i].tube);
-    }
   }
 
   /**
@@ -329,14 +329,11 @@ export class InstanceService {
    * @param city La ville dont on souhaite connaitre la demande
    * @param type Le type de tube dont on souhaite connaitre la demande
    */
-  private requiredVolumeRecursive(city: City, tube: Tube, recursion: number = 0): number{
+  private requiredVolumeRecursive(city: City, tube: Tube): number{
     var volume: number = this.requiredVolume(city,tube.type);
-    for(var i = 0; i < city.outgoing_arcs.length; i++){
-      if(city.outgoing_arcs[i].tube == tube){
-        var dest: City = city.outgoing_arcs[i].destination;
-        volume += this.requiredVolumeRecursive(dest,tube, recursion+1);
-      }
-    }
+    for(var i = 0; i < city.outgoing_arcs.length; i++)
+      if(city.outgoing_arcs[i].tube == tube)
+        volume += this.requiredVolumeRecursive(city.outgoing_arcs[i].destination, tube);
     return volume;
   }
 
@@ -354,7 +351,7 @@ export class InstanceService {
 
   /**
    * Initialise la liste des demandes en parsant le texte fourni
-   * @param lines Les lignes à parser
+   * @param lines Les lignes à parser sous forme de tableau de string
    */
   private parseDemandes(lines: string[]): void{
     for(var i = 0, inst = this.instance; i < this.nbVilles; i++){
@@ -372,11 +369,10 @@ export class InstanceService {
    * @returns La ville correspondant à l'id donné en paramètre, sinon une ville par defaut si aucune ville ne correspond
    */
   public findCityById(id:Number) : City {
-    for (const city of this.instance.cities){
-      if (city.id == id){
+    for (const city of this.instance.cities)
+      if (city.id == id)
         return city;
-      }
-    }
+
     return new City();
   }
 
@@ -386,11 +382,10 @@ export class InstanceService {
    * @returns La ville correspondant au nom donné en paramètre, sinon une ville par defaut si aucune ville ne correspond
    */
   public findCityByName(name: string) : City {
-    for (const city of this.instance.cities){
-      if (city.name == name){
+    for (const city of this.instance.cities)
+      if (city.name == name)
         return city;
-      }
-    }
+
     return new City();
   }
 }
