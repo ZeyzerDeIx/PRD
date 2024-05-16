@@ -320,7 +320,7 @@ export class InstanceService {
    * @param type Le type de tube dont on souhaite connaitre la demande
    */
   private requiredVolumeRecursive(city: City, tube: Tube, recursion: number = 0): number{
-    var volume: number = this.requiredVolume(city,tube);
+    var volume: number = this.requiredVolume(city,tube.type);
     for(var i = 0; i < city.outgoing_arcs.length; i++){
       if(city.outgoing_arcs[i].tube == tube){
         var dest: City = city.outgoing_arcs[i].destination;
@@ -335,9 +335,9 @@ export class InstanceService {
    * @param city La ville dont on souhaite connaitre la demande
    * @param type Le type de tube dont on souhaite connaitre la demande
    */
-  private requiredVolume(city: City, tube: Tube): number{
+  public requiredVolume(city: City, type: Type): number{
     var cityDem: Map<string, number> = this.instance.demande.get(city.name) as Map<string, number>;
-    return cityDem.get(tube.type.name) as number;
+    return cityDem.get(type.name) as number;
   }
 
   
@@ -354,30 +354,6 @@ export class InstanceService {
           ville.set(inst.types[j],Number(dem[j]));
         inst.demande.set(inst.cities[i].name, ville);
       }
-  }
-
-  /**
-   * Retourne l'indice des villes associée à chaque tube proposée par le modèle (répartition par tubes) via le tableau passé par référence en paramètre
-   * @param indiceVilles Le tableau dans lequel ranger les résultats
-   */
-  private async parseRepartitionTube(indiceVilles: number[][]): Promise<void> {
-    var finish: boolean = false;
-
-    this.getInstanceSolutionData().subscribe(data =>{
-      var textLines = data.split('\n');
-      for(var i = 0; i < textLines.length; i++){
-        var line = textLines[i].split(' ');
-        var indiceVilleTube: number[] = [];
-        for(var j = 0; j < line.length; j++){
-            indiceVilleTube.push(Number(line[j]));
-        }
-        indiceVilles.push(indiceVilleTube);
-      }
-      finish = true;
-    });
-
-    while(!finish)
-      await new Promise(resolve => setTimeout(resolve, 10));
   }
 
   /**
