@@ -1,5 +1,5 @@
 import { EventEmitter, Injectable } from '@angular/core';
-import { Tube } from './include/modelClasses';
+import { Tube } from '../include/modelClasses';
 
 @Injectable({
   providedIn: 'root'

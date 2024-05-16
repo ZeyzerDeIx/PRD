@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpClientModule} from '@angular/common/http';
-import { InstanceService } from './instance.service';
-import { ArcService } from './arc.service';
+import { InstanceService } from './services/instance.service';
+import { ArcService } from './services/arc.service';
 import { FormCohorteComponent } from './form-cohorte/form-cohorte.component';
 import { TableArcComponent } from './table-arc/table-arc.component';
 import { DataDisplayerComponent } from './data-displayer/data-displayer.component';

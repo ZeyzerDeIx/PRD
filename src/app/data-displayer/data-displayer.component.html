@@ -6,7 +6,7 @@
   <div #infoContent class="info-content" [style.max-height.px]="infoBoxHeight">
     <h2>Nombre d'alicotages</h2>
     <div class="info-container">
-      <div class="info">Solution: {{ instance?.solution?.nbAlico }}</div>
+      <div class="info">Solution: {{ instance.solution?.nbAlico }}</div>
       <div class="info"  *ngIf="selectedTube.number != -1">
       Tube: {{ selectedTube.nbAlico }}</div>
     </div>

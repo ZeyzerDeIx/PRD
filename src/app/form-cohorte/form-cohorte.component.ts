@@ -3,13 +3,13 @@ import {FormsModule} from '@angular/forms';
 import {MatInputModule} from '@angular/material/input';
 import {MatSelectChange, MatSelectModule} from '@angular/material/select';
 import {MatFormFieldModule} from '@angular/material/form-field';
-import { InstanceService } from '../instance.service';
+import { InstanceService } from '../services/instance.service';
 import L, { LatLngExpression } from 'leaflet';
 import { __propKey } from 'tslib';
-import { ArcService } from '../arc.service';
+import { ArcService } from '../services/arc.service';
 import { iconDefault, iconViolet } from '../include/leaflet-icons';
 import { Cohorte, Type, Tube, Arc, Instance, City } from '../include/modelClasses';
-import { DataService } from '../data.service';
+import { DataService } from '../services/data.service';
 
 /**
  * FormCohorteComponent gère la sélection de la cohorte, du type et du tube voulu

@@ -1,9 +1,9 @@
 // data-displayer.component.ts
 
 import { Component, OnInit, ElementRef, ViewChild } from '@angular/core';
-import { InstanceService } from '../instance.service';
+import { InstanceService } from '../services/instance.service';
 import { Instance, Tube, City } from '../include/modelClasses';
-import { DataService } from '../data.service';
+import { DataService } from '../services/data.service';
 import { NgIf, NgFor } from '@angular/common';
 import L from 'leaflet';
 import { iconDefault, iconViolet, iconEmph } from '../include/leaflet-icons';

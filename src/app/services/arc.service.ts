@@ -1,5 +1,5 @@
 import { EventEmitter, Injectable } from '@angular/core';
-import { Arc, City, Instance } from './include/modelClasses';
+import { Arc, City, Instance } from '../include/modelClasses';
 import L, { LatLngExpression } from 'leaflet';
 
 /**

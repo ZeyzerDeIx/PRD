@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import L, { LatLngExpression } from 'leaflet';
 import 'leaflet-arrowheads';
-import { Instance, City, Cohorte, Arc, Tube, Solution, Type } from './include/modelClasses';
+import { Instance, City, Cohorte, Arc, Tube, Solution, Type } from '../include/modelClasses';
 import { ArcService } from './arc.service';
 
 /**

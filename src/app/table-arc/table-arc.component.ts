@@ -1,5 +1,5 @@
-import { ArcService } from '../arc.service';
-import { InstanceService } from '../instance.service';
+import { ArcService } from '../services/arc.service';
+import { InstanceService } from '../services/instance.service';
 import { Component, AfterViewInit, ViewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
@@ -11,7 +11,7 @@ import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { NgIf } from '@angular/common';
 import { LatLngExpression } from 'leaflet';
 import { Arc, Instance, City, Tube } from '../include/modelClasses';
-import { DataService } from '../data.service';
+import { DataService } from '../services/data.service';
 
 /**
  * TableArcComponent gère la modification des arcs pour chaque tube
