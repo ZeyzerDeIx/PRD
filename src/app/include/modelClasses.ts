@@ -194,22 +194,16 @@ export class City {
     incomming_arcs: Arc[];
 
     /**
-     * Indique si la ville est selectionnée (seulement pour les cohortes)
-     */
-    selected: boolean;
-
-    /**
      * Marqueur de la ville sur la carte
      */
     marker: L.Marker|null;
 
-    constructor(name: string = '', id: number = 0, cohorte: boolean = false, outgoing_arcs: Arc[] = [], incomming_arcs: Arc[] = [], selected: boolean = false, marker = null) {
+    constructor(name: string = '', id: number = 0, cohorte: boolean = false, outgoing_arcs: Arc[] = [], incomming_arcs: Arc[] = [], marker = null) {
         this.name = name;
         this.id = id;
         this.cohorte = cohorte;
         this.outgoing_arcs = outgoing_arcs;
         this.incomming_arcs = incomming_arcs;
-        this.selected = selected;
         this.marker = marker;
     }
 }
