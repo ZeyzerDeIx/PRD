@@ -198,6 +198,7 @@ export class TableArcComponent implements AfterViewInit{
     //on parcours chaque tube de chaque type de chaque cohorte
     for(let cohorte of this.instance.cohortes){
       for(let type of cohorte.types){
+        var nbUsedByCohorteTube: number = 0;
         for(let tube of type.tubes){
           //on vérifie qu'aucun arc du tube n'a pour destination sa cohorte ou son origine
           for(let arc of tube.arcs){
@@ -219,6 +220,11 @@ export class TableArcComponent implements AfterViewInit{
               "Le tube n°"+tube.number+" du type "+type.name+" de la cohorte "+cohorte.city.name+" ne peut pas assumer le volume demandé.\nVolume du tube: "+tube.volume+"\nVolume demandé: "+this.instanceService.requiredVolumeByTubeRecursive(cohorte.city, tube)
               );
           }
+
+          if(tube.usedByCohorte && ++nbUsedByCohorteTube > 1)
+            return this.printError(
+              "Il y a plusieurs tubes de type "+type.name+" prélevés par la cohorte "+cohorte.city.name+".\nMerci d'en choisir un seul."
+              );
         }
       }
     }

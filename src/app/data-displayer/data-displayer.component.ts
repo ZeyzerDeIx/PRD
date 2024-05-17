@@ -7,6 +7,8 @@ import { DataService } from '../services/data.service';
 import { NgIf, NgFor } from '@angular/common';
 import L from 'leaflet';
 import { iconDefault, iconViolet, iconEmph } from '../include/leaflet-icons';
+import {MatCheckboxModule} from '@angular/material/checkbox';
+import { FormsModule } from '@angular/forms'; 
 
 /**
  * Ce composant permet l'affichage de donnée utiles pour mieux comprendre l'état actuelle de la solution ou pour faire du débuggage.
@@ -14,7 +16,7 @@ import { iconDefault, iconViolet, iconEmph } from '../include/leaflet-icons';
 @Component({
   selector: 'app-data-displayer',
   standalone: true,
-  imports: [NgIf, NgFor],
+  imports: [NgIf, NgFor, MatCheckboxModule, FormsModule],
   templateUrl: './data-displayer.component.html',
   styleUrls: ['./data-displayer.component.scss']
 })
@@ -123,7 +125,7 @@ export class DataDisplayerComponent implements OnInit {
   /**
    * Met à jour la liste des villes visitées par le tuube selectionnée.
    */
-  private updateTubeCities(): void{
+  public updateTubeCities(): void{
     this.selectedTube.cities = [];
     for(let arc of this.selectedTube.arcs){
       this.addCity(arc.origin);

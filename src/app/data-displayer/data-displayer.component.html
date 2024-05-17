@@ -17,6 +17,7 @@
         <div class="info">Demandé: {{ requiredVolume }} ml</div>
       </div>
       <h2>Tube utilisé à</h2>
+      <mat-checkbox color="primary" [(ngModel)]="selectedTube.usedByCohorte" (change)="updateTubeCities()">Inclure la cohorte</mat-checkbox>
       <div class="info-container">
         <div *ngFor="let city of selectedTube.cities">
           <div class="info" (mouseenter)="toggleCityEmphathize(city)" (mouseleave)="toggleCityEmphathize(city,false)">{{ city.name }} ({{ cityDemande(city) }} ml)</div>
