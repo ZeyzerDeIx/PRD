@@ -10,7 +10,7 @@ import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { NgIf } from '@angular/common';
 import { LatLngExpression } from 'leaflet';
-import { Arc, Instance, City, Tube } from '../include/modelClasses';
+import { Arc, Instance, City, Tube, Type } from '../include/modelClasses';
 import { DataService } from '../services/data.service';
 
 /**
@@ -237,24 +237,15 @@ export class TableArcComponent implements AfterViewInit{
    */
   private checkIncommingArcs(arcs: Arc[]): string{
 
-    //on commence par vérifier que tous les arcs proviennent bien de tubes différents
-    var tubes: Tube[] = [];
+    //on commence par vérifier que tous les arcs proviennent bien de types différents (par cohorte)
+    var types: Type[] = [];
     for(let arc of arcs){
-      if(tubes.includes(arc.tube))
-        return arc.destination.name + " est la destination de plusieurs flux d'un même tube (le n°" + arc.tube.number + "). Cela est interdit.";
+      if(types.includes(arc.tube.type))
+        return arc.destination.name + " est la destination de plusieurs flux d'un même type ( " + arc.tube.type.name + " ) en provenance de la cohorte "+ arc.tube.type.cohorte.city.name +".\nCela est interdit.";
 
-      tubes.push(arc.tube);
+      types.push(arc.tube.type);
     }
-
-    //si on arrive ici c'est que tous les arcs proviennent bien de tubes différents
-
-    //TODO: Ceci est probablement buggué, il faudra le reprendre
-    //on vérifie que parmis tous les arcs entrants, il y en a au moins un qui peut entièrement satisfaire la demande de la ville
-    for(let arc of arcs){
-      if(arc.quantity < this.instanceService.requiredVolumeByType(arc.destination, arc.tube.type))
-        return "Ok !";
-    }
-    return "Aucun arc entrant de " + arcs[0].destination.name + " ne contient un assez grand volume pour satisfaire la demande.";
+    return "Ok !";
   }
 
   /**
