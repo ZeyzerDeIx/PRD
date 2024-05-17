@@ -100,12 +100,22 @@ export class TableArcComponent implements AfterViewInit{
     })
   }
 
+  /**
+   * Met à jour la destination de l'arc.
+   * @param arc L'arc dont on veut changer la destination.
+   * @param newDestName Le nom de la nouvelle ville de destination.
+   */
   public arcDestChange(arc: Arc, newDestName: string): void{
     var newDest: City = this.instanceService.findCityByName(newDestName);
     this.arcService.setArcDestination(arc, newDest);
     this.arcChange(arc);
   }
 
+  /**
+   * Met à jour l'origine de l'arc.
+   * @param arc L'arc dont on veut changer l'origine.
+   * @param newOrigName Le nom de la nouvelle ville d'origine.
+   */
   public arcOrigChange(arc: Arc, newOrigName: string): void{
     var newOrig: City = this.instanceService.findCityByName(newOrigName);
     this.arcService.setArcOrigin(arc, newOrig);
@@ -132,16 +142,28 @@ export class TableArcComponent implements AfterViewInit{
     this.dataService.tubeUpdated();
   }
 
+  /**
+   * Supprime un arc de la liste et de tous les endroits où il est référencé.
+   * @param arc L'arc à supprimer. 
+   */
   public deleteArc(arc: Arc){
     this.arcService.deleteArc(arc);
-
     this.dataService.tubeUpdated();
   }
 
+  /**
+   * Fait le minimum entre les deux entrées.
+   * @param a Premier nombre
+   * @param b Second nombre
+   * @returns Le minimum des deux nombres en entrée.
+   */
   min(a:number, b:number): number{
     return a>b? b: a;
   }
 
+  /**
+   * Créer un nouvel arc reliant la cohorte du tube à elle même.
+   */
   addArc(){
 
     const citiesPos = this.instanceService.getCitiesPosition();
@@ -164,45 +186,44 @@ export class TableArcComponent implements AfterViewInit{
    * Vérifie si la solution modifiée par l'utilisateur reste faisable (i.e. chaque ville est bien desservie par une seule autre ville)
    */
   checkSolution(){
-    var cohorteCity = this.arcService.getCohorteCity();
     var error = "Ok !"
-
-    for(let arc of this.polylineArray){
-      if(arc.destination == cohorteCity){
-        error = "La ville cohorte ne peut pas être dans les villes d'arrivée";
-        return this.handleSaveErrors(error);
-      }
-    }
 
     for(let city of this.instance.cities){
       if(city.incomming_arcs.length > 1){
         error = this.checkIncommingArcs(city.incomming_arcs);
-        if(error != "Ok !") return this.handleSaveErrors(error);
+        if(error != "Ok !") return this.printError(error);
       }
     }
-    /*var nbOccurences = new Map<string, number>();
-    this.cities.forEach(city => {
-      nbOccurences.set(city, 0);
-    });
-    this.selectedDestination.forEach(city => {
-      nbOccurences.set(city, nbOccurences.get(city)! + 1);
-    });
-    for (const city of this.cities){
-      if(city != cohorteCity.name && nbOccurences.get(city) != 1){
-        error = city + " ne doit apparaître qu'une seule et unique fois !"
-        this.handleSaveErrors(error);
+
+    //on parcours chaque tube de chaque type de chaque cohorte
+    for(let cohorte of this.instance.cohortes){
+      for(let type of cohorte.types){
+        for(let tube of type.tubes){
+          //on vérifie qu'aucun arc du tube n'a pour destination sa cohorte ou son origine
+          for(let arc of tube.arcs){
+            //l'arc a pour destination son origine
+            if(arc.destination == arc.origin)
+              return this.printError(
+                "Un arc du tube n°"+tube.number+" du type "+type.name+" de la cohorte "+cohorte.city.name+" a pour destination et origine la même ville ("+arc.destination.name+").\nCela est interdit."
+                );
+            //l'arc a pour destination sa cohorte
+            if(arc.destination == cohorte.city)
+              return this.printError(
+                "Un arc du tube n°"+tube.number+" du type "+type.name+" de la cohorte "+cohorte.city.name+" a pour destination "+cohorte.city.name+" qui est la ville cohorte d'origine du tube.\nCela est interdit."
+                );
+          }
+
+          //on vérifie que le tube peut assumer le volume demandé
+          if(this.instanceService.requiredVolumeByTubeRecursive(cohorte.city, tube) > tube.volume){
+            return this.printError(
+              "Le tube n°"+tube.number+" du type "+type.name+" de la cohorte "+cohorte.city.name+" ne peut pas assumer le volume demandé.\nVolume du tube: "+tube.volume+"\nVolume demandé: "+this.instanceService.requiredVolumeByTubeRecursive(cohorte.city, tube)
+              );
+          }
+        }
       }
     }
-    for (var id = 0; id < this.selectedDestination.length; id++){
-      if (this.selectedOrigin.at(id) == this.selectedDestination.at(id)){
-        error = "Veuillez sélectionner une ville de départ et d'arivée différente pour chaque arc !"
-        this.handleSaveErrors(error);
-      }
-    }*/
     
-    if(error == "Ok !"){
-      this.handleSaveErrors(error);
-    }
+    alert("La solution a été sauvegardé avec succès!");
   }
 
   /**
@@ -227,21 +248,22 @@ export class TableArcComponent implements AfterViewInit{
 
     //si on arrive ici c'est que tous les arcs proviennent bien de tubes différents
 
+    //TODO: Ceci est probablement buggué, il faudra le reprendre
     //on vérifie que parmis tous les arcs entrants, il y en a au moins un qui peut entièrement satisfaire la demande de la ville
     for(let arc of arcs){
-      if(arc.quantity < this.instanceService.requiredVolume(arc.destination, arc.tube.type))
+      if(arc.quantity < this.instanceService.requiredVolumeByType(arc.destination, arc.tube.type))
         return "Ok !";
     }
-    return "Aucun arc entrant de " + arcs[0].destination.name + "ne contient un assez grand volume pour satisfaire la demande.";
+    return "Aucun arc entrant de " + arcs[0].destination.name + " ne contient un assez grand volume pour satisfaire la demande.";
   }
 
   /**
    * Affiche un message d'erreur quand l'utilisateur essaie de sauvegarder une solution infaisable
    * @param error Message d'erreur à afficher
    */
-  handleSaveErrors(error: string){
+  printError(error: string){
+    console.error(error);
     alert(error);
-    console.log(error);
   }
 
   /**
