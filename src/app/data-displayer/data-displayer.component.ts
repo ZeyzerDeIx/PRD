@@ -177,7 +177,7 @@ export class DataDisplayerComponent implements OnInit {
     if(city.marker == null) return;
     
     if(emph) city.marker.setIcon(iconEmph);
-    else if(city == this.selectedTube.type.cohorte.city) city.marker.setIcon(iconViolet);
+    else if(city.selected) city.marker.setIcon(iconViolet);
     else city.marker.setIcon(iconDefault);
   }
 

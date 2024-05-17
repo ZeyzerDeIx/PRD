@@ -72,6 +72,10 @@ export class FormCohorteComponent {
    * @param e Contient l'ancienne cohorte et la nouvelle choisie
    */
   cohorteChange(e: MatSelectChange){
+    //Réinitialiser la cohorte actuellement selectionnée
+    for(let cohorte of this.instance.cohortes)
+      cohorte.city.selected = false;
+
     var city:City = e.value.city;
     for (const marker of this.markersArray){
       if(marker.options.alt == city.name){
@@ -80,6 +84,7 @@ export class FormCohorteComponent {
 
         this.cohorteMarker = marker;
         this.cohorteMarker.setIcon(iconViolet); // Change the current marker
+        city.selected = true;
       }
     }
     
