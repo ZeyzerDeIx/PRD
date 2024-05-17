@@ -8,9 +8,6 @@ import { NgIf, NgFor } from '@angular/common';
 import L from 'leaflet';
 import { iconDefault, iconViolet, iconEmph } from '../include/leaflet-icons';
 
-/**
- * Ce composant permet l'affichage de donnée utiles pour mieux comprendre l'état actuelle de la solution ou pour faire du débuggage.
- */
 @Component({
   selector: 'app-data-displayer',
   standalone: true,
@@ -24,27 +21,12 @@ export class DataDisplayerComponent implements OnInit {
    * Instance provenant de InstanceService (Initialisée en amont depuis le service même)
    */
   instance: Instance = this.instanceService.getInstance();
-
-  /**
-   * Le tube actuellement selectionné par l'utilisateur.
-   * Source des informations à afficher.
-   */
   selectedTube: Tube = new Tube();
-
-  /**
-   * Si oui ou non la boite d'information est ouverte.
-   */
   isInfoBoxOpen: boolean = false;
-
-  /**
-   * Cet élément fait le lien avec la template et permet de récupérer des informations sur la taille de la boite notament.
-   */
   @ViewChild('infoContent') infoContent!: ElementRef;
 
   /**
    * Permet à la page d'actualiser le texte de toggle.
-   * Cette méthode est utilisée par la template d'affichage.
-   * @returns "Fermer" si la boite est ouverte, "Afficher" sinon.
    */
   get toggleButtonText(): string {
     return this.isInfoBoxOpen ? 'Fermer' : 'Afficher';
@@ -52,36 +34,13 @@ export class DataDisplayerComponent implements OnInit {
 
   /**
    * Permet une animation plus fluide en ajustant la taille de la boite d'affichage.
-   * Cette méthode est utilisée par la template d'affichage.
-   * @returns La taille actuelle de la boite.
    */
   get infoBoxHeight(): number {
     return this.isInfoBoxOpen ? this.infoContent.nativeElement.scrollHeight : 0;
   }
 
   /**
-   * Permet de connaître le volume totale que demande la solution au tube selectionné.
-   * Cette méthode est utilisée par la template d'affichage.
-   * @returns le volume requis totale pour le tube selectionné.
-   */
-  get requiredVolume(): number {
-    return this.instanceService.requiredVolumeByTubeRecursive(this.selectedTube.type.cohorte.city, this.selectedTube);
-  }
-
-  /**
-   * Permet de récupérer la demande d'une ville pour le type du tube selectionné.
-   * Cette méthode est utilisée par la template d'affichage.
-   * @param city La ville dont on souhaite connaître la demande.
-   * @returns La demande de la ville en entrée pour le type du tube selectionné.
-   */
-  public cityDemande(city: City): number {
-    return this.instanceService.requiredVolumeByType(city, this.selectedTube.type);
-  }
-
-  /**
    * Permet de changer l'état de la boite d'information entre ouverte et fermée.
-   * Cette méthode est utilisée par la template d'affichage.
-   * @param event L'évennement déclanché. Permet de connaître l'état de la checkbox.
    */
   toggleInfoBox(event: any) {
     this.isInfoBoxOpen = event.target.checked;
@@ -108,9 +67,8 @@ export class DataDisplayerComponent implements OnInit {
   /**
    * Est appelé à chaque fois que le tube selectionné est update.
    * Permet de mettre à jour les donnée et leur affichage.
-   * @param newTube Le nouveau tube s'il a changé, le même qu'avant sinon (valeur par defaut).
    */
-  private onSelectedTubeUpdate(newTube: Tube = this.selectedTube): void{
+  private onSelectedTubeUpdate(newTube: Tube){
     this.selectedTube = newTube;
     this.updateTubeCities();
     this.caculateAlicotagesNb();
@@ -122,19 +80,11 @@ export class DataDisplayerComponent implements OnInit {
   private updateTubeCities(): void{
     this.selectedTube.cities = [];
     for(let arc of this.selectedTube.arcs){
-      this.addCity(arc.origin);
-      this.addCity(arc.destination);
+      if(!this.selectedTube.cities.includes(arc.origin))
+        this.selectedTube.cities.push(arc.origin);
+      if(!this.selectedTube.cities.includes(arc.destination))
+        this.selectedTube.cities.push(arc.destination);
     }
-  }
-
-  /**
-   * Permet d'ajouter une ville au tube en vérifiant qu'elle n'y est pas déjà et qu'elle prélève bien le tube.
-   * @param city Ville à vérifier et ajouter.
-   */
-  private addCity(city: City): void{
-    var t = this.selectedTube;
-    if(!t.cities.includes(city) && (city != t.type.cohorte.city || !t.usedByCohorte))
-        t.cities.push(city);
   }
 
   /**

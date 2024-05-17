@@ -87,31 +87,13 @@ export class Tube {
     type: Type;
 
     /**
-     * Solution rattachée au tube
-     */
-    solution: Solution;
-
-    /**
      * Nombre d'alicotage du tube
      */
     nbAlico: number;
 
-    /**
-     * Vrai si la cohorte de départ du tube se sert dedans avant expédition, faux sinon
-     */
-    usedByCohorte: boolean;
+    solution: Solution;
 
-    constructor(
-        number: number = -1,
-        volume: number = 0,
-        consumed: number = 0,
-        arcs: Arc[] = [],
-        cities: City[] = [],
-        type: Type = new Type(),
-        solution: Solution = new Solution(),
-        nbAlico: number = 0,
-        usedByCohorte: boolean = false
-    ) {
+    constructor(number: number = -1, volume: number = 0, consumed: number = 0, arcs: Arc[] = [], cities: City[] = [], type: Type = new Type(), solution: Solution = new Solution(), nbAlico: number = 0) {
         this.number = number;
         this.volume = volume;
         this.consumed = consumed;
@@ -120,7 +102,6 @@ export class Tube {
         this.type = type;
         this.solution = solution;
         this.nbAlico = nbAlico;
-        this.usedByCohorte = usedByCohorte;
     }
 }
 

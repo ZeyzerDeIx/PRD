@@ -231,6 +231,7 @@ export class InstanceService {
           for(var k = 0; k < this.nbTubes; k++){
             var tube: Tube = new Tube(k+1, Number(volumeTubesLine[k]), 0, [], [], this.instance.cohortes[i].types[j], this.instance.solution!);
             this.instance.cohortes[i].types[j].tubes.push(tube);
+
           }
         }
       }
@@ -312,12 +313,9 @@ export class InstanceService {
     var tubeNum: number = 0;
     for(let cohorte of this.instance.cohortes)
       for(let type of cohorte.types)
-        for(let tube of type.tubes){
+        for(let tube of type.tubes)
           for(let id of lines[tubeNum++].split("\t").slice(4))
             tube.cities.push(this.findCityById(Number(id)));
-          if(tube.cities.includes(cohorte.city))
-            tube.usedByCohorte = true;
-        }
   }
 
   /**
@@ -325,24 +323,19 @@ export class InstanceService {
    */
   public caculateArcsQuantities(): void{
     for(let arc of this.arcService.getPolylineArray())
-      arc.quantity = this.requiredVolumeByTubeRecursive(arc.destination, arc.tube);
+      arc.quantity = this.requiredVolumeRecursive(arc.destination, arc.tube);
   }
 
   /**
-   * Calcul le volume demandé par une ville <b><u>et ses succeusseurs</u></b> pour le tube donnée en paramètre
+   * Calcul le volume demandé par une ville <b><u>et ses succeusseurs</u></b> pour le type de tube donnée en paramètre
    * @param city La ville dont on souhaite connaitre la demande
-   * @param tube Le tube dont on souhaite connaitre la demande
-   * @returns Le volume demandé par la ville donnée et ses successeurs pour le tube données.
+   * @param type Le type de tube dont on souhaite connaitre la demande
    */
-  public requiredVolumeByTubeRecursive(city: City, tube: Tube): number{
-    var volume: number = this.requiredVolumeByType(city,tube.type);
-
-    if(!tube.usedByCohorte && tube.type.cohorte.city == city)
-      volume = 0;
-
+  private requiredVolumeRecursive(city: City, tube: Tube): number{
+    var volume: number = this.requiredVolume(city,tube.type);
     for(var i = 0; i < city.outgoing_arcs.length; i++)
       if(city.outgoing_arcs[i].tube == tube)
-        volume += this.requiredVolumeByTubeRecursive(city.outgoing_arcs[i].destination, tube);
+        volume += this.requiredVolumeRecursive(city.outgoing_arcs[i].destination, tube);
     return volume;
   }
 
@@ -351,7 +344,7 @@ export class InstanceService {
    * @param city La ville dont on souhaite connaitre la demande
    * @param type Le type de tube dont on souhaite connaitre la demande
    */
-  public requiredVolumeByType(city: City, type: Type): number{
+  public requiredVolume(city: City, type: Type): number{
     var cityDem: Map<string, number> = this.instance.demande.get(city.name) as Map<string, number>;
     return cityDem.get(type.name) as number;
   }
