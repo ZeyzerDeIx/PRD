@@ -16,6 +16,12 @@
 
 .full-width{
     width: 100%;
+    font-size: 1.6em;
+}
+
+.arrow {
+    width: 17%;
+    font-size: 1.6em;
 }
 
 .info-box {
@@ -25,4 +31,8 @@
     border-radius: 5px; /* Coins arrondis */
     box-shadow: 0 0 5px rgba(0, 0, 0, 0.1); /* Ombre */
     color: #333; /* Couleur du texte */
+}
+
+.to-right {
+    float: right;
 }

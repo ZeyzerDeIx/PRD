@@ -8,19 +8,14 @@
 </mat-paginator>
 <div *ngIf="tableIsActive">
   <div id="divButton">
-    <div>
-      <button [disabled]="!paginator.hasPreviousPage()" mat-raised-button color="primary" (click)="paginator.previousPage()"><</button>
-      <button [disabled]="!paginator.hasNextPage()" mat-raised-button color="primary" (click)="paginator.nextPage()">></button>
-    </div>
+    <button class="arrow" [disabled]="!paginator.hasPreviousPage()" mat-raised-button color="primary" (click)="paginator.previousPage()"><</button>
     <div class="info-box">
       {{ paginator.pageIndex * paginator.pageSize + min(totalRecords,1) }}
       -
       {{ min(totalRecords,((paginator.pageIndex+1) * paginator.pageSize)) }}
       / {{ totalRecords }}
     </div>
-    <div *ngIf="tableIsActive">
-      <button type="button" mat-raised-button color="primary" (click)="checkSolution()">Sauvegarder</button>
-    </div>
+    <button class="arrow" [disabled]="!paginator.hasNextPage()" mat-raised-button color="primary" (click)="paginator.nextPage()">></button>
   </div>
 
   <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
@@ -77,4 +72,6 @@
   </table>
 
   <button type="button" class="full-width" mat-raised-button color="primary" (click)="addArc()">+</button>
+
+  <button class="to-right" type="button" mat-raised-button color="primary" (click)="checkSolution()">Sauvegarder la solution</button>
 </div>

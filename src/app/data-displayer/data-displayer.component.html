@@ -6,18 +6,18 @@
   <div #infoContent class="info-content" [style.max-height.px]="infoBoxHeight">
     <h2>Nombre d'alicotages</h2>
     <div class="info-container">
-      <div class="info">Solution: {{ instance.solution?.nbAlico }}</div>
+      <div class="info">Total: {{ instance.solution?.nbAlico }}</div>
       <div class="info"  *ngIf="selectedTube.number != -1">
       Tube: {{ selectedTube.nbAlico }}</div>
     </div>
     <div *ngIf="selectedTube.number != -1">
       <h2>Volume</h2>
       <div class="info-container">
-        <div class="info">Du tube: {{ selectedTube.volume }} ml</div>
+        <div class="info">Tube: {{ selectedTube.volume }} ml</div>
         <div class="info">Demandé: {{ requiredVolume }} ml</div>
       </div>
       <h2>Tube utilisé à</h2>
-      <mat-checkbox color="primary" [(ngModel)]="selectedTube.usedByCohorte" (change)="updateTubeCities()">Inclure la cohorte</mat-checkbox>
+      <mat-checkbox color="primary" [(ngModel)]="selectedTube.usedByCohorte" (change)="updateTubeCities()">Inclure la cohorte dans la liste</mat-checkbox>
       <div class="info-container">
         <div *ngFor="let city of selectedTube.cities">
           <div class="info" (mouseenter)="toggleCityEmphathize(city)" (mouseleave)="toggleCityEmphathize(city,false)">{{ city.name }} ({{ cityDemande(city) }} ml)</div>

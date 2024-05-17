@@ -58,7 +58,7 @@ export class TableArcComponent implements AfterViewInit{
   /**
    * Nombre d'arcs par page du tableau d'arcs
    */
-  pageSize = 6;
+  pageSize = 5;
 
   /**
    * Numéro de la page du tableau d'arcs

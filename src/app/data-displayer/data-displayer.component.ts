@@ -139,7 +139,7 @@ export class DataDisplayerComponent implements OnInit {
    */
   private addCity(city: City): void{
     var t = this.selectedTube;
-    if(!t.cities.includes(city) && (city != t.type.cohorte.city || !t.usedByCohorte))
+    if(!t.cities.includes(city) && (city != t.type.cohorte.city || t.usedByCohorte))
         t.cities.push(city);
   }
 
