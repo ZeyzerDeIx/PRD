@@ -64,8 +64,12 @@ export class DataDisplayerComponent implements OnInit {
    * Cette méthode est utilisée par la template d'affichage.
    * @returns le volume requis totale pour le tube selectionné.
    */
-  get requiredVolume(): number {
-    return this.instanceService.requiredVolumeByTubeRecursive(this.selectedTube.type.cohorte.city, this.selectedTube);
+  get requiredVolume(): number|string {
+    try{
+      return this.instanceService.requiredVolumeByTubeRecursive(this.selectedTube.type.cohorte.city, this.selectedTube);
+    } catch(error: any){
+      return "Erreur";
+    }
   }
 
   /**
