@@ -4,6 +4,7 @@ import { LeafletModule } from '@asymmetrik/ngx-leaflet';
 import { AppComponent } from './app.component';
 import { HttpClientModule } from '@angular/common/http';
 import { SolutionService } from './solution.service';
+import { FileSaverModule } from 'ngx-filesaver';
 
 @NgModule({
   declarations: [
@@ -12,7 +13,8 @@ import { SolutionService } from './solution.service';
   imports: [
     BrowserModule,
     LeafletModule,
-    HttpClientModule
+    HttpClientModule,
+    FileSaverModule
   ],
   exports: [
   ],

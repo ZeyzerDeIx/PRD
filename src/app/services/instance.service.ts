@@ -4,6 +4,7 @@ import L, { LatLngExpression } from 'leaflet';
 import 'leaflet-arrowheads';
 import { Instance, City, Cohorte, Arc, Tube, Solution, Type } from '../include/modelClasses';
 import { ArcService } from './arc.service';
+import { FileService } from './file.service';
 
 /**
  * Service gérant la construction de l'instance et de sa solution.
@@ -63,7 +64,7 @@ export class InstanceService {
    * @param http Client HTTP permettant de faire les requêtes pour récupérer les données via les fichiers txt
    * @param arcService Permet l'injection du ArcService dans ce service
    */
-  constructor(protected http:HttpClient, private arcService: ArcService) {
+  constructor(protected http:HttpClient, private arcService: ArcService, private fileService: FileService) {
     this.citiesPosition = new Map();
     this.instance = new Instance([], this.types);
 
@@ -377,7 +378,7 @@ export class InstanceService {
    * @param id Le numéro de la ville à trouver
    * @returns La ville correspondant à l'id donné en paramètre, sinon une ville par defaut si aucune ville ne correspond
    */
-  public findCityById(id:Number) : City {
+  public findCityById(id:Number) : City{
     for (const city of this.instance.cities)
       if (city.id == id)
         return city;
@@ -390,11 +391,40 @@ export class InstanceService {
    * @param name Le nom de la ville à trouver
    * @returns La ville correspondant au nom donné en paramètre, sinon une ville par defaut si aucune ville ne correspond
    */
-  public findCityByName(name: string) : City {
+  public findCityByName(name: string) : City{
     for (const city of this.instance.cities)
       if (city.name == name)
         return city;
 
     return new City();
+  }
+
+  /**
+   * Créer le fichier texte de la solution et le télécharge chez le client.
+   */
+  public saveSolution(): void{
+    var content: string = "";
+    this.instance.cohortes.forEach((cohorte, i) =>
+      cohorte.types.forEach((type, j) =>
+        type.tubes.forEach((tube, k) => {
+          content += `${i}\t${j}\t${k}\t${tube.cities.length}`;
+          tube.cities.forEach(city => content += `\t${city.id}`);
+          content += "\n";
+        })
+      )
+    );
+
+    for(let cohorte of this.instance.cohortes){
+      for(let type of cohorte.types){
+        for(let tube of type.tubes){
+          content += `${tube.arcs.length}\n`;
+          for(let arc of tube.arcs)
+            content += `${arc.origin.id}\t${arc.destination.id}\n`;
+        }
+      }
+    }
+
+    const fileName = 'solution.txt';
+    this.fileService.downloadFile(content, fileName);
   }
 }

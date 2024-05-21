@@ -229,7 +229,7 @@ export class TableArcComponent implements AfterViewInit{
       }
     }
     
-    alert("La solution a été sauvegardé avec succès!");
+    this.instanceService.saveSolution();
   }
 
   /**
