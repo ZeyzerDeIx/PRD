@@ -70,9 +70,7 @@ export class InstanceService {
    * Renvoie la solution proposée par le modèle
    * @returns La solution proposée par le modèle sous la forme d'un objet Instance
    */
-  public getInstance(): Instance{
-    return this.instance;
-  }
+  public getInstance(): Instance{ return this.instance; }
 
   public getIsInitialized(): boolean {return this.isInitialized;}
 
@@ -101,11 +99,9 @@ export class InstanceService {
   }
 
 
-
   //------------------------------------------------------------//
   //--------------------------PRIVATE---------------------------//
   //------------------------------------------------------------//
-
 
 
   /**
@@ -240,31 +236,21 @@ export class InstanceService {
       //l'index de la ligne en cours de traitement
       var curLineIndex: number = 0;
 
-      for(let cohorte of this.instance.cohortes){
-        for(let type of cohorte.types){
+      for(let cohorte of this.instance.cohortes)
+        for(let type of cohorte.types)
           for(let tube of type.tubes){
             //la première lignes pour chaque tube contient le nombres d'arcs de ce tube
-            var nbArcs: number = Number(lines[curLineIndex++]);
+            const arcCount: number = Number(lines[curLineIndex++]);
 
-            for(var i = 0; i < nbArcs; i++){
-              var split: string[] = lines[curLineIndex++].split('\t');
+            //la liste des id des origines et destinations pour chaque arc du tube
+            const arcLines: string[] = lines.slice(curLineIndex,curLineIndex+arcCount);
 
-              //villes de départ et d'arrivée de l'arc
-              var orig: City = this.findCityById(Number(split[0]));
-              var dest: City = this.findCityById(Number(split[1]));
+            this.parseTubeArcs(tube, arcLines);
 
-              //couleur de la polyline de l'arc
-              var color = this.colors[tube.number!-1];
-
-              //polyline de l'arc (élément visuel affiché sur la carte)
-              var polyline = this.arcService.createPolyline(orig, dest,color);
-              
-              var arc = new Arc(polyline,orig,dest,tube);
-              tube.arcs.push(arc);
-            }
+            //on passe toutes les lignes que l'on vient d'utiliser
+            curLineIndex += arcCount;
           }
-        }
-      }
+          
       this.caculateArcsQuantities();
       finish = true;
     });
@@ -272,6 +258,30 @@ export class InstanceService {
     //permet d'attendre que l'execution soit terminée pour que tout se déroulent dans l'ordre
     while(!finish)
       await new Promise(resolve => setTimeout(resolve, 10));
+  }
+
+  /**
+   * Parse la liste des arcs d'un tube pour créer les objets correspondants et les ajouter à la liste tube.arcs.
+   * @param tube Le tube dont on souhaite parser les arcs.
+   * @param arcLines La liste contenant les id de l'origine et de la destination de chaque arc du tube.
+   */
+  private parseTubeArcs(tube: Tube, arcLines: string[]): void{
+    for(let arcLine of arcLines){
+      var split: string[] = arcLine.split('\t');
+
+      //villes de départ et d'arrivée de l'arc
+      var orig: City = this.findCityById(Number(split[0]));
+      var dest: City = this.findCityById(Number(split[1]));
+
+      //couleur de la polyline de l'arc
+      var color = this.colors[tube.number!-1];
+
+      //polyline de l'arc (élément visuel affiché sur la carte)
+      var polyline = this.arcService.createPolyline(orig, dest,color);
+      
+      var arc = new Arc(polyline,orig,dest,tube);
+      tube.arcs.push(arc);
+    }
   }
 
   /**
@@ -310,26 +320,22 @@ export class InstanceService {
     if(!tube.usedByCohorte && tube.type.cohorte.city == city)
       volume = 0;
 
-    for(var i = 0; i < city.outgoing_arcs.length; i++)
-      if(city.outgoing_arcs[i].tube == tube)
-        volume += this.requiredVolumeByTube(city.outgoing_arcs[i].destination, tube);
+    for(let arc of city.outgoing_arcs)
+      if(arc.tube == tube)
+        volume += this.requiredVolumeByTube(arc.destination, tube);
     return volume;
   }
-
-  
 
   /**
    * Initialise la liste des demandes en parsant le texte fourni
    * @param lines Les lignes à parser sous forme de tableau de string
    */
   private parseDemandes(lines: string[]): void{
-    var i: number=0;
-    for(let city of this.instance.cities){
-        var dem: string[] = lines[i++].split('\t');
-        var j: number=0;
-        for(let typeName of this.instance.typesName)
-          city.demandes.set(typeName,Number(dem[j++]));
-      }
+    this.instance.cities.forEach((city, i) =>
+      this.instance.typesName.forEach((typeName, j) => 
+        city.demandes.set(typeName,Number(lines[i].split('\t')[j]))
+        )
+    );
   }
 
   /**
@@ -341,7 +347,6 @@ export class InstanceService {
     for (const city of this.instance.cities)
       if (city.id == id)
         return city;
-
     return new City();
   }
 
@@ -354,7 +359,6 @@ export class InstanceService {
     for (const city of this.instance.cities)
       if (city.name == name)
         return city;
-
     return new City();
   }
 
