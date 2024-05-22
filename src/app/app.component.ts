@@ -85,15 +85,14 @@ export class AppComponent implements OnInit {
    * Crée un popup pour chaque marqueur sur la carte
    */
   private createMarkersPopup(){
-    for (const marker of this.markersArray){
-      var city = marker.options.alt  || "";
-      var popupContent = `` + `<div>Ville : ${ city } <br>
+    for (let marker of this.markersArray){
+      var city = this.instanceService.findCityByName(marker.options.alt as string);
+      var popupContent = `<div>Ville : ${ city.name } <br>
                                     Demande : 
                                     <ul>`;
 
-      for (var i = 0; i < this.instance.types.length; i++){
-        popupContent += `<li>${ this.instance.types[i] } : ${ this.instance.demande.get(city)!.get(this.instance.types[i]) } mL</li>`;
-      }
+      for (let typeName of this.instance.typesName)
+        popupContent += `<li>${ typeName } : ${ city.demandes.get(typeName) }mL</li>`;
 
       popupContent += `</ul></div>`
 

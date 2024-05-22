@@ -25,12 +25,12 @@ export class InstanceService {
   /**
    * URL de l'instance d'entrée du modèle
    */
-  private instanceUrl:string = "assets/solution_data/instance.txt";
+  private instanceUrl:string = "assets/solution_data/I_20_4_4_4_3_00.txt";
 
   /**
    * URL de la solution proposée par le modèle
    */
-  private instanceSolutionUrl:string = "assets/solution_data/solution_instance.txt";
+  private instanceSolutionUrl:string = "assets/solution_data/sol_20_4_4_4_3_00.txt";
 
   // TODO: Les types de tubes sont créées manuellement, peut-être pouvoir choisir la liste des types ?
   /**
@@ -209,7 +209,10 @@ export class InstanceService {
     //on attend la récupération des données de l'instance stockées sur le serveur pour éxécuter les traîtements
     this.getInstanceData().subscribe(async(data) => {
       var textLines = data.split('\n');
+
       this.nbVilles = Number(textLines[0]);
+      this.instance.cities = this.instance.cities.slice(0, this.nbVilles);
+
       this.nbCohortes = Number(textLines[1]);
       var cohorteVilleline = textLines[2].split('\t');
       var cohorteNbPatientsline = textLines[3].split('\t');
@@ -326,7 +329,7 @@ export class InstanceService {
    */
   public caculateArcsQuantities(): void{
     for(let arc of this.arcService.getPolylineArray())
-      arc.quantity = this.requiredVolumeByTubeRecursive(arc.destination, arc.tube);
+      arc.quantity = this.requiredVolumeByTube(arc.destination, arc.tube);
   }
 
   /**
@@ -335,26 +338,16 @@ export class InstanceService {
    * @param tube Le tube dont on souhaite connaitre la demande
    * @returns Le volume demandé par la ville donnée et ses successeurs pour le tube données.
    */
-  public requiredVolumeByTubeRecursive(city: City, tube: Tube): number{
-    var volume: number = this.requiredVolumeByType(city,tube.type);
+  public requiredVolumeByTube(city: City, tube: Tube): number{
+    var volume: number = city.demandes.get(tube.type.name) as number;
 
     if(!tube.usedByCohorte && tube.type.cohorte.city == city)
       volume = 0;
 
     for(var i = 0; i < city.outgoing_arcs.length; i++)
       if(city.outgoing_arcs[i].tube == tube)
-        volume += this.requiredVolumeByTubeRecursive(city.outgoing_arcs[i].destination, tube);
+        volume += this.requiredVolumeByTube(city.outgoing_arcs[i].destination, tube);
     return volume;
-  }
-
-  /**
-   * Calcul le volume demandé par une ville pour le type de tube donnée en paramètre
-   * @param city La ville dont on souhaite connaitre la demande
-   * @param type Le type de tube dont on souhaite connaitre la demande
-   */
-  public requiredVolumeByType(city: City, type: Type): number{
-    var cityDem: Map<string, number> = this.instance.demande.get(city.name) as Map<string, number>;
-    return cityDem.get(type.name) as number;
   }
 
   
@@ -364,12 +357,12 @@ export class InstanceService {
    * @param lines Les lignes à parser sous forme de tableau de string
    */
   private parseDemandes(lines: string[]): void{
-    for(var i = 0, inst = this.instance; i < this.nbVilles; i++){
-        var ville: Map<string, number> = new Map();
-        var dem = lines[i].split('\t');
-        for(var j = 0; j < this.nbTypes; j++)
-          ville.set(inst.types[j],Number(dem[j]));
-        inst.demande.set(inst.cities[i].name, ville);
+    var i: number=0;
+    for(let city of this.instance.cities){
+        var dem: string[] = lines[i++].split('\t');
+        var j: number=0;
+        for(let typeName of this.instance.typesName)
+          city.demandes.set(typeName,Number(dem[j++]));
       }
   }
 

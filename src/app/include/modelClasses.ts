@@ -198,13 +198,19 @@ export class City {
      */
     marker: L.Marker|null;
 
-    constructor(name: string = '', id: number = 0, cohorte: boolean = false, outgoing_arcs: Arc[] = [], incomming_arcs: Arc[] = [], marker = null) {
+    /**
+     * Demandes de la ville par type de tube.
+     */
+    demandes: Map<string, number>;
+
+    constructor(name: string = '', id: number = 0, cohorte: boolean = false, outgoing_arcs: Arc[] = [], incomming_arcs: Arc[] = [], marker = null, demandes = new Map()) {
         this.name = name;
         this.id = id;
         this.cohorte = cohorte;
         this.outgoing_arcs = outgoing_arcs;
         this.incomming_arcs = incomming_arcs;
         this.marker = marker;
+        this.demandes = demandes;
     }
 }
 
@@ -238,7 +244,7 @@ export class Instance {
     /**
      * Types de tube de l'instance
      */
-    types: string[];
+    typesName: string[];
 
     /**
      * Cohortes de l'instance
@@ -250,22 +256,15 @@ export class Instance {
      */
     solution: Solution | null;
 
-    /**
-     * Demande de chaque type de tube pour chaque ville
-     */
-    demande: Map<string, Map<string, number>>;
-
     constructor(
         cities: City[] = [],
-        types: string[] = [],
+        typesName: string[] = [],
         cohortes: Cohorte[] = [],
-        solution: Solution | null = null,
-        demande: Map<string, Map<string, number>> = new Map()
+        solution: Solution | null = null
     ) {
         this.cities = cities;
-        this.types = types;
+        this.typesName = typesName;
         this.cohortes = cohortes;
         this.solution = solution;
-        this.demande = demande;
     }
 }

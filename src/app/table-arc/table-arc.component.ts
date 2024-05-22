@@ -10,7 +10,7 @@ import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { NgIf } from '@angular/common';
 import { LatLngExpression } from 'leaflet';
-import { Arc, Instance, City, Tube, Type } from '../include/modelClasses';
+import { Arc, Instance, City, Tube, Type, Cohorte } from '../include/modelClasses';
 import { DataService } from '../services/data.service';
 
 /**
@@ -185,7 +185,7 @@ export class TableArcComponent implements AfterViewInit{
   /**
    * Vérifie si la solution modifiée par l'utilisateur reste faisable (i.e. chaque ville est bien desservie par une seule autre ville)
    */
-  checkSolution(){
+  checkSolution(): void{
     var error = "Ok !"
 
     for(let city of this.instance.cities){
@@ -215,9 +215,9 @@ export class TableArcComponent implements AfterViewInit{
           }
 
           //on vérifie que le tube peut assumer le volume demandé
-          if(this.instanceService.requiredVolumeByTubeRecursive(cohorte.city, tube) > tube.volume){
+          if(this.instanceService.requiredVolumeByTube(cohorte.city, tube) > tube.volume){
             return this.printError(
-              "Le tube n°"+tube.number+" du type "+type.name+" de la cohorte "+cohorte.city.name+" ne peut pas assumer le volume demandé.\nVolume du tube: "+tube.volume+"\nVolume demandé: "+this.instanceService.requiredVolumeByTubeRecursive(cohorte.city, tube)
+              "Le tube n°"+tube.number+" du type "+type.name+" de la cohorte "+cohorte.city.name+" ne peut pas assumer le volume demandé.\nVolume du tube: "+tube.volume+"\nVolume demandé: "+this.instanceService.requiredVolumeByTube(cohorte.city, tube)
               );
           }
 
@@ -227,6 +227,7 @@ export class TableArcComponent implements AfterViewInit{
               );
         }
       }
+      this.checkDemandesSatisfied(cohorte);
     }
     
     this.instanceService.saveSolution();
@@ -252,6 +253,10 @@ export class TableArcComponent implements AfterViewInit{
       types.push(arc.tube.type);
     }
     return "Ok !";
+  }
+
+  private checkDemandesSatisfied(cohorte: Cohorte): void{
+
   }
 
   /**

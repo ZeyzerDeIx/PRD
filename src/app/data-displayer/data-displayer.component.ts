@@ -68,7 +68,7 @@ export class DataDisplayerComponent implements OnInit {
    */
   get requiredVolume(): number|string {
     try{
-      return this.instanceService.requiredVolumeByTubeRecursive(this.selectedTube.type.cohorte.city, this.selectedTube);
+      return this.instanceService.requiredVolumeByTube(this.selectedTube.type.cohorte.city, this.selectedTube);
     } catch(error: any){
       return "Erreur";
     }
@@ -81,7 +81,7 @@ export class DataDisplayerComponent implements OnInit {
    * @returns La demande de la ville en entrée pour le type du tube selectionné.
    */
   public cityDemande(city: City): number {
-    return this.instanceService.requiredVolumeByType(city, this.selectedTube.type);
+    return city.demandes.get(this.selectedTube.type.name) as number;
   }
 
   /**
