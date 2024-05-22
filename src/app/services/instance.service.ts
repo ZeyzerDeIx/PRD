@@ -36,7 +36,7 @@ export class InstanceService {
   /**
    * Liste des types de tube différents
    */
-  private types:string[] = ["LCR","SER","PLA"];
+  private types:string[] = ["LCR","SER","PLA", 'SNG'];
 
   /**
    * Tableau contenant la position des marqueurs associés à chaque ville
@@ -57,7 +57,7 @@ export class InstanceService {
   private nbVilles: number = 0;
   private nbTypes: number = 0;
   private nbCohortes: number = 0;
-  public colors: string[] = ['red', 'blue', 'green'];
+  public colors: string[] = ['red', 'blue', 'green', 'purple'];
 
   /**
    * Constructeur du service
@@ -214,7 +214,7 @@ export class InstanceService {
       var cohorteVilleline = textLines[2].split('\t');
       var cohorteNbPatientsline = textLines[3].split('\t');
       for (var i = 0; i < this.nbCohortes; i++){
-        var villeId = Number(cohorteVilleline[i]) - 1;
+        var villeId = Number(cohorteVilleline[i]);
         this.instance.cities[villeId].cohorte = true;
         this.instance.cohortes.push({
           nbPatients: Number(cohorteNbPatientsline[i]),

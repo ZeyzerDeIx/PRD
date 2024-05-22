@@ -92,7 +92,7 @@ export class AppComponent implements OnInit {
                                     <ul>`;
 
       for (var i = 0; i < this.instance.types.length; i++){
-        popupContent += `<li>${ this.instance.types[i] } : ${ this.instance.demande.get(city)!.get(this.instance.types[i]) } mL</li>`
+        popupContent += `<li>${ this.instance.types[i] } : ${ this.instance.demande.get(city)!.get(this.instance.types[i]) } mL</li>`;
       }
 
       popupContent += `</ul></div>`

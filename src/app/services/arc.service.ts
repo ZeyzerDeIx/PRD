@@ -115,7 +115,7 @@ export class ArcService {
    * @param color La couleur d'affichage de la polyline
    */
   public createPolyline(origin: City, destination: City, color: string, pos: Map<string,number[]>): L.Polyline{
-    
+
     var originPoint: LatLngExpression = 
     [pos.get(origin.name)![0], pos.get(origin.name)![1]];
 

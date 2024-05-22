@@ -140,6 +140,146 @@
                 "type": "Point"
             },
             "id": 9
+        },
+        {
+            "type": "Feature",
+            "properties": {
+                "name": "Amiens"
+            },
+            "geometry": {
+                "coordinates": [
+                    49.8800,
+                    2.2131
+                ],
+                "type": "Point"
+            },
+            "id": 10
+        },
+        {
+            "type": "Feature",
+            "properties": {
+                "name": "Angers"
+            },
+            "geometry": {
+                "coordinates": [
+                    47.4819,
+                    -0.5790
+                ],
+                "type": "Point"
+            },
+            "id": 11
+        },
+        {
+            "type": "Feature",
+            "properties": {
+                "name": "Besançon"
+            },
+            "geometry": {
+                "coordinates": [
+                    47.2257,
+                    5.9417
+                ],
+                "type": "Point"
+            },
+            "id": 12
+        },
+        {
+            "type": "Feature",
+            "properties": {
+                "name": "Brest"
+            },
+            "geometry": {
+                "coordinates": [
+                    48.3932,
+                    -4.5094
+                ],
+                "type": "Point"
+            },
+            "id": 13
+        },
+        {
+            "type": "Feature",
+            "properties": {
+                "name": "Caen"
+            },
+            "geometry": {
+                "coordinates": [
+                    49.2047,
+                    -0.3790
+                ],
+                "type": "Point"
+            },
+            "id": 14
+        },
+        {
+            "type": "Feature",
+            "properties": {
+                "name": "Clermont-Ferrand"
+            },
+            "geometry": {
+                "coordinates": [
+                    45.7596,
+                    3.0696
+                ],
+                "type": "Point"
+            },
+            "id": 15
+        },
+        {
+            "type": "Feature",
+            "properties": {
+                "name": "Dijon"
+            },
+            "geometry": {
+                "coordinates": [
+                    47.3201,
+                    5.0480
+                ],
+                "type": "Point"
+            },
+            "id": 16
+        },
+        {
+            "type": "Feature",
+            "properties": {
+                "name": "Grenoble"
+            },
+            "geometry": {
+                "coordinates": [
+                    45.1995,
+                    5.7242
+                ],
+                "type": "Point"
+            },
+            "id": 17
+        },
+        {
+            "type": "Feature",
+            "properties": {
+                "name": "Limoges"
+            },
+            "geometry": {
+                "coordinates": [
+                    45.8125,
+                    1.2140
+                ],
+                "type": "Point"
+            },
+            "id": 18
+        },
+        {
+            "type": "Feature",
+            "properties": {
+                "name": "Nantes"
+            },
+            "geometry": {
+                "coordinates": [
+                    47.2109,
+                    -1.5791
+                ],
+                "type": "Point"
+            },
+            "id": 19
         }
     ]
 }
