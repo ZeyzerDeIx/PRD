@@ -38,10 +38,6 @@ export class InstanceService {
    */
   private types:string[] = ["LCR","SER","PLA", 'SNG'];
 
-  /**
-   * Tableau contenant la position des marqueurs associés à chaque ville
-   */
-  private citiesPosition: Map<string,number[]>;
 
   /**
    * Contient la solution proposée par le modèle sous la forme d'un objet Solution
@@ -53,10 +49,10 @@ export class InstanceService {
    */
   private isInitialized: boolean = false;
 
-  private nbTubes: number = 0;
-  private nbVilles: number = 0;
-  private nbTypes: number = 0;
-  private nbCohortes: number = 0;
+  private tubeCount: number = 0;
+  private cityCount: number = 0;
+  private typeCount: number = 0;
+  private cohorteCount: number = 0;
   public colors: string[] = ['red', 'blue', 'green', 'purple'];
 
   /**
@@ -65,18 +61,9 @@ export class InstanceService {
    * @param arcService Permet l'injection du ArcService dans ce service
    */
   constructor(protected http:HttpClient, private arcService: ArcService, private fileService: FileService) {
-    this.citiesPosition = new Map();
     this.instance = new Instance([], this.types);
 
     this.initService();
-  }
-
-  /**
-   * Renvoie la position des marqueurs de chaque ville
-   * @returns Un tableau contenant la position des marqueurs associés à chaque ville
-   */
-  public getCitiesPosition(): Map<string, number[]> {
-    return this.citiesPosition;
   }
 
   /**
@@ -98,10 +85,8 @@ export class InstanceService {
   public drawCities(map: L.Map, cities:City[]): L.Marker[]{ 
     var markersArray: L.Marker[] = [];
     for (const city of cities) {
-      // Ugly line to work around "LatLngExpression is not assignable to number | any | undefined..."
-      let latlngs:LatLngExpression = [this.citiesPosition.get(city.name)![0], this.citiesPosition.get(city.name)![1]];
 
-      const marker = L.marker(latlngs, {alt: city.name});
+      const marker = L.marker(city.position, {alt: city.name});
 
       // Ajout du marqueur à la ville
       city.marker = marker;
@@ -128,7 +113,6 @@ export class InstanceService {
    */
   private async initService(): Promise<void>
   {
-    await this.parseCitiesPosition();
     await this.parseCities();
     await this.parseInstance();
 
@@ -168,29 +152,11 @@ export class InstanceService {
       for (const city of data.features) {
         const name = city.properties.name;
         const id = city.id; 
-        var cityToAdd: City = new City(name,id);
-        this.instance.cities.push(cityToAdd);
-      }
-      finish = true;
-    });
-
-    //permet d'attendre que l'execution soit terminée pour que tout se déroulent dans l'ordre
-    while(!finish)
-      await new Promise(resolve => setTimeout(resolve, 10));
-  }
-
-  /**
-   * Initialise la position des marqueurs associés à chaque ville depuis les données de la carte
-   */
-  private async parseCitiesPosition(): Promise<void>{
-    var finish: boolean = false;
-    this.getMapData().subscribe((cities:any) => {
-      for (const city of cities.features) {
         const lat = city.geometry.coordinates[0];
         const lon = city.geometry.coordinates[1];
-        const name = city.properties.name; 
-        
-        this.citiesPosition.set(name, [lat,lon]);
+        var cityToAdd: City = new City(name,id);
+        cityToAdd.position = [lat,lon];
+        this.instance.cities.push(cityToAdd);
       }
       finish = true;
     });
@@ -210,13 +176,13 @@ export class InstanceService {
     this.getInstanceData().subscribe(async(data) => {
       var textLines = data.split('\n');
 
-      this.nbVilles = Number(textLines[0]);
-      this.instance.cities = this.instance.cities.slice(0, this.nbVilles);
+      this.cityCount = Number(textLines[0]);
+      this.instance.cities = this.instance.cities.slice(0, this.cityCount);
 
-      this.nbCohortes = Number(textLines[1]);
+      this.cohorteCount = Number(textLines[1]);
       var cohorteVilleline = textLines[2].split('\t');
       var cohorteNbPatientsline = textLines[3].split('\t');
-      for (var i = 0; i < this.nbCohortes; i++){
+      for (var i = 0; i < this.cohorteCount; i++){
         var villeId = Number(cohorteVilleline[i]);
         this.instance.cities[villeId].cohorte = true;
         this.instance.cohortes.push({
@@ -226,20 +192,20 @@ export class InstanceService {
         });
       }
 
-      this.nbTypes = Number(textLines[4]);
-      this.nbTubes = Number(textLines[5]);
-      for(var i = 0; i < this.nbCohortes; i++){
-        for(var j = 0; j < this.nbTypes; j++){
+      this.typeCount = Number(textLines[4]);
+      this.tubeCount = Number(textLines[5]);
+      for(var i = 0; i < this.cohorteCount; i++){
+        for(var j = 0; j < this.typeCount; j++){
           this.instance.cohortes[i].types.push(new Type(this.types[j],[],this.instance.cohortes[i]));
-          var volumeTubesLine = textLines[6+i*this.nbCohortes+j].split('\t');
-          for(var k = 0; k < this.nbTubes; k++){
+          var volumeTubesLine = textLines[6+i*this.cohorteCount+j].split('\t');
+          for(var k = 0; k < this.tubeCount; k++){
             var tube: Tube = new Tube(k+1, Number(volumeTubesLine[k]), 0, [], [], this.instance.cohortes[i].types[j], this.instance.solution!);
             this.instance.cohortes[i].types[j].tubes.push(tube);
           }
         }
       }
-      var borneInf: number = 6+this.nbTypes*this.nbCohortes;
-      var lines: string[] = textLines.slice(borneInf,borneInf + this.nbVilles);
+      var borneInf: number = 6+this.typeCount*this.cohorteCount;
+      var lines: string[] = textLines.slice(borneInf,borneInf + this.cityCount);
       await this.parseDemandes(lines);
       await this.parseSolution();
       
@@ -258,7 +224,7 @@ export class InstanceService {
     var finish: boolean = false;
 
     //permet de passer les premières lignes (redondance des données)
-    var separator: number = this.nbCohortes*this.nbTypes*this.nbTubes;
+    var separator: number = this.cohorteCount*this.typeCount*this.tubeCount;
 
     this.getInstanceSolutionData().subscribe(data =>{
       this.instance.solution = new Solution(this.instance);
@@ -291,7 +257,7 @@ export class InstanceService {
               var color = this.colors[tube.number!-1];
 
               //polyline de l'arc (élément visuel affiché sur la carte)
-              var polyline = this.arcService.createPolyline(orig, dest,color,this.citiesPosition);
+              var polyline = this.arcService.createPolyline(orig, dest,color);
               
               var arc = new Arc(polyline,orig,dest,tube);
               tube.arcs.push(arc);

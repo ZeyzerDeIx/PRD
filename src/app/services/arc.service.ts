@@ -114,15 +114,9 @@ export class ArcService {
    * @param destination La ville de destination de l'arc/la polyline
    * @param color La couleur d'affichage de la polyline
    */
-  public createPolyline(origin: City, destination: City, color: string, pos: Map<string,number[]>): L.Polyline{
+  public createPolyline(origin: City, destination: City, color: string): L.Polyline{
 
-    var originPoint: LatLngExpression = 
-    [pos.get(origin.name)![0], pos.get(origin.name)![1]];
-
-    var destinationPoint: LatLngExpression = 
-    [pos.get(destination.name)![0], pos.get(destination.name)![1]];
-
-    var latlngs:LatLngExpression[] = [originPoint, destinationPoint];
+    var latlngs:LatLngExpression[] = [origin.position, destination.position];
 
     var polylineOptions = {color: color, weight: 4, opacity: 0.5};
 

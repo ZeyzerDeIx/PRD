@@ -1,4 +1,4 @@
-import L, { Marker } from 'leaflet';
+import L, { Marker, LatLngExpression } from 'leaflet';
 
 /**
  * Interface pour une cohorte
@@ -203,7 +203,20 @@ export class City {
      */
     demandes: Map<string, number>;
 
-    constructor(name: string = '', id: number = 0, cohorte: boolean = false, outgoing_arcs: Arc[] = [], incomming_arcs: Arc[] = [], marker = null, demandes = new Map()) {
+    /**
+     * Position en degrés.
+     */
+    position: LatLngExpression;
+
+    constructor(name: string = '',
+        id: number = 0,
+        cohorte: boolean = false,
+        outgoing_arcs: Arc[] = [],
+        incomming_arcs: Arc[] = [],
+        marker: L.Marker|null = null,
+        demandes: Map<string, number> = new Map(),
+        position: LatLngExpression = [0,0]
+    ) {
         this.name = name;
         this.id = id;
         this.cohorte = cohorte;
@@ -211,6 +224,7 @@ export class City {
         this.incomming_arcs = incomming_arcs;
         this.marker = marker;
         this.demandes = demandes;
+        this.position = position;
     }
 }
 

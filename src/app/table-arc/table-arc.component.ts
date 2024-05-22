@@ -127,15 +127,7 @@ export class TableArcComponent implements AfterViewInit{
    * @param index: Indice de l'arc à modifier
    */
   private arcChange(arc: Arc){
-    const citiesPos = this.instanceService.getCitiesPosition();
-
-    const orig: number[] = citiesPos.get(arc.origin.name)!;
-    const dest: number[] = citiesPos.get(arc.destination.name)!;
-
-    const newOrigCoord: LatLngExpression = [orig[0], orig[1]];
-    const newDestCoord: LatLngExpression = [dest[0], dest[1]];
-
-    const newCoords: LatLngExpression[] = [newOrigCoord, newDestCoord];
+    const newCoords: LatLngExpression[] = [arc.origin.position, arc.destination.position];
 
     this.arcService.modifyArc(arc, newCoords);
 
@@ -165,17 +157,13 @@ export class TableArcComponent implements AfterViewInit{
    * Créer un nouvel arc reliant la cohorte du tube à elle même.
    */
   addArc(){
-
-    const citiesPos = this.instanceService.getCitiesPosition();
     const co: City = this.arcService.getCohorteCity();
-    const coPos: number[] = citiesPos.get(co.name)!;
-    const newCoord: LatLngExpression = [coPos[0], coPos[1]];
     const tube: Tube = this.dataService.getSelectedTube();
     const color = this.instanceService.colors[tube.number-1];
-    const polyline = this.arcService.createPolyline(co, co, color, citiesPos);
+    const polyline = this.arcService.createPolyline(co, co, color);
     
     var arc = new Arc(polyline,co,co,tube);
-    arc.polyline.setLatLngs([newCoord, newCoord]);
+    arc.polyline.setLatLngs([co.position, co.position]);
     this.arcService.addArc(arc);
 
     this.dataService.tubeUpdated();
