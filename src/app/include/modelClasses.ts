@@ -1,7 +1,7 @@
 import L, { Marker, LatLngExpression } from 'leaflet';
 
 /**
- * Interface pour une cohorte
+ * Classe modèle représentant une cohorte
  */
 export class Cohorte {
     /**
@@ -27,7 +27,7 @@ export class Cohorte {
 }
 
 /**
- * Interface pour un type de tube
+ * Classe modèle représentant un type de tube
  */
 export class Type {
     /**
@@ -53,7 +53,7 @@ export class Type {
 }
 
 /**
- * Interface pour un tube / échantillon sanguin / prélèvement
+ * Classe modèle représentant un tube / échantillon sanguin / prélèvement
  */
 export class Tube {
     /**
@@ -125,7 +125,7 @@ export class Tube {
 }
 
 /**
- * Interface pour un arc
+ * Classe modèle représentant un arc
  */
 export class Arc {
     /**
@@ -165,7 +165,7 @@ export class Arc {
 }
 
 /**
- * Interface pour une ville
+ * Classe modèle représentant une ville
  */
 export class City {
     /**
@@ -228,6 +228,9 @@ export class City {
     }
 }
 
+/**
+ * Classe modèle représentant une solution de l'instance
+ */
 export class Solution {
 
     /**
@@ -247,7 +250,7 @@ export class Solution {
 }
 
 /**
- * Interface pour l'instance
+ * Classe modèle représentant l'instance
  */
 export class Instance {
     /**
