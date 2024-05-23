@@ -84,7 +84,7 @@ export class TableArcComponent implements AfterViewInit{
    */
   mouseOverArc(data: Arc){
     data.polyline.setStyle({
-      weight: 6,
+      weight: 5,
       opacity: 1
     })
   }
@@ -95,7 +95,7 @@ export class TableArcComponent implements AfterViewInit{
    */
   mouseOutArc(data: Arc){
     data.polyline.setStyle({
-      weight: 4,
+      weight: 2.7,
       opacity: 0.5
     })
   }
@@ -215,7 +215,8 @@ export class TableArcComponent implements AfterViewInit{
               );
         }
       }
-      this.checkDemandesSatisfied(cohorte);
+      error = this.checkDemandesSatisfied(cohorte);
+      if(error != "Ok !") return this.printError(error);
     }
     
     this.instanceService.saveSolution();
@@ -236,15 +237,38 @@ export class TableArcComponent implements AfterViewInit{
     var types: Type[] = [];
     for(let arc of arcs){
       if(types.includes(arc.tube.type))
-        return arc.destination.name + " est la destination de plusieurs flux d'un même type ( " + arc.tube.type.name + " ) en provenance de la cohorte "+ arc.tube.type.cohorte.city.name +".\nCela est interdit.";
+        return arc.destination.name + " est la destination de plusieurs flux d'un même type ( " + arc.tube.type.name + " ) en provenance de la cohorte " + arc.tube.type.cohorte.city.name + ".\nCela est interdit.";
 
       types.push(arc.tube.type);
     }
     return "Ok !";
   }
 
-  private checkDemandesSatisfied(cohorte: Cohorte): void{
+  /**
+   * Vérifie si les demandes de chaque type de chaque ville sont satisfaites par la cohorte en entrée.
+   * @param cohorte la cohorte à contrôler.
+   */
+  private checkDemandesSatisfied(cohorte: Cohorte): string{
+    for(let type of cohorte.types){
+      for(let city of this.instance.cities){
+        if(city.demandes.get(type.name) != 0 && !this.pathExists(cohorte.city, city, type))
+          return city.name + " n'est pas desservie par la cohorte " + cohorte.city.name + " en type " + type.name + ".\nCela est interdit.";
+      }
+    }
+    return "Ok !";
+  }
 
+  /**
+   * Vérifie qu'il existe bien un chemin entre la ville a et la ville b.
+   * @param a Départ du chemin.
+   * @param b Arrivé du chemin.
+   */
+  private pathExists(a: City, b: City, type: Type): boolean{
+    if(a == b) return true;
+    for(let arc of a.outgoing_arcs)
+      if(arc.tube.type == type && (arc.destination == b || this.pathExists(arc.destination, b, type)))
+        return true;
+    return false;
   }
 
   /**

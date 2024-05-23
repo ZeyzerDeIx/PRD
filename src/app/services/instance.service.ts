@@ -146,8 +146,8 @@ export class InstanceService {
     var finish: boolean = false;
     this.getMapData().subscribe((data:any) => {
       for (const city of data.features) {
-        const name = city.properties.name;
-        const id = city.id; 
+        const name = city.properties.name + " ("+ city.id + ")";
+        const id = city.id;
         const lat = city.geometry.coordinates[0];
         const lon = city.geometry.coordinates[1];
         var cityToAdd: City = new City(name,id);

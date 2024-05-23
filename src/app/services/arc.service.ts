@@ -118,11 +118,11 @@ export class ArcService {
 
     var latlngs:LatLngExpression[] = [origin.position, destination.position];
 
-    var polylineOptions = {color: color, weight: 4, opacity: 0.5};
+    var polylineOptions = {color: color, weight: 2.7, opacity: 0.5};
 
     return L.polyline(latlngs, polylineOptions)
     .arrowheads({
-      size: "25px",
+      size: "16px",
       opacity: 0.5,
       fill: false,
       yawn: 75,
