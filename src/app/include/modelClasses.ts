@@ -36,19 +36,19 @@ export class Type {
     name: string;
 
     /**
-     * Tableau de Tube associés au type
-     */
-    tubes: Tube[];
-
-    /**
      * Cohorte à laquelle est associée le type
      */
     cohorte: Cohorte;
 
-    constructor(name: string = '', tubes: Tube[] = [], cohorte: Cohorte = new Cohorte()) {
+    /**
+     * Tableau de Tube associés au type
+     */
+    tubes: Tube[];
+
+    constructor(name: string = '', cohorte: Cohorte = new Cohorte(), tubes: Tube[] = []) {
         this.name = name;
-        this.tubes = tubes;
         this.cohorte = cohorte;
+        this.tubes = tubes;
     }
 }
 
@@ -65,21 +65,6 @@ export class Tube {
      * Volume / quantité du tube
      */
     volume: number;
-
-    /**
-     * Volume consommé
-     */
-    consumed: number;
-
-    /**
-     * Liste d'arcs associés au tube
-     */
-    arcs: Arc[];
-
-    /**
-     * Liste des villes associées au tube
-     */
-    cities: City[];
 
     /**
      * type du tube
@@ -101,26 +86,41 @@ export class Tube {
      */
     usedByCohorte: boolean;
 
+    /**
+     * Volume consommé
+     */
+    consumed: number;
+
+    /**
+     * Liste d'arcs associés au tube
+     */
+    arcs: Arc[];
+
+    /**
+     * Liste des villes associées au tube
+     */
+    cities: City[];
+
     constructor(
         number: number = -1,
         volume: number = 0,
-        consumed: number = 0,
-        arcs: Arc[] = [],
-        cities: City[] = [],
         type: Type = new Type(),
         solution: Solution = new Solution(),
         nbAlico: number = 0,
-        usedByCohorte: boolean = false
+        usedByCohorte: boolean = false,
+        consumed: number = 0,
+        arcs: Arc[] = [],
+        cities: City[] = []
     ) {
         this.number = number;
         this.volume = volume;
-        this.consumed = consumed;
-        this.arcs = arcs;
-        this.cities = cities;
         this.type = type;
         this.solution = solution;
         this.nbAlico = nbAlico;
         this.usedByCohorte = usedByCohorte;
+        this.consumed = consumed;
+        this.arcs = arcs;
+        this.cities = cities;
     }
 }
 

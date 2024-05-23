@@ -36,7 +36,7 @@ export class InstanceService {
   /**
    * Liste des types de tube différents
    */
-  private types:string[] = ["LCR","SER","PLA", 'SNG'];
+  private typeNames:string[] = ["LCR","SER","PLA", 'SNG'];
 
 
   /**
@@ -61,7 +61,7 @@ export class InstanceService {
    * @param arcService Permet l'injection du ArcService dans ce service
    */
   constructor(protected http:HttpClient, private arcService: ArcService, private fileService: FileService) {
-    this.instance = new Instance([], this.types);
+    this.instance = new Instance([], this.typeNames);
 
     this.initService();
   }
@@ -171,15 +171,15 @@ export class InstanceService {
     //on attend la récupération des données de l'instance stockées sur le serveur pour éxécuter les traîtements
     this.getInstanceData().subscribe(async(data) => {
       //on convertie les données en tableau de lignes
-      var textLines = data.split('\n');
+      var lines = data.split('\n');
 
-      this.cityCount = Number(textLines[0]);
+      this.cityCount = Number(lines[0]);
       //on coupe les villes non utilisées par l'instance pour ne pas surcharger l'interface et éviter les bugs liées au parcours des villes
       this.instance.cities = this.instance.cities.slice(0, this.cityCount);
 
-      this.cohorteCount = Number(textLines[1]);
-      var cohorteCityLine = textLines[2].split('\t');
-      var cohortePatientCountLine = textLines[3].split('\t');
+      this.cohorteCount = Number(lines[1]);
+      var cohorteCityLine = lines[2].split('\t');
+      var cohortePatientCountLine = lines[3].split('\t');
       for (var i = 0; i < this.cohorteCount; i++){
         var villeId = Number(cohorteCityLine[i]);
         this.instance.cities[villeId].cohorte = true;
@@ -189,21 +189,36 @@ export class InstanceService {
           ));
       }
 
-      this.typeCount = Number(textLines[4]);
-      this.tubeCount = Number(textLines[5]);
-      for(var i = 0; i < this.cohorteCount; i++){
-        for(var j = 0; j < this.typeCount; j++){
-          this.instance.cohortes[i].types.push(new Type(this.types[j],[],this.instance.cohortes[i]));
-          var volumeTubesLine = textLines[6+i*this.cohorteCount+j].split('\t');
-          for(var k = 0; k < this.tubeCount; k++){
-            var tube: Tube = new Tube(k+1, Number(volumeTubesLine[k]), 0, [], [], this.instance.cohortes[i].types[j], this.instance.solution!);
-            this.instance.cohortes[i].types[j].tubes.push(tube);
-          }
-        }
-      }
-      var borneInf: number = 6+this.typeCount*this.cohorteCount;
-      var lines: string[] = textLines.slice(borneInf,borneInf + this.cityCount);
-      var afterDemandes = textLines.slice(borneInf + this.cityCount);
+      this.typeCount = Number(lines[4]);
+      this.tubeCount = Number(lines[5]);
+
+      this.instance.cohortes.forEach((cohorte, i) =>
+        this.typeNames.forEach((typeName, j) => {
+          var newType: Type = new Type(typeName, cohorte);
+          cohorte.types.push(newType);
+
+          //la ligne contenant les volume des tubes du type
+          lines[6+i*this.cohorteCount+j]
+          //on en fait un tableau
+          .split('\t')
+          //on retire le retour chariot du tableau
+          .slice(0,this.typeCount)
+          //et on la parcourt
+          .forEach((volume, k) => {
+            newType.tubes.push(new Tube(
+              k+1,
+              Number(volume),
+              newType,
+              this.instance.solution!
+            ));
+          });
+        })
+      );
+      
+      //borne inférieur à partir de laquelle on passe aux demandes
+      var lowerBound: number = 6+this.typeCount*this.cohorteCount;
+      var lines: string[] = lines.slice(lowerBound,lowerBound + this.cityCount);
+      var afterDemandes = lines.slice(lowerBound + this.cityCount);
       this.instance.maxFreezes = Number(afterDemandes[0]);
       await this.parseDemandes(lines);
       await this.parseSolution();
