@@ -261,7 +261,7 @@ export class Instance {
     /**
      * Types de tube de l'instance
      */
-    typesName: string[];
+    typeNames: string[];
 
     /**
      * Cohortes de l'instance
@@ -280,13 +280,13 @@ export class Instance {
 
     constructor(
         cities: City[] = [],
-        typesName: string[] = [],
+        typeNames: string[] = [],
         cohortes: Cohorte[] = [],
         solution: Solution | null = null,
         maxFreezes: number = 0
     ) {
         this.cities = cities;
-        this.typesName = typesName;
+        this.typeNames = typeNames;
         this.cohortes = cohortes;
         this.solution = solution;
         this.maxFreezes = maxFreezes;

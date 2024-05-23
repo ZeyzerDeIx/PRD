@@ -92,7 +92,7 @@ export class AppComponent implements OnInit {
                                     Demande : 
                                     <ul>`;
 
-      for (let typeName of this.instance.typesName)
+      for (let typeName of this.instance.typeNames)
         popupContent += `<li>${ typeName } : ${ city.demandes.get(typeName) }mL</li>`;
 
       popupContent += `</ul></div>`

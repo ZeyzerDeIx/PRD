@@ -37,7 +37,6 @@ export class InstanceService {
    */
   private typesURL:string = "assets/solution_data/types.txt";
 
-  // TODO: Les types de tubes sont créées manuellement, peut-être pouvoir choisir la liste des types ?
   /**
    * Liste des types de tube différents
    */
@@ -66,7 +65,7 @@ export class InstanceService {
    * @param arcService Permet l'injection du ArcService dans ce service
    */
   constructor(protected http:HttpClient, private arcService: ArcService, private fileService: FileService) {
-    this.instance = new Instance([], this.typeNames);
+    this.instance = new Instance();
 
     this.initService();
   }
@@ -253,6 +252,7 @@ export class InstanceService {
     this.getTypesData().subscribe(data =>{
       //transforme le fichier en un tableau de string
       this.typeNames = data.split('\n');
+      this.instance.typeNames = this.typeNames;
 
       finish = true;
     });
@@ -381,7 +381,7 @@ export class InstanceService {
    */
   private parseDemandes(lines: string[]): void{
     this.instance.cities.forEach((city, i) =>
-      this.instance.typesName.forEach((typeName, j) => 
+      this.instance.typeNames.forEach((typeName, j) => 
         city.demandes.set(typeName,Number(lines[i].split('\t')[j]))
         )
     );
