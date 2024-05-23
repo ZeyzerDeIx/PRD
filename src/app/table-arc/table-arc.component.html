@@ -7,7 +7,7 @@
   style="display: none;">
 </mat-paginator>
 <div *ngIf="tableIsActive">
-  <div id="divButton">
+  <div *ngIf="paginator.length != 0; else elseBlock" id="divButton">
     <button class="arrow" [disabled]="!paginator.hasPreviousPage()" mat-raised-button color="primary" (click)="paginator.previousPage()"><</button>
     <div class="info-box">
       {{ paginator.pageIndex * paginator.pageSize + min(totalRecords,1) }}
@@ -17,8 +17,9 @@
     </div>
     <button class="arrow" [disabled]="!paginator.hasNextPage()" mat-raised-button color="primary" (click)="paginator.nextPage()">></button>
   </div>
+  <ng-template #elseBlock><div class="info-box">Aucun arc dans ce tube, ajoutez en un!</div></ng-template>
 
-  <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+  <table *ngIf="paginator.length != 0" mat-table [dataSource]="dataSource" class="mat-elevation-z8">
 
     <!-- Origin Column -->
     <ng-container matColumnDef="origin">
@@ -72,6 +73,6 @@
   </table>
 
   <button type="button" class="full-width" mat-raised-button color="primary" (click)="addArc()">+</button>
-
-  <button class="to-right" type="button" mat-raised-button color="primary" (click)="checkSolution()">Sauvegarder la solution</button>
 </div>
+
+<button class="to-right" type="button" mat-raised-button color="primary" (click)="checkSolution()">Sauvegarder la solution</button>
