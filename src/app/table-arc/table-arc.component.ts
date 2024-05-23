@@ -169,7 +169,6 @@ export class TableArcComponent implements AfterViewInit{
     this.dataService.tubeUpdated();
   }
 
-  // TODO : La fonction marche mais elle ne fait que afficher le résultat dans la console
   /**
    * Vérifie si la solution modifiée par l'utilisateur reste faisable (i.e. chaque ville est bien desservie par une seule autre ville)
    */

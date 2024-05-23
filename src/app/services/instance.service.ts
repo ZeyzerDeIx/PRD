@@ -37,11 +37,6 @@ export class InstanceService {
    */
   private typesURL:string = "assets/solution_data/types.txt";
 
-  /**
-   * Liste des types de tube différents
-   */
-  private typeNames:string[] = [];
-
 
   /**
    * Contient la solution proposée par le modèle sous la forme d'un objet Solution
@@ -203,10 +198,12 @@ export class InstanceService {
       }
 
       this.typeCount = Number(lines[4]);
+      if(this.instance.typeNames.length > this.typeCount)
+        this.instance.typeNames = this.instance.typeNames.slice(this.typeCount);
       this.tubeCount = Number(lines[5]);
 
       this.instance.cohortes.forEach((cohorte, i) =>
-        this.typeNames.forEach((typeName, j) => {
+        this.instance.typeNames.forEach((typeName, j) => {
           var newType: Type = new Type(typeName, cohorte);
           cohorte.types.push(newType);
 
@@ -251,8 +248,7 @@ export class InstanceService {
 
     this.getTypesData().subscribe(data =>{
       //transforme le fichier en un tableau de string
-      this.typeNames = data.split('\n');
-      this.instance.typeNames = this.typeNames;
+      this.instance.typeNames = data.split('\n');
 
       finish = true;
     });
