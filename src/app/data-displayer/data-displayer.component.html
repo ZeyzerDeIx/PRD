@@ -4,6 +4,8 @@
     <span class="summary-arrow">&#9658;</span> {{ toggleButtonText }} les détails
   </label>
   <div #infoContent class="info-content" [style.max-height.px]="infoBoxHeight">
+    <h2>Nombre max de congélations</h2>
+    <div class="info">{{ instance.maxFreezes }}</div>
     <h2>Nombre d'alicotages</h2>
     <div class="info-container">
       <div class="info">Total: {{ instance.solution?.nbAlico }}</div>

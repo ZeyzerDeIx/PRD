@@ -146,7 +146,7 @@ export class InstanceService {
     var finish: boolean = false;
     this.getMapData().subscribe((data:any) => {
       for (const city of data.features) {
-        const name = city.properties.name + " ("+ city.id + ")";
+        const name = city.properties.name + " ["+ city.id + "]";
         const id = city.id;
         const lat = city.geometry.coordinates[0];
         const lon = city.geometry.coordinates[1];
@@ -170,22 +170,23 @@ export class InstanceService {
 
     //on attend la récupération des données de l'instance stockées sur le serveur pour éxécuter les traîtements
     this.getInstanceData().subscribe(async(data) => {
+      //on convertie les données en tableau de lignes
       var textLines = data.split('\n');
 
       this.cityCount = Number(textLines[0]);
+      //on coupe les villes non utilisées par l'instance pour ne pas surcharger l'interface et éviter les bugs liées au parcours des villes
       this.instance.cities = this.instance.cities.slice(0, this.cityCount);
 
       this.cohorteCount = Number(textLines[1]);
-      var cohorteVilleline = textLines[2].split('\t');
-      var cohorteNbPatientsline = textLines[3].split('\t');
+      var cohorteCityLine = textLines[2].split('\t');
+      var cohortePatientCountLine = textLines[3].split('\t');
       for (var i = 0; i < this.cohorteCount; i++){
-        var villeId = Number(cohorteVilleline[i]);
+        var villeId = Number(cohorteCityLine[i]);
         this.instance.cities[villeId].cohorte = true;
-        this.instance.cohortes.push({
-          nbPatients: Number(cohorteNbPatientsline[i]),
-          city: this.instance.cities[villeId],
-          types: []
-        });
+        this.instance.cohortes.push(new Cohorte(
+          Number(cohortePatientCountLine[i]),
+          this.instance.cities[villeId]
+          ));
       }
 
       this.typeCount = Number(textLines[4]);
@@ -202,6 +203,8 @@ export class InstanceService {
       }
       var borneInf: number = 6+this.typeCount*this.cohorteCount;
       var lines: string[] = textLines.slice(borneInf,borneInf + this.cityCount);
+      var afterDemandes = textLines.slice(borneInf + this.cityCount);
+      this.instance.maxFreezes = Number(afterDemandes[0]);
       await this.parseDemandes(lines);
       await this.parseSolution();
       

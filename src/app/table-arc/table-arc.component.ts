@@ -247,6 +247,7 @@ export class TableArcComponent implements AfterViewInit{
   /**
    * Vérifie si les demandes de chaque type de chaque ville sont satisfaites par la cohorte en entrée.
    * @param cohorte la cohorte à contrôler.
+   * @returns Le message d'erreur s'il y en a une, "Ok !" sinon.
    */
   private checkDemandesSatisfied(cohorte: Cohorte): string{
     for(let type of cohorte.types){
@@ -262,6 +263,7 @@ export class TableArcComponent implements AfterViewInit{
    * Vérifie qu'il existe bien un chemin entre la ville a et la ville b.
    * @param a Départ du chemin.
    * @param b Arrivé du chemin.
+   * @returns true si le chemin existe, false sinon.
    */
   private pathExists(a: City, b: City, type: Type): boolean{
     if(a == b) return true;
@@ -273,7 +275,7 @@ export class TableArcComponent implements AfterViewInit{
 
   /**
    * Affiche un message d'erreur quand l'utilisateur essaie de sauvegarder une solution infaisable
-   * @param error Message d'erreur à afficher
+   * @param error Message d'erreur à afficher.
    */
   printError(error: string){
     console.error(error);

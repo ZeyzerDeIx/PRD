@@ -7,7 +7,7 @@ export class Cohorte {
     /**
      * Nombre de patients de la cohorte
      */
-    nbPatients: number | undefined;
+    patientCount: number | undefined;
 
     /**
      * Ville de départ de la cohorte
@@ -19,8 +19,8 @@ export class Cohorte {
      */
     types: Type[];
 
-    constructor(nbPatients: number | undefined = undefined, city: City = new City(), types: Type[] = []) {
-        this.nbPatients = nbPatients;
+    constructor(patientCount: number | undefined = undefined, city: City = new City(), types: Type[] = []) {
+        this.patientCount = patientCount;
         this.city = city;
         this.types = types;
     }
@@ -270,15 +270,22 @@ export class Instance {
      */
     solution: Solution | null;
 
+    /**
+     * Nombre de congélations maximum de l'instance
+     */
+    maxFreezes: number;
+
     constructor(
         cities: City[] = [],
         typesName: string[] = [],
         cohortes: Cohorte[] = [],
-        solution: Solution | null = null
+        solution: Solution | null = null,
+        maxFreezes: number = 0
     ) {
         this.cities = cities;
         this.typesName = typesName;
         this.cohortes = cohortes;
         this.solution = solution;
+        this.maxFreezes = maxFreezes;
     }
 }
