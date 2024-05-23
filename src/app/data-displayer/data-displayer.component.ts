@@ -39,6 +39,12 @@ export class DataDisplayerComponent implements OnInit {
   isInfoBoxOpen: boolean = false;
 
   /**
+   * Permet de connaître le volume totale que demande la solution au tube selectionné. Utilisé par la template d'affichage.
+   * NB: Peut également être un string en cas d'erreur (pour afficher "erreur" justement).
+   */
+  requiredVolume: number|string = 0;
+
+  /**
    * Cet élément fait le lien avec la template et permet de récupérer des informations sur la taille de la boite notament.
    */
   @ViewChild('infoContent') infoContent!: ElementRef;
@@ -59,19 +65,6 @@ export class DataDisplayerComponent implements OnInit {
    */
   get infoBoxHeight(): number {
     return this.isInfoBoxOpen ? this.infoContent.nativeElement.scrollHeight : 0;
-  }
-
-  /**
-   * Permet de connaître le volume totale que demande la solution au tube selectionné.
-   * Cette méthode est utilisée par la template d'affichage.
-   * @returns le volume requis totale pour le tube selectionné.
-   */
-  get requiredVolume(): number|string {
-    try{
-      return this.instanceService.requiredVolumeByTube(this.selectedTube.type.cohorte.city, this.selectedTube);
-    } catch(error: any){
-      return "Erreur";
-    }
   }
 
   /**
@@ -118,6 +111,11 @@ export class DataDisplayerComponent implements OnInit {
    */
   private onSelectedTubeUpdate(newTube: Tube = this.selectedTube): void{
     this.selectedTube = newTube;
+    try{
+      this.requiredVolume = this.instanceService.requiredVolumeByTube(this.selectedTube.type.cohorte.city, this.selectedTube);
+    } catch(error: any){
+      this.requiredVolume = "Erreur";
+    }
     this.updateTubeCities();
     this.caculateAlicotagesNb();
   }

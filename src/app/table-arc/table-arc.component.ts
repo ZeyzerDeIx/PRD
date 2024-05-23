@@ -287,6 +287,7 @@ export class TableArcComponent implements AfterViewInit{
   ngAfterViewInit(){
     this.arcService.polylineUpdated.subscribe(
       (polylineArray) => {
+        console.log("update");
         this.polylineArray = polylineArray;
 
         //TODO à remplacer par un ErrorService et un composant d'affichage
