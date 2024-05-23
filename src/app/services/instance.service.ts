@@ -32,11 +32,16 @@ export class InstanceService {
    */
   private instanceSolutionUrl:string = "assets/solution_data/sol_20_4_4_4_3_00.txt";
 
+  /**
+   * URL de la solution proposée par le modèle
+   */
+  private typesURL:string = "assets/solution_data/types.txt";
+
   // TODO: Les types de tubes sont créées manuellement, peut-être pouvoir choisir la liste des types ?
   /**
    * Liste des types de tube différents
    */
-  private typeNames:string[] = ["LCR","SER","PLA", 'SNG'];
+  private typeNames:string[] = [];
 
 
   /**
@@ -109,6 +114,7 @@ export class InstanceService {
    */
   private async initService(): Promise<void>
   {
+    await this.parseTypes();
     await this.parseCities();
     await this.parseInstance();
 
@@ -128,7 +134,7 @@ export class InstanceService {
    * @returns L'instance texte en entrée du modèle sous la forme d'un Observable
    */
   private getInstanceData(){
-    return this.http.get(this.instanceUrl, { responseType: 'text'});
+    return this.http.get(this.instanceUrl, {responseType: 'text'});
   }
 
   /**
@@ -136,7 +142,15 @@ export class InstanceService {
    * @returns La solution texte proposée par le modèle sous la forme d'un Observable
    */
   private getInstanceSolutionData(){
-    return this.http.get(this.instanceSolutionUrl, { responseType: 'text'});
+    return this.http.get(this.instanceSolutionUrl, {responseType: 'text'});
+  }
+
+  /**
+   * Renvoie les types sous forme de texte
+   * @returns Les types
+   */
+  private getTypesData(){
+    return this.http.get(this.typesURL, {responseType: 'text'});
   }
 
   /**
@@ -204,25 +218,42 @@ export class InstanceService {
           //on retire le retour chariot du tableau
           .slice(0,this.typeCount)
           //et on la parcourt
-          .forEach((volume, k) => {
+          .forEach((volume, k) => 
             newType.tubes.push(new Tube(
               k+1,
               Number(volume),
               newType,
-              this.instance.solution!
-            ));
-          });
+              this.instance.solution!))
+          );
         })
       );
       
       //borne inférieur à partir de laquelle on passe aux demandes
       var lowerBound: number = 6+this.typeCount*this.cohorteCount;
-      var lines: string[] = lines.slice(lowerBound,lowerBound + this.cityCount);
+
+      var demandes: string[] = lines.slice(lowerBound,lowerBound + this.cityCount);
+      await this.parseDemandes(demandes);
+
       var afterDemandes = lines.slice(lowerBound + this.cityCount);
       this.instance.maxFreezes = Number(afterDemandes[0]);
-      await this.parseDemandes(lines);
+
       await this.parseSolution();
       
+      finish = true;
+    });
+
+    //permet d'attendre que l'execution soit terminée pour que tout se déroulent dans l'ordre
+    while(!finish)
+      await new Promise(resolve => setTimeout(resolve, 10));
+  }
+
+  private async parseTypes(): Promise<void>{
+    var finish: boolean = false;
+
+    this.getTypesData().subscribe(data =>{
+      //transforme le fichier en un tableau de string
+      this.typeNames = data.split('\n');
+
       finish = true;
     });
 
@@ -362,8 +393,8 @@ export class InstanceService {
    * @returns La ville correspondant à l'id donné en paramètre, sinon une ville par defaut si aucune ville ne correspond
    */
   public findCityById(id:Number) : City{
-    for (const city of this.instance.cities)
-      if (city.id == id)
+    for(const city of this.instance.cities)
+      if(city.id == id)
         return city;
     return new City();
   }
@@ -374,8 +405,8 @@ export class InstanceService {
    * @returns La ville correspondant au nom donné en paramètre, sinon une ville par defaut si aucune ville ne correspond
    */
   public findCityByName(name: string) : City{
-    for (const city of this.instance.cities)
-      if (city.name == name)
+    for(const city of this.instance.cities)
+      if(city.name == name)
         return city;
     return new City();
   }
@@ -385,25 +416,20 @@ export class InstanceService {
    */
   public saveSolution(): void{
     var content: string = "";
+
+    //L'entête avec les villes utilisants chaque tube
     this.instance.cohortes.forEach((cohorte, i) =>
       cohorte.types.forEach((type, j) =>
-        type.tubes.forEach((tube, k) => {
-          content += `${i}\t${j}\t${k}\t${tube.cities.length}`;
-          tube.cities.forEach(city => content += `\t${city.id}`);
-          content += "\n";
-        })
-      )
-    );
+        type.tubes.forEach((tube, k) =>
+          content += `${i}\t${j}\t${k}\t${tube.cities.length}` +
+          tube.cities.map(city => `\t${city.id}`).join('') + "\n"
+        )));
 
-    for(let cohorte of this.instance.cohortes){
-      for(let type of cohorte.types){
-        for(let tube of type.tubes){
-          content += `${tube.arcs.length}\n`;
-          for(let arc of tube.arcs)
-            content += `${arc.origin.id}\t${arc.destination.id}\n`;
-        }
-      }
-    }
+    //Les arcs pour chaque tube
+    for(let cohorte of this.instance.cohortes)
+      for(let type of cohorte.types)
+        for(let tube of type.tubes)
+          content += `${tube.arcs.length}\n` + tube.arcs.map(arc => `${arc.origin.id}\t${arc.destination.id}\n`).join('');
 
     const fileName = 'solution.txt';
     this.fileService.downloadFile(content, fileName);
