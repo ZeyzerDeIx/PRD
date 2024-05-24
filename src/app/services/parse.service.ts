@@ -28,7 +28,7 @@ export class ParseService {
   private instanceSolutionUrl:string = "assets/solution_data/sol_20_4_4_4_3_00.txt";
 
   /**
-   * URL de la solution proposée par le modèle
+   * URL des types proposés par le modèle
    */
   private typesURL:string = "assets/solution_data/types.txt";
 
@@ -59,7 +59,7 @@ export class ParseService {
     this.instance = new Instance();
   }
 
-  
+
   /**
    * Renvoie la ville associée à l'id donné en paramètre
    * @param id Le numéro de la ville à trouver
