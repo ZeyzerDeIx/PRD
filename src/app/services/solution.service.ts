@@ -30,7 +30,7 @@ export class SolutionService {
     //on parcours chaque tube de chaque type de chaque cohorte
     for(let cohorte of instance.cohortes){
       for(let type of cohorte.types){
-        var nbUsedByCohorteTube: number = 0;
+        var tubeUsedByCohorteCount: number = 0;
         for(let tube of type.tubes){
           //on vérifie qu'aucun arc du tube n'a pour destination sa cohorte ou son origine
           for(let arc of tube.arcs){
@@ -53,11 +53,15 @@ export class SolutionService {
               );
 
           //on vérifie que la cohorte ne prélève qu'un tube par type
-          if(tube.usedByCohorte && ++nbUsedByCohorteTube > 1)
+          if(tube.usedByCohorte && ++tubeUsedByCohorteCount > 1)
             return this.printError(
               "Il y a plusieurs tubes de type "+type.name+" prélevés par la cohorte "+cohorte.city.name+".\nMerci d'en choisir un seul."
               );
         }
+        if(tubeUsedByCohorteCount == 0)
+          return this.printError(
+            "La cohorte "+cohorte.city.name+" ne prélève aucun tube du type "+type.name+". Sa demande n'est donc pas satisfaite."
+            );
       }
       error = this.checkDemandesSatisfied(cohorte, instance.cities);
       if(error != this.noErrorMessage) return this.printError(error);
