@@ -42,8 +42,8 @@ export class InstanceService {
   }
 
   /**
-   * Renvoie la solution proposée par le modèle
-   * @returns La solution proposée par le modèle sous la forme d'un objet Instance
+   * Retourne l'instance une fois celle ci initialisée de manière asynchrone.
+   * @returns L'instance. (Promise)
    */
   public async getInstance(): Promise<Instance>{
     while(!this.isInitialized) await new Promise(resolve => setTimeout(resolve, 10));
