@@ -48,7 +48,6 @@ export class ParseService {
   private cityCount: number = 0;
   private typeCount: number = 0;
   private cohorteCount: number = 0;
-  public colors: string[] = ['red', 'blue', 'green', 'purple'];
 
   /**
    * Constructeur du service
@@ -280,7 +279,7 @@ export class ParseService {
       var dest: City = this.findCityById(Number(split[1]));
 
       //couleur de la polyline de l'arc
-      var color = this.colors[tube.number!-1];
+      var color = this.arcService.colors[tube.number!-1];
 
       //polyline de l'arc (élément visuel affiché sur la carte)
       var polyline = this.arcService.createPolyline(orig, dest,color);

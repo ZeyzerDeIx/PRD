@@ -25,7 +25,12 @@ export class ArcService {
   /**
    * Permet de transmettre la liste des arcs à chaque modification de celle-ci
    */
-  polylineUpdated:EventEmitter<Arc[]> = new EventEmitter();
+  public polylineUpdated:EventEmitter<Arc[]> = new EventEmitter();
+
+  /**
+   * Liste des couleures possibles pour les arcs.
+   */
+  public colors: string[] = ['red', 'blue', 'green', 'purple'];
 
   /**
    * Constructeur du service

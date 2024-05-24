@@ -160,7 +160,7 @@ export class TableArcComponent implements AfterViewInit{
   addArc(){
     const co: City = this.arcService.getCohorteCity();
     const tube: Tube = this.dataService.getSelectedTube();
-    const color = this.instanceService.colors[tube.number-1];
+    const color = this.arcService.colors[tube.number-1];
     const polyline = this.arcService.createPolyline(co, co, color);
     
     var arc = new Arc(polyline,co,co,tube);

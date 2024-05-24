@@ -28,7 +28,6 @@ export class InstanceService {
    * Faux tant que le parsing des ressources n'est pas terminé
    */
   private isInitialized: boolean = false;
-  public colors: string[] = ['red', 'blue', 'green', 'purple'];
 
   /**
    * Constructeur du service
