@@ -52,17 +52,20 @@ export class SolutionService {
               "Le tube n°"+tube.number+" du type "+type.name+" de la cohorte "+cohorte.city.name+" ne peut pas assumer le volume demandé.\nVolume du tube: "+tube.volume+"\nVolume demandé: "+this.instanceService.requiredVolumeByTube(cohorte.city, tube)
               );
 
-          //on vérifie que la cohorte ne prélève qu'un tube par type
+          //on vérifie que la cohorte ne prélève pas plusieurs tubes par type
           if(tube.usedByCohorte && ++tubeUsedByCohorteCount > 1)
             return this.printError(
               "Il y a plusieurs tubes de type "+type.name+" prélevés par la cohorte "+cohorte.city.name+".\nMerci d'en choisir un seul."
               );
         }
+        //on vérifie que la cohorte prélève bien un tube
         if(tubeUsedByCohorteCount == 0)
           return this.printError(
             "La cohorte "+cohorte.city.name+" ne prélève aucun tube du type "+type.name+". Sa demande n'est donc pas satisfaite."
             );
       }
+      error = this.checkFreezesCount(instance.maxFreezes, cohorte, instance.cities);
+      if(error != this.noErrorMessage) return this.printError(error);
       error = this.checkDemandesSatisfied(cohorte, instance.cities);
       if(error != this.noErrorMessage) return this.printError(error);
     }
@@ -99,10 +102,27 @@ export class SolutionService {
    * @returns Le message d'erreur s'il y en a une, "Ok !" sinon.
    */
   private checkDemandesSatisfied(cohorte: Cohorte, cities: City[]): string{
-    for(let type of cohorte.types)
-      for(let city of cities)
-        if(city.demandes.get(type.name) != 0 && !this.arcService.pathExists(cohorte.city, city, type))
-          return city.name + " n'est pas desservie par la cohorte " + cohorte.city.name + " en type " + type.name + ".\nCela est interdit.";
+    for(let city of cities)
+      for(let type of cohorte.types){
+        var path: boolean = false;
+        for(let tube of type.tubes)
+          if(!(city.demandes.get(type.name) != 0 && !this.arcService.pathExists(cohorte.city, city, tube)))
+            path = true;
+          if(!path)
+            return city.name + " n'est pas desservie par la cohorte " + cohorte.city.name + " en type " + type.name + ".\nCela est interdit.";
+      }
+    
+    return this.noErrorMessage;
+  }
+
+  private checkFreezesCount(maxFreezes: number, cohorte: Cohorte, cities: City[]): string{
+    for(let city of cities)
+      for(let type of cohorte.types)
+        for(let tube of type.tubes){
+          var path: Arc[] = this.arcService.findPath(cohorte.city, city, tube);
+          if(path.length > maxFreezes)
+            return "Le chemin entre la cohorte"+cohorte.city.name+" et "+city.name+" dépasse les "+maxFreezes+" congélations.\nCela est interdit.";
+        }
     return this.noErrorMessage;
   }
 
