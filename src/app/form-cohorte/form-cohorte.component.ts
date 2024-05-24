@@ -1,4 +1,4 @@
-import { Component, Input} from '@angular/core';
+import { Component, Input, AfterViewInit} from '@angular/core';
 import {FormsModule} from '@angular/forms';
 import {MatInputModule} from '@angular/material/input';
 import {MatSelectChange, MatSelectModule} from '@angular/material/select';
@@ -21,7 +21,7 @@ import { DataService } from '../services/data.service';
   templateUrl: './form-cohorte.component.html',
   styleUrl: './form-cohorte.component.scss'
 })
-export class FormCohorteComponent {
+export class FormCohorteComponent implements AfterViewInit{
   /**
    * Carte Leaflet du composant principal
    */
@@ -63,9 +63,7 @@ export class FormCohorteComponent {
    * @param arcService Service permettant de créér les arcs
    * @param dataService Service permettant de communiquer les données importantes à afficher
    */
-  constructor(private instanceService:InstanceService, private arcService:ArcService, private dataService: DataService){
-    //this.instance = instanceService.instance;
-  }
+  constructor(private instanceService:InstanceService, private arcService:ArcService, private dataService: DataService){}
 
   /**
    * Gère la sélection d'une nouvelle cohorte dans le formulaire
@@ -115,5 +113,11 @@ export class FormCohorteComponent {
         this.map.removeLayer(layer);
     });
   }
-
+  async ngAfterViewInit(): Promise<void>{
+    //on attend que le solution service soit initialisé
+    while(!this.instanceService.getIsInitialized())
+      await new Promise(resolve => setTimeout(resolve, 10));
+    
+    this.instance = this.instanceService.getInstance();
+  }
 }

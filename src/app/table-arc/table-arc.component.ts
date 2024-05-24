@@ -178,7 +178,13 @@ export class TableArcComponent implements AfterViewInit{
   /**
    * Initialise toutes les valeurs du composant
    */
-  ngAfterViewInit(){
+  async ngAfterViewInit(): Promise<void>{
+    //on attend que le solution service soit initialisé
+    while(!this.instanceService.getIsInitialized())
+      await new Promise(resolve => setTimeout(resolve, 10));
+
+    this.instance = this.instanceService.getInstance();
+
     this.arcService.polylineUpdated.subscribe(
       (polylineArray) => {
         this.polylineArray = polylineArray;

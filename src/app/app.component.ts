@@ -51,9 +51,11 @@ export class AppComponent implements OnInit {
   public async ngOnInit():  Promise<void> {
     this.loadMap();
 
-    //on attend que le solution service soit initialisé
+    //on attend que l'instance service soit initialisé
     while(!this.instanceService.getIsInitialized())
       await new Promise(resolve => setTimeout(resolve, 10));
+    //et on update l'instance
+    this.instance = this.instanceService.getInstance();
 
     this.markersArray = this.instanceService.drawCities(this.map, this.instance.cities);
     this.createMarkersPopup()
