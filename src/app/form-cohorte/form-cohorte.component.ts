@@ -55,7 +55,7 @@ export class FormCohorteComponent implements AfterViewInit{
   /**
    * Instance provenant de InstanceService (Initialisée en amont depuis le service même)
    */
-  instance: Instance = this.instanceService.getInstance();
+  instance: Instance = new Instance();
   
   /**
    * Constructeur du composant
@@ -113,11 +113,9 @@ export class FormCohorteComponent implements AfterViewInit{
         this.map.removeLayer(layer);
     });
   }
+
   async ngAfterViewInit(): Promise<void>{
-    //on attend que le solution service soit initialisé
-    while(!this.instanceService.getIsInitialized())
-      await new Promise(resolve => setTimeout(resolve, 10));
-    
-    this.instance = this.instanceService.getInstance();
+    //on attend que l'instance puisse être récupérée
+    this.instance = await this.instanceService.getInstance();
   }
 }

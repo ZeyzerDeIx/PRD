@@ -39,7 +39,7 @@ export class TableArcComponent implements AfterViewInit{
   /**
    * Instance provenant de InstanceService (Initialisée en amont depuis le service même)
    */
-  instance: Instance = this.instanceService.getInstance();
+  instance: Instance = new Instance();
 
   /**
    * Tableau d'Arc contenant la liste des arcs 
@@ -179,11 +179,8 @@ export class TableArcComponent implements AfterViewInit{
    * Initialise toutes les valeurs du composant
    */
   async ngAfterViewInit(): Promise<void>{
-    //on attend que le solution service soit initialisé
-    while(!this.instanceService.getIsInitialized())
-      await new Promise(resolve => setTimeout(resolve, 10));
-
-    this.instance = this.instanceService.getInstance();
+    //on attend que l'instance puisse être récupérée
+    this.instance = await this.instanceService.getInstance();
 
     this.arcService.polylineUpdated.subscribe(
       (polylineArray) => {

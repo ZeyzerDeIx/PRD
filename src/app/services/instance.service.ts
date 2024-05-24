@@ -45,9 +45,10 @@ export class InstanceService {
    * Renvoie la solution proposée par le modèle
    * @returns La solution proposée par le modèle sous la forme d'un objet Instance
    */
-  public getInstance(): Instance{ return this.instance; }
-
-  public getIsInitialized(): boolean {return this.isInitialized;}
+  public async getInstance(): Promise<Instance>{
+    while(!this.isInitialized) await new Promise(resolve => setTimeout(resolve, 10));
+    return this.instance;
+  }
 
   /**
    * Ajoute les marqueurs associés à chaque ville sur la carte Leaflet

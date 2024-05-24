@@ -5,10 +5,10 @@
   </label>
   <div #infoContent class="info-content" [style.max-height.px]="infoBoxHeight">
     <h2>Nombre max de congélations</h2>
-    <div class="info">{{ instanceService.getInstance().maxFreezes }}</div>
+    <div class="info">{{ instance.maxFreezes }}</div>
     <h2>Nombre d'alicotages</h2>
     <div class="info-container">
-      <div class="info">Total: {{ instanceService.getInstance().solution?.nbAlico }}</div>
+      <div class="info">Total: {{ instance.solution?.nbAlico }}</div>
       <div class="info"  *ngIf="selectedTube.number != -1">
       Tube: {{ selectedTube.nbAlico }}</div>
     </div>

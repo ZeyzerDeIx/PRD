@@ -1,6 +1,6 @@
 // data-displayer.component.ts
 
-import { Component, OnInit, ElementRef, ViewChild } from '@angular/core';
+import { Component, AfterViewInit, ElementRef, ViewChild } from '@angular/core';
 import { InstanceService } from '../services/instance.service';
 import { Instance, Tube, City } from '../include/modelClasses';
 import { DataService } from '../services/data.service';
@@ -20,7 +20,12 @@ import { FormsModule } from '@angular/forms';
   templateUrl: './data-displayer.component.html',
   styleUrls: ['./data-displayer.component.scss']
 })
-export class DataDisplayerComponent implements OnInit {
+export class DataDisplayerComponent implements AfterViewInit {
+
+  /**
+   * Instance provenant de InstanceService (Initialisée en amont depuis le service même)
+   */
+  instance: Instance = new Instance;
 
   /**
    * Le tube actuellement selectionné par l'utilisateur.
@@ -86,19 +91,8 @@ export class DataDisplayerComponent implements OnInit {
    * @param instanceService Service permettant de créer l'objet Instance
    * @param dataService Service permettant de communiquer les données importantes à afficher
    */
-  constructor(protected instanceService:InstanceService, private dataService: DataService){
+  constructor(private instanceService:InstanceService, private dataService: DataService){
   }
-
-  async ngOnInit(): Promise<void> {
-    this.dataService.selectedTubeUpdate.subscribe(this.onSelectedTubeUpdate.bind(this));
-
-    //on attend que le instance service soit initialisé
-    while(!this.instanceService.getIsInitialized())
-      await new Promise(resolve => setTimeout(resolve, 10));
-
-    this.caculateAlicotagesNb();
-  }
-
   /**
    * Est appelé à chaque fois que le tube selectionné est update.
    * Permet de mettre à jour les donnée et leur affichage.
@@ -140,17 +134,16 @@ export class DataDisplayerComponent implements OnInit {
    * Calcul le nombre d'alicotage de chaque tube ainsi que de la solution pour les mettres à jour.
    */
   private caculateAlicotagesNb(): void{
-    var instance = this.instanceService.getInstance();
-    if(instance.solution == null) return;
+    if(this.instance.solution == null) return;
 
     //on reinitialise tout les nombres d'alico à 0 pour les recalculer
-    instance.solution.nbAlico = 0;
-    for(let cohorte of instance.cohortes)
+    this.instance.solution.nbAlico = 0;
+    for(let cohorte of this.instance.cohortes)
       for(let type of cohorte.types)
         for(let tube of type.tubes)
           tube.nbAlico = 0;
 
-    for(let city of instance.cities){
+    for(let city of this.instance.cities){
       //le nombre d'arc sortant de la ville courrante par tube sous forme de map
       var arcsByTube: Map<Tube, number> = new Map();
 
@@ -164,7 +157,7 @@ export class DataDisplayerComponent implements OnInit {
 
       //pour tous tube ayant + d'un arc sortant, les arcs supplémentaires sont compté comme +1 alicotage
       for(let [key, value] of arcsByTube){
-          instance.solution!.nbAlico += value-1;
+          this.instance.solution!.nbAlico += value-1;
           key.nbAlico += value-1;
       }
     }
@@ -183,4 +176,12 @@ export class DataDisplayerComponent implements OnInit {
     else city.marker.setIcon(iconDefault);
   }
 
+  async ngAfterViewInit(): Promise<void>{
+    this.dataService.selectedTubeUpdate.subscribe(this.onSelectedTubeUpdate.bind(this));
+
+    //on attend que l'instance puisse être récupérée
+    this.instance = await this.instanceService.getInstance();
+    
+    this.caculateAlicotagesNb();
+  }
 }

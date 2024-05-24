@@ -31,7 +31,7 @@ export class AppComponent implements OnInit {
   /**
    * Solution provenant de SolutionService (Initialisée en amont depuis le service même)
    */
-  instance: Instance = this.instanceService.getInstance();
+  instance: Instance = new Instance();
 
    /**
    * Liste des marqueurs Leaflet de la carte (1 marqueur par ville)
@@ -51,11 +51,8 @@ export class AppComponent implements OnInit {
   public async ngOnInit():  Promise<void> {
     this.loadMap();
 
-    //on attend que l'instance service soit initialisé
-    while(!this.instanceService.getIsInitialized())
-      await new Promise(resolve => setTimeout(resolve, 10));
-    //et on update l'instance
-    this.instance = this.instanceService.getInstance();
+    //on attend que l'instance puisse être récupérée
+    this.instance = await this.instanceService.getInstance();
 
     this.markersArray = this.instanceService.drawCities(this.map, this.instance.cities);
     this.createMarkersPopup()
