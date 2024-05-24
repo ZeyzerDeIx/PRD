@@ -1,5 +1,5 @@
 import { EventEmitter, Injectable } from '@angular/core';
-import { Arc, City, Instance } from '../include/modelClasses';
+import { Arc, City, Instance, Type } from '../include/modelClasses';
 import L, { LatLngExpression } from 'leaflet';
 
 /**
@@ -149,5 +149,20 @@ export class ArcService {
   public updatePolylineQuantities(arcs: Arc[]){
     for (const arc of arcs)
       arc.polyline.bindTooltip(`<div>Flux : ${ arc.quantity }</div>`);
+  }
+
+
+  /**
+   * Vérifie qu'il existe bien un chemin entre la ville a et la ville b.
+   * @param a Départ du chemin.
+   * @param b Arrivé du chemin.
+   * @returns true si le chemin existe, false sinon.
+   */
+  public pathExists(a: City, b: City, type: Type): boolean{
+    if(a == b) return true;
+    for(let arc of a.outgoing_arcs)
+      if(arc.tube.type == type && (arc.destination == b || this.pathExists(arc.destination, b, type)))
+        return true;
+    return false;
   }
 }

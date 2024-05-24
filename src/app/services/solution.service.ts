@@ -1,23 +1,29 @@
 import { Injectable } from '@angular/core';
 import { Tube, Instance, Arc, Type, Cohorte, City } from '../include/modelClasses';
 import { InstanceService } from './instance.service';
+import { ArcService } from './arc.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class SolutionService {
-  constructor(private instanceService: InstanceService) { }
+  /**
+   * Variable contenant le message "Ok !", signifiant qu'il n'y a pas d'erreure.
+   */
+  private readonly noErrorMessage: string = "Ok !";
+
+  constructor(private instanceService: InstanceService, private arcService: ArcService) { }
 
   /**
    * Vérifie si la solution modifiée par l'utilisateur reste faisable (i.e. chaque ville est bien desservie par une seule autre ville)
    */
   checkSolution(instance: Instance): boolean{
-    var error = "Ok !"
+    var error = this.noErrorMessage;
 
     for(let city of instance.cities){
       if(city.incomming_arcs.length > 1){
         error = this.checkIncommingArcs(city.incomming_arcs);
-        if(error != "Ok !") return this.printError(error);
+        if(error != this.noErrorMessage) return this.printError(error);
       }
     }
 
@@ -41,12 +47,12 @@ export class SolutionService {
           }
 
           //on vérifie que le tube peut assumer le volume demandé
-          if(this.instanceService.requiredVolumeByTube(cohorte.city, tube) > tube.volume){
+          if(this.instanceService.requiredVolumeByTube(cohorte.city, tube) > tube.volume)
             return this.printError(
               "Le tube n°"+tube.number+" du type "+type.name+" de la cohorte "+cohorte.city.name+" ne peut pas assumer le volume demandé.\nVolume du tube: "+tube.volume+"\nVolume demandé: "+this.instanceService.requiredVolumeByTube(cohorte.city, tube)
               );
-          }
 
+          //on vérifie que la cohorte ne prélève qu'un tube par type
           if(tube.usedByCohorte && ++nbUsedByCohorteTube > 1)
             return this.printError(
               "Il y a plusieurs tubes de type "+type.name+" prélevés par la cohorte "+cohorte.city.name+".\nMerci d'en choisir un seul."
@@ -54,7 +60,7 @@ export class SolutionService {
         }
       }
       error = this.checkDemandesSatisfied(cohorte, instance.cities);
-      if(error != "Ok !") return this.printError(error);
+      if(error != this.noErrorMessage) return this.printError(error);
     }
 
     return true;
@@ -79,7 +85,7 @@ export class SolutionService {
 
       types.push(arc.tube.type);
     }
-    return "Ok !";
+    return this.noErrorMessage;
   }
 
   /**
@@ -91,30 +97,18 @@ export class SolutionService {
   private checkDemandesSatisfied(cohorte: Cohorte, cities: City[]): string{
     for(let type of cohorte.types)
       for(let city of cities)
-        if(city.demandes.get(type.name) != 0 && !this.pathExists(cohorte.city, city, type))
+        if(city.demandes.get(type.name) != 0 && !this.arcService.pathExists(cohorte.city, city, type))
           return city.name + " n'est pas desservie par la cohorte " + cohorte.city.name + " en type " + type.name + ".\nCela est interdit.";
-    return "Ok !";
+    return this.noErrorMessage;
   }
 
   /**
-   * Vérifie qu'il existe bien un chemin entre la ville a et la ville b.
-   * @param a Départ du chemin.
-   * @param b Arrivé du chemin.
-   * @returns true si le chemin existe, false sinon.
-   */
-  private pathExists(a: City, b: City, type: Type): boolean{
-    if(a == b) return true;
-    for(let arc of a.outgoing_arcs)
-      if(arc.tube.type == type && (arc.destination == b || this.pathExists(arc.destination, b, type)))
-        return true;
-    return false;
-  }
-
-  /**
-   * Affiche un message d'erreur quand l'utilisateur essaie de sauvegarder une solution infaisable
+   * Affiche un message d'erreur quand l'utilisateur essaie de sauvegarder une solution infaisable.
    * @param error Message d'erreur à afficher.
+   * @returns Systématiquement false, car si une erreur est affichée, c'est que checkSolution retourne false.
    */
   printError(error: string): boolean{
+    error = "Sauvegarde impossible:\n"+ error;
     console.error(error);
     alert(error);
     return false;
