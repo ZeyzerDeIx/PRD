@@ -164,10 +164,30 @@ export class ArcService {
    * @returns true si le chemin existe, false sinon.
    */
   public pathExists(a: City, b: City, type: Type): boolean{
-    if(a == b) return true;
+    if(a === b) return true;
     for(let arc of a.outgoing_arcs)
-      if(arc.tube.type == type && (arc.destination == b || this.pathExists(arc.destination, b, type)))
+      if(arc.tube.type === type && (arc.destination === b || this.pathExists(arc.destination, b, type)))
         return true;
     return false;
+  }
+
+  /**
+   * Retourne le chemin, s'il y en a un, entre la ville a et la ville b.
+   * @param a Départ du chemin.
+   * @param b Arrivé du chemin.
+   * @returns La chaine d'arcs reliant les deux villes sous forme de tableau d'arcs. La liste est vide s'il n'y a pas de chemin.
+   */
+  public findPath(a: City, b: City, type: Type): Arc[]{
+    if(a === b) return [];
+
+    for(const arc of a.outgoing_arcs){
+      if(arc.tube.type === type && arc.destination === b)
+        return [arc];
+        
+      const path: Arc[] = this.findPath(arc.destination, b, type);
+      if(path.length) return [arc, ...path]; //concaténation
+    }
+
+    return [];
   }
 }
