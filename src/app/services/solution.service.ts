@@ -92,7 +92,7 @@ export class SolutionService {
     for(let type of cohorte.types)
       for(let city of cities)
         if(city.demandes.get(type.name) != 0 && !this.pathExists(cohorte.city, city, type))
-          return city.name + " n'est pas desservie par la cohorte " + cohorte.city.name + " en type " + type.name + ".Cela est interdit.";
+          return city.name + " n'est pas desservie par la cohorte " + cohorte.city.name + " en type " + type.name + ".\nCela est interdit.";
     return "Ok !";
   }
 

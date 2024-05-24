@@ -248,7 +248,7 @@ export class InstanceService {
 
     this.getTypesData().subscribe(data =>{
       //transforme le fichier en un tableau de string
-      this.instance.typeNames = data.split('\n');
+      this.instance.typeNames = data.split('\r\n');
 
       finish = true;
     });
