@@ -3,7 +3,6 @@ import { BrowserModule } from '@angular/platform-browser';
 import { LeafletModule } from '@asymmetrik/ngx-leaflet';
 import { AppComponent } from './app.component';
 import { HttpClientModule } from '@angular/common/http';
-import { SolutionService } from './solution.service';
 import { FileSaverModule } from 'ngx-filesaver';
 
 @NgModule({
@@ -17,9 +16,6 @@ import { FileSaverModule } from 'ngx-filesaver';
     FileSaverModule
   ],
   exports: [
-  ],
-  providers: [
-    SolutionService
   ],
   bootstrap: [AppComponent]
 })
