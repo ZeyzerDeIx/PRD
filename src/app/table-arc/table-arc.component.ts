@@ -96,8 +96,8 @@ export class TableArcComponent implements AfterViewInit{
    */
   mouseOutArc(data: Arc){
     data.polyline.setStyle({
-      weight: 2.7,
-      opacity: 0.5
+      weight: 3,
+      opacity: 0.75
     })
   }
 

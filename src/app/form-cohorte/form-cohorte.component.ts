@@ -83,7 +83,15 @@ export class FormCohorteComponent implements AfterViewInit{
     
     this.arcService.setCohorteCity(city);
     this.type = new Type();
-    this.typeChange();
+    this.tube = new Tube();
+    this.tubeChange();
+
+    var cohorteArcs: Arc[] = [];
+    for(let type of this.cohorte.types)
+      for(let tube of type.tubes)
+        cohorteArcs = [...cohorteArcs, ...tube.arcs];
+    this.arcService.setPolylineArray([]);
+    this.arcService.drawPolylines(cohorteArcs);
   }
 
   /**
@@ -92,6 +100,11 @@ export class FormCohorteComponent implements AfterViewInit{
   typeChange(){
     this.tube = new Tube();
     this.tubeChange();
+    var typeArcs: Arc[] = [];
+    for(let tube of this.type.tubes)
+      typeArcs = [...typeArcs, ...tube.arcs];
+    this.arcService.setPolylineArray([]);
+    this.arcService.drawPolylines(typeArcs)
   }
 
   /**
@@ -100,6 +113,7 @@ export class FormCohorteComponent implements AfterViewInit{
   tubeChange(){
     this.removeArcs();
     this.dataService.setSelectedTube(this.tube);
+    if(this.tube.number == -1) return;
     this.arcService.setPolylineArray(this.tube.arcs);
     this.arcService.drawPolylines(this.tube.arcs)
   }

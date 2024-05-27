@@ -44,10 +44,10 @@ export class ParseService {
   public getInstance(): Instance{ return this.instance; }
 
 
-  private tubeCount: number = 0;
-  private cityCount: number = 0;
-  private typeCount: number = 0;
-  private cohorteCount: number = 0;
+  public tubeCount: number = 0;
+  public cityCount: number = 0;
+  public typeCount: number = 0;
+  public cohorteCount: number = 0;
 
   /**
    * Constructeur du service

@@ -92,6 +92,8 @@ export class InstanceService {
 
     this.caculateArcsQuantities();
 
+    this.arcService.colors = this.arcService.generateRandomColors(this.parseService.tubeCount);
+
     this.isInitialized = true;
   }
 

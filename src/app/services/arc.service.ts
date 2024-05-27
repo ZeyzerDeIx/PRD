@@ -30,7 +30,33 @@ export class ArcService {
   /**
    * Liste des couleures possibles pour les arcs.
    */
-  public colors: string[] = ['red', 'blue', 'green', 'purple'];
+  public colors: string[] = this.generateRandomColors(4);
+  generateRandomColors(numColors: number): string[] {
+    const colors: string[] = [];
+    const step = 360 / numColors; // Répartir uniformément les teintes
+
+    for (let i = 0; i < numColors; i++) {
+        const hue = i * step;
+        const saturation = 100; // Saturation maximale pour des couleurs vives
+        const lightness = 50; // Luminosité moyenne pour des couleurs équilibrées
+        colors.push(`hsl(${hue}, ${saturation}%, ${lightness}%)`);
+    }
+
+    // Convertir les couleurs HSL en RGB
+    const rgbColors = colors.map(this.hslToRgb);
+    return rgbColors;
+  }
+
+  hslToRgb(hsl: string): string {
+    const [h, s, l] = hsl.match(/\d+/g)!.map(Number);
+    const a = s * Math.min(l, 100 - l) / 100;
+    const f = (n: number) => {
+        const k = (n + h / 30) % 12;
+        const color = l - a * Math.max(Math.min(k - 3, 9 - k, 1), -1);
+        return Math.round(255 * color);
+    };
+    return `rgb(${f(0)/100},${f(8)/100},${f(4)/100})`;
+  }
 
   /**
    * Constructeur du service
@@ -123,12 +149,12 @@ export class ArcService {
 
     var latlngs:LatLngExpression[] = [origin.position, destination.position];
 
-    var polylineOptions = {color: color, weight: 2.7, opacity: 0.5};
+    var polylineOptions = {color: color, weight: 3, opacity: 0.75};
 
     return L.polyline(latlngs, polylineOptions)
     .arrowheads({
       size: "16px",
-      opacity: 0.5,
+      opacity: 0.75,
       fill: false,
       yawn: 75,
       offsets: {end: '75px'}
