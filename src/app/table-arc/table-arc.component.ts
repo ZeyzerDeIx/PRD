@@ -81,24 +81,18 @@ export class TableArcComponent implements AfterViewInit{
 
   /**
    * Modifie le style d'un arc quand on passe la souris sur la ligne associée dans le tableau d'arcs
-   * @param data Arc à modifier
+   * @param arc Arc à modifier
    */
-  mouseOverArc(data: Arc){
-    data.polyline.setStyle({
-      weight: 5,
-      opacity: 1
-    })
+  mouseOverArc(arc: Arc){
+    this.arcService.toggleArcEmphathize(arc);
   }
 
   /**
    * Réinitialise le style d'un arc quand on enlève la souris de la ligne associée dans le tableau d'arcs
-   * @param data Arc à réinitialiser
+   * @param arc Arc à réinitialiser
    */
-  mouseOutArc(data: Arc){
-    data.polyline.setStyle({
-      weight: 3,
-      opacity: 0.75
-    })
+  mouseOutArc(arc: Arc){
+    this.arcService.toggleArcEmphathize(arc, false);
   }
 
   /**

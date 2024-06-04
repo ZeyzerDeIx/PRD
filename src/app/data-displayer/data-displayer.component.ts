@@ -2,6 +2,7 @@
 
 import { Component, AfterViewInit, ElementRef, ViewChild } from '@angular/core';
 import { InstanceService } from '../services/instance.service';
+import { ArcService } from '../services/arc.service';
 import { Instance, Tube, City } from '../include/modelClasses';
 import { DataService } from '../services/data.service';
 import { NgIf, NgFor } from '@angular/common';
@@ -91,7 +92,7 @@ export class DataDisplayerComponent implements AfterViewInit {
    * @param instanceService Service permettant de créer l'objet Instance
    * @param dataService Service permettant de communiquer les données importantes à afficher
    */
-  constructor(private instanceService:InstanceService, private dataService: DataService){
+  constructor(private instanceService:InstanceService, private dataService: DataService, private arcService: ArcService){
   }
   /**
    * Est appelé à chaque fois que le tube selectionné est update.
@@ -174,6 +175,9 @@ export class DataDisplayerComponent implements AfterViewInit {
     if(emph) city.marker.setIcon(iconEmph);
     else if(city == this.selectedTube.type.cohorte.city) city.marker.setIcon(iconViolet);
     else city.marker.setIcon(iconDefault);
+
+    for(let arc of this.arcService.findPath(this.selectedTube.type.cohorte.city, city, this.selectedTube))
+      this.arcService.toggleArcEmphathize(arc, emph);
   }
 
   async ngAfterViewInit(): Promise<void>{

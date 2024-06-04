@@ -149,12 +149,12 @@ export class ArcService {
 
     var latlngs:LatLngExpression[] = [origin.position, destination.position];
 
-    var polylineOptions = {color: color, weight: 3, opacity: 0.75};
+    var polylineOptions = {color: color, weight: 2.5, opacity: 0.7};
 
     return L.polyline(latlngs, polylineOptions)
     .arrowheads({
       size: "16px",
-      opacity: 0.75,
+      opacity: 0.7,
       fill: false,
       yawn: 75,
       offsets: {end: '75px'}
@@ -216,5 +216,18 @@ export class ArcService {
       }
 
     return [];
+  }
+
+  /**
+   * Met en évidence un arc.
+   *
+   * @param {Arc} arc L'arc à mettre en évidence.
+   * @param {boolean} [emph=true] Si false, inverse la mise en évidence.
+   */
+  public toggleArcEmphathize(arc: Arc, emph: boolean = true): void{
+    arc.polyline.setStyle({
+      weight:  emph? 6 : 2.5,
+      opacity: emph? 1 : 0.7
+    });
   }
 }
