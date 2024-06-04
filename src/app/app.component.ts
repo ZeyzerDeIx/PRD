@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { HttpClientModule} from '@angular/common/http';
 import { InstanceService } from './services/instance.service';
 import { ArcService } from './services/arc.service';
+import { DataService } from './services/data.service';
 import { FormCohorteComponent } from './form-cohorte/form-cohorte.component';
 import { TableArcComponent } from './table-arc/table-arc.component';
 import { DataDisplayerComponent } from './data-displayer/data-displayer.component';
@@ -42,7 +43,7 @@ export class AppComponent implements OnInit {
    * Constructeur du composant
    * @param instanceService Service permettant de créer l'objet Solution
    */
-  constructor(private instanceService:InstanceService, private arcService: ArcService) {
+  constructor(private instanceService:InstanceService, private arcService: ArcService, private dataService: DataService) {
   }
 
   /**
@@ -97,12 +98,18 @@ export class AppComponent implements OnInit {
       popupContent += `</ul></div>`
 
       marker.bindPopup(popupContent, {autoPan: false});
+      
       marker.on('mouseover', (e) => {
         e.target.openPopup();
+        //obligatoir, pour une raison obscure, city ne fonctionne pas.
+        var cityToEmph = this.instanceService.findCityByName(e.target.options.alt as string);
+        this.dataService.toggleCityEmphathize(cityToEmph);
       });
 
       marker.on('mouseout', (e) => {
         e.target.closePopup();
+        var cityToEmph = this.instanceService.findCityByName(e.target.options.alt as string);
+        this.dataService.toggleCityEmphathize(cityToEmph,false);
       });
     }
   }

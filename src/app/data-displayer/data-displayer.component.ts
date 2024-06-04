@@ -2,12 +2,10 @@
 
 import { Component, AfterViewInit, ElementRef, ViewChild } from '@angular/core';
 import { InstanceService } from '../services/instance.service';
-import { ArcService } from '../services/arc.service';
 import { Instance, Tube, City } from '../include/modelClasses';
 import { DataService } from '../services/data.service';
 import { NgIf, NgFor } from '@angular/common';
 import L from 'leaflet';
-import { iconDefault, iconViolet, iconEmph } from '../include/leaflet-icons';
 import {MatCheckboxModule} from '@angular/material/checkbox';
 import { FormsModule } from '@angular/forms'; 
 
@@ -92,7 +90,7 @@ export class DataDisplayerComponent implements AfterViewInit {
    * @param instanceService Service permettant de créer l'objet Instance
    * @param dataService Service permettant de communiquer les données importantes à afficher
    */
-  constructor(private instanceService:InstanceService, private dataService: DataService, private arcService: ArcService){
+  constructor(private instanceService:InstanceService, private dataService: DataService){
   }
   /**
    * Est appelé à chaque fois que le tube selectionné est update.
@@ -170,14 +168,7 @@ export class DataDisplayerComponent implements AfterViewInit {
    * @param emph Vrai par defaut, si faux, la mise en évidence est inversé, c'est à dire que l'on redonne un logo normal pour le marker.
    */
   public toggleCityEmphathize(city: City, emph: boolean = true):void{
-    if(city.marker == null) return;
-    
-    if(emph) city.marker.setIcon(iconEmph);
-    else if(city == this.selectedTube.type.cohorte.city) city.marker.setIcon(iconViolet);
-    else city.marker.setIcon(iconDefault);
-
-    for(let arc of this.arcService.findPath(this.selectedTube.type.cohorte.city, city, this.selectedTube))
-      this.arcService.toggleArcEmphathize(arc, emph);
+    this.dataService.toggleCityEmphathize(city, emph);
   }
 
   async ngAfterViewInit(): Promise<void>{
