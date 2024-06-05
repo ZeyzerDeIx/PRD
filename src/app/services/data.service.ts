@@ -60,6 +60,9 @@ export class DataService {
           tube.nbAlico = 0;
 
     for(let city of instance.cities){
+      //il faut également réinitialiser les alico des villes.
+      city.nbAlico = 0;
+
       //le nombre d'arc sortant de la ville courrante par tube sous forme de map
       var arcsByTube: Map<Tube, number> = new Map();
 
@@ -78,6 +81,7 @@ export class DataService {
         city.nbAlico += nbAlico;
         tube.nbAlico += nbAlico;
       }
+      
       if(city.nbAlico > maxAlCity.nbAlico)
         maxAlCity = city;
     }
