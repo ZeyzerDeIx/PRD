@@ -17,9 +17,15 @@
 .info-container {
   display: flex; /* Utiliser flexbox */
   flex-wrap: wrap; /* Permettre le passage à la ligne */
+  margin: 10px;
 }
 
 .info {
+  position: relative; /* Nécessaire pour positionner l'infobulle */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
   flex: 1;
   margin-top: 10px; /* Marge supérieure pour l'espacement entre les éléments */
   background-color: #ffffff; /* Couleur de fond */
@@ -36,6 +42,42 @@
   background-color: #cccccc; /* Couleur de fond */
 }
 
+/* Style de l'infobulle */
+.info .tooltip {
+  visibility: hidden;
+  width: 200px;
+  background-color: black;
+  color: #fff;
+  text-align: center;
+  border-radius: 5px;
+  padding: 5px;
+  position: absolute;
+  z-index: 1;
+  bottom: 125%; /* Position de l'infobulle */
+  left: 50%;
+  margin-left: -100px; /* Centre l'infobulle */
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+/* Flèche de l'infobulle */
+.info .tooltip::after {
+  content: "";
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  margin-left: -5px;
+  border-width: 5px;
+  border-style: solid;
+  border-color: black transparent transparent transparent;
+}
+
+/* Afficher l'infobulle au survol */
+.info:hover .tooltip {
+  visibility: visible;
+  opacity: 1;
+}
+
 .summary-label {
   display: block; /* Afficher en tant que bloc */
   cursor: pointer;
@@ -47,11 +89,11 @@
 .summary-arrow {
   display: inline-block;
   transform: rotate(0deg);
-  transition: transform 0.3s ease-in-out;
 }
 
 #toggleInfo:checked ~ .info-content {
   max-height: unset;
+  overflow: visible;
 }
 
 #toggleInfo:checked ~ .summary-label .summary-arrow {
@@ -61,7 +103,6 @@
 .info-content {
   max-height: 0;
   overflow: hidden;
-  transition: max-height 0.3s;
 }
 
 .visually-hidden {

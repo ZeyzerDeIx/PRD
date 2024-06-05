@@ -43,6 +43,8 @@ export class DataDisplayerComponent implements AfterViewInit {
    */
   requiredVolume: number|string = 0;
 
+  maxAlCity: City = new City();
+
   /**
    * Cet élément fait le lien avec la template et permet de récupérer des informations sur la taille de la boite notament.
    */
@@ -105,7 +107,7 @@ export class DataDisplayerComponent implements AfterViewInit {
       this.requiredVolume = "Erreur";
     }
     this.updateTubeCities();
-    this.dataService.caculateAlicotagesNb(this.instance);
+    this.maxAlCity = this.dataService.caculateAlicotagesNb(this.instance);
   }
 
   /**
@@ -144,6 +146,6 @@ export class DataDisplayerComponent implements AfterViewInit {
     //on attend que l'instance puisse être récupérée
     this.instance = await this.instanceService.getInstance();
     
-    this.dataService.caculateAlicotagesNb(this.instance);
+    this.maxAlCity = this.dataService.caculateAlicotagesNb(this.instance);
   }
 }

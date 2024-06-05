@@ -44,9 +44,13 @@ export class DataService {
 
   /**
    * Calcul le nombre d'alicotage de chaque tube ainsi que de la solution pour les mettres à jour.
+   * 
+   * @returns La ville ayant le plus d'alicotages.
    */
-  public caculateAlicotagesNb(instance: Instance): void{
-    if(instance.solution == null) return;
+  public caculateAlicotagesNb(instance: Instance): City{
+    if(instance.solution == null) return new City();
+
+    var maxAlCity: City = new City();
 
     //on reinitialise tout les nombres d'alico à 0 pour les recalculer
     instance.solution.nbAlico = 0;
@@ -74,6 +78,9 @@ export class DataService {
         city.nbAlico += nbAlico;
         tube.nbAlico += nbAlico;
       }
+      if(city.nbAlico > maxAlCity.nbAlico)
+        maxAlCity = city;
     }
+    return maxAlCity;
   }
 }
