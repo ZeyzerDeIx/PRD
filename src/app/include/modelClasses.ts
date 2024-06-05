@@ -208,6 +208,11 @@ export class City {
      */
     position: LatLngExpression;
 
+    /**
+     * Nombre d'alicotage
+     */
+    nbAlico: number;
+
     constructor(name: string = '',
         id: number = 0,
         cohorte: boolean = false,
@@ -215,7 +220,8 @@ export class City {
         incomming_arcs: Arc[] = [],
         marker: L.Marker|null = null,
         demandes: Map<string, number> = new Map(),
-        position: LatLngExpression = [0,0]
+        position: LatLngExpression = [0,0],
+        nbAlico: number = 0
     ) {
         this.name = name;
         this.id = id;
@@ -225,6 +231,7 @@ export class City {
         this.marker = marker;
         this.demandes = demandes;
         this.position = position;
+        this.nbAlico = nbAlico;
     }
 }
 

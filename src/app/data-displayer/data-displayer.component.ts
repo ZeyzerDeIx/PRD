@@ -105,7 +105,7 @@ export class DataDisplayerComponent implements AfterViewInit {
       this.requiredVolume = "Erreur";
     }
     this.updateTubeCities();
-    this.caculateAlicotagesNb();
+    this.dataService.caculateAlicotagesNb(this.instance);
   }
 
   /**
@@ -130,39 +130,6 @@ export class DataDisplayerComponent implements AfterViewInit {
   }
 
   /**
-   * Calcul le nombre d'alicotage de chaque tube ainsi que de la solution pour les mettres à jour.
-   */
-  private caculateAlicotagesNb(): void{
-    if(this.instance.solution == null) return;
-
-    //on reinitialise tout les nombres d'alico à 0 pour les recalculer
-    this.instance.solution.nbAlico = 0;
-    for(let cohorte of this.instance.cohortes)
-      for(let type of cohorte.types)
-        for(let tube of type.tubes)
-          tube.nbAlico = 0;
-
-    for(let city of this.instance.cities){
-      //le nombre d'arc sortant de la ville courrante par tube sous forme de map
-      var arcsByTube: Map<Tube, number> = new Map();
-
-      //on compte le nombre d'arcs sortants par tube
-      for(let arc of city.outgoing_arcs){
-        if(!arcsByTube.has(arc.tube))
-          arcsByTube.set(arc.tube, 0);
-        var curVal: number = arcsByTube.get(arc.tube) as number;
-        arcsByTube.set(arc.tube, curVal+1);
-      }
-
-      //pour tous tube ayant + d'un arc sortant, les arcs supplémentaires sont compté comme +1 alicotage
-      for(let [key, value] of arcsByTube){
-          this.instance.solution!.nbAlico += value-1;
-          key.nbAlico += value-1;
-      }
-    }
-  }
-
-  /**
    * Met en évidence le marker d'une ville.
    * @param city La ville à mettre en évidence.
    * @param emph Vrai par defaut, si faux, la mise en évidence est inversé, c'est à dire que l'on redonne un logo normal pour le marker.
@@ -177,6 +144,6 @@ export class DataDisplayerComponent implements AfterViewInit {
     //on attend que l'instance puisse être récupérée
     this.instance = await this.instanceService.getInstance();
     
-    this.caculateAlicotagesNb();
+    this.dataService.caculateAlicotagesNb(this.instance);
   }
 }

@@ -1,5 +1,5 @@
 import { EventEmitter, Injectable } from '@angular/core';
-import { Tube, City } from '../include/modelClasses';
+import { Tube, City, Instance } from '../include/modelClasses';
 import { ArcService } from '../services/arc.service';
 import { iconDefault, iconViolet, iconEmph } from '../include/leaflet-icons';
 
@@ -40,5 +40,40 @@ export class DataService {
 
     for(let arc of this.arcService.findPath(this.selectedTube.type.cohorte.city, city, this.selectedTube))
       this.arcService.toggleArcEmphathize(arc, emph);
+  }
+
+  /**
+   * Calcul le nombre d'alicotage de chaque tube ainsi que de la solution pour les mettres à jour.
+   */
+  public caculateAlicotagesNb(instance: Instance): void{
+    if(instance.solution == null) return;
+
+    //on reinitialise tout les nombres d'alico à 0 pour les recalculer
+    instance.solution.nbAlico = 0;
+    for(let cohorte of instance.cohortes)
+      for(let type of cohorte.types)
+        for(let tube of type.tubes)
+          tube.nbAlico = 0;
+
+    for(let city of instance.cities){
+      //le nombre d'arc sortant de la ville courrante par tube sous forme de map
+      var arcsByTube: Map<Tube, number> = new Map();
+
+      //on compte le nombre d'arcs sortants par tube
+      for(let arc of city.outgoing_arcs){
+        if(!arcsByTube.has(arc.tube))
+          arcsByTube.set(arc.tube, 0);
+        var curVal: number = arcsByTube.get(arc.tube) as number;
+        arcsByTube.set(arc.tube, curVal+1);
+      }
+
+      //pour tous tube ayant + d'un arc sortant, les arcs supplémentaires sont compté comme +1 alicotage
+      for(let [tube, arcCount] of arcsByTube){
+        const nbAlico = tube.type.cohorte.patientCount!*(arcCount-1);
+        instance.solution!.nbAlico += nbAlico;
+        city.nbAlico += nbAlico;
+        tube.nbAlico += nbAlico;
+      }
+    }
   }
 }
