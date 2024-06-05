@@ -60,15 +60,6 @@ export class DataDisplayerComponent implements AfterViewInit {
   }
 
   /**
-   * Permet une animation plus fluide en ajustant la taille de la boite d'affichage.
-   * Cette méthode est utilisée par la template d'affichage.
-   * @returns La taille actuelle de la boite.
-   */
-  get infoBoxHeight(): number {
-    return this.isInfoBoxOpen ? this.infoContent.nativeElement.scrollHeight : 0;
-  }
-
-  /**
    * Permet de récupérer la demande d'une ville pour le type du tube selectionné.
    * Cette méthode est utilisée par la template d'affichage.
    * @param city La ville dont on souhaite connaître la demande.
