@@ -74,17 +74,14 @@ export class SolutionService {
   }
 
   /**
-   * Vérifie que les arcs entrants d'une ville remplissent bien les deux critères suivants:
-   * <ul>
-   * <li>Les arcs entrants proviennent tous de tubes différents.</li>
-   * <li>Au moins un des arcs entrant peut satisfaire pleinement la demande.</li>
-   * </ul>
+   * Vérifie que les arcs entrants d'une ville remplissent bien le critère suivant:
+   * Les arcs entrants proviennent tous de tubes différents.
    * @param arcs La liste des arcs entrants de la ville
    * @returns Un message d'erreur si une des condition n'est pas respéctée, sinon le message contient "Ok !".
    */
   private checkIncommingArcs(arcs: Arc[]): string{
 
-    //on commence par vérifier que tous les arcs proviennent bien de types différents (par cohorte)
+    //on vérifie que tous les arcs proviennent bien de types différents (par cohorte)
     var types: Type[] = [];
     for(let arc of arcs){
       if(types.includes(arc.tube.type))
@@ -115,6 +112,14 @@ export class SolutionService {
     return this.noErrorMessage;
   }
 
+  /**
+   * Vérifie que toutes les villes du tube respectent bien le nombre de congélation max.
+   *
+   * @param maxFreezes Le nombre de congélations maximum.
+   * @param cohorte La cohorte.
+   * @param cities Toutes les villes de l'instance.
+   * @returns Le message d'erreur s'il y en a une, "Ok !" sinon.
+   */
   private checkFreezesCount(maxFreezes: number, cohorte: Cohorte, cities: City[]): string{
     for(let city of cities)
       for(let type of cohorte.types)

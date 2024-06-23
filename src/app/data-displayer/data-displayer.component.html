@@ -11,19 +11,19 @@
         <span class="tooltip">Nombre de congélation maximum de l'instance.</span>
       </div>
     </div>
-    <h2>Nombre d'alicotages</h2>
+    <h2>Nombre d'aliquotages</h2>
     <div class="info-container">
       <div class="info">
         Total: {{ instance.solution?.nbAlico }}
-        <span class="tooltip">Nombre total d'alicotages de toute la solution.</span>
+        <span class="tooltip">Nombre total d'aliquotages de toute la solution.</span>
       </div>
       <div class="info">
       {{ maxAlCity.name }}: {{ maxAlCity.nbAlico }}
-      <span class="tooltip">Cette ville est celle où il y a le plus d'alicotages.</span>
+      <span class="tooltip">Cette ville est celle où il y a le plus d'aliquotages.</span>
       </div>
       <div class="info"  *ngIf="selectedTube.number != -1">
         Tube: {{ selectedTube.nbAlico }}
-        <span class="tooltip">Nombre d'alicotages du tube selectionné.</span>
+        <span class="tooltip">Nombre d'aliquotages du tube selectionné.</span>
       </div>
     </div>
     <div *ngIf="selectedTube.number != -1">

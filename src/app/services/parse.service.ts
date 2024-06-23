@@ -20,12 +20,12 @@ export class ParseService {
   /**
    * URL de l'instance d'entrée du modèle
    */
-  private instanceUrl:string = "assets/solution_data/I_20_4_4_4_3_00.txt";
+  private instanceUrl:string = "assets/solution_data/instance.txt";
 
   /**
    * URL de la solution proposée par le modèle
    */
-  private instanceSolutionUrl:string = "assets/solution_data/sol_20_4_4_4_3_00.txt";
+  private instanceSolutionUrl:string = "assets/solution_data/solution.txt";
 
   /**
    * URL des types proposés par le modèle
@@ -161,7 +161,7 @@ export class ParseService {
 
       this.typeCount = Number(lines[4]);
       if(this.instance.typeNames.length > this.typeCount)
-        this.instance.typeNames = this.instance.typeNames.slice(this.typeCount);
+        this.instance.typeNames = this.instance.typeNames.slice(0,this.typeCount);
       this.tubeCount = Number(lines[5]);
 
       this.instance.cohortes.forEach((cohorte, i) =>
@@ -232,7 +232,7 @@ export class ParseService {
     this.getInstanceSolutionData().subscribe(data =>{
       this.instance.solution = new Solution(this.instance);
       //transforme le fichier en un tableau de string
-      var lines: string[] = data.split('\n');
+      var lines: string[] = data.split('\n').slice(1);
 
       //on parse les lignes contenant les villes visitées par chaque tube
       this.parseTubesCities(lines.slice(0, separator));
