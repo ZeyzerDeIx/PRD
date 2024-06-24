@@ -20,12 +20,12 @@ export class ParseService {
   /**
    * URL de l'instance d'entrée du modèle
    */
-  private instanceUrl:string = "assets/solution_data/instance.txt";
+  private instanceUrl:string = "assets/solution_data/I_20_4_4_4_3_00.txt";
 
   /**
    * URL de la solution proposée par le modèle
    */
-  private instanceSolutionUrl:string = "assets/solution_data/solution.txt";
+  private instanceSolutionUrl:string = "assets/solution_data/sol_20_4_4_4_3_00.txt";
 
   /**
    * URL des types proposés par le modèle
@@ -299,7 +299,8 @@ export class ParseService {
       for(let type of cohorte.types)
         for(let tube of type.tubes){
           for(let id of lines[tubeNum++].split("\t").slice(4))
-            tube.cities.push(this.findCityById(Number(id)));
+            if(id != "")
+              tube.cities.push(this.findCityById(Number(id)));
           if(tube.cities.includes(cohorte.city))
             tube.usedByCohorte = true;
         }
