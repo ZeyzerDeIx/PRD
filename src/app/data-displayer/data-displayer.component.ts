@@ -59,6 +59,15 @@ export class DataDisplayerComponent implements AfterViewInit {
     return this.isInfoBoxOpen ? 'Fermer' : 'Afficher';
   }
 
+  get totalFreeze(): number {
+    var totalFreeze: number = 0;
+    for(let cohorte of this.instance.cohortes)
+      for(let type of cohorte.types)
+        for(let tube of type.tubes)
+          totalFreeze += tube.arcs.length;
+    return totalFreeze;
+  }
+
   /**
    * Permet de récupérer la demande d'une ville pour le type du tube selectionné.
    * Cette méthode est utilisée par la template d'affichage.

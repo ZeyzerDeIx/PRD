@@ -4,11 +4,19 @@
     <span class="summary-arrow">&#9658;</span> {{ toggleButtonText }} les détails
   </label>
   <div #infoContent class="info-content">
-    <h2>Nombre max de congélations</h2>
+    <h2>Nombre de congélations</h2>
     <div class="info-container">
       <div class="info">
-        {{ instance.maxFreezes }}
-        <span class="tooltip">Nombre de congélation maximum de l'instance.</span>
+        Total: {{ totalFreeze }}
+        <span class="tooltip">Nombre total de congélations de l'instance.</span>
+      </div>
+      <div class="info">
+        Max: {{ instance.maxFreezes }}
+        <span class="tooltip">Nombre maximum de congélations autorisées dans l'instance.</span>
+      </div>
+      <div class="info" *ngIf="selectedTube.number != -1">
+        Tube: {{ selectedTube.arcs.length }}
+        <span class="tooltip">Nombre de congélations du tube sélectionné.</span>
       </div>
     </div>
     <h2>Nombre d'aliquotages</h2>
@@ -21,7 +29,7 @@
       {{ maxAlCity.name }}: {{ maxAlCity.nbAlico }}
       <span class="tooltip">Cette ville est celle où il y a le plus d'aliquotages.</span>
       </div>
-      <div class="info"  *ngIf="selectedTube.number != -1">
+      <div class="info" *ngIf="selectedTube.number != -1">
         Tube: {{ selectedTube.nbAlico }}
         <span class="tooltip">Nombre d'aliquotages du tube selectionné.</span>
       </div>
