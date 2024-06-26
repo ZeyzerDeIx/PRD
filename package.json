@@ -3,13 +3,18 @@
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
-    "start": "ng serve",
+    "start": "concurrently \"ng serve\" \"npm run electron\"",
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
     "compodoc": "npx compodoc -p tsconfig.doc.json -n \"Documentation PRD\" -s",
     "compodoc generate": "npx compodoc -p tsconfig.doc.json",
-    "compodoc serv": "npx compodoc -s"
+    "compodoc serv": "npx compodoc -s",
+    "electron": "electron ./src/electron.dev",
+    "package:win": "npm run build && cross-var electron-packager dist $npm_package_name-$npm_package_version --out=packages --platform=win32 --arch=all --overwrite ",
+    "package:linux": "npm run build && cross-var electron-packager dist $npm_package_name-$npm_package_version --out=packages --platform=linux --arch=all --overwrite ",
+    "package:osx": "npm run build && cross-var electron-packager dist $npm_package_name-$npm_package_version --out=packages --platform=darwin --arch=all --overwrite ",
+    "package:all": "npm run build && cross-var electron-packager dist $npm_package_name-$npm_package_version --out=packages --all --arch=all --overwrite "
   },
   "private": true,
   "dependencies": {
@@ -44,6 +49,10 @@
     "@types/jasmine": "~5.1.0",
     "@types/leaflet": "^1.9.8",
     "@types/node": "^20.12.7",
+    "concurrently": "^8.2.2",
+    "cross-var": "^1.1.0",
+    "electron": "^31.1.0",
+    "electron-packager": "^17.1.2",
     "jasmine-core": "~5.1.0",
     "karma": "~6.4.0",
     "karma-chrome-launcher": "~3.2.0",
