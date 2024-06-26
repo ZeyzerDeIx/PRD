@@ -19,7 +19,7 @@ Vous pouvez également lancer `ng serve --open` pour ouvrir l'onglet automatique
 
 ## Tester l'application sans être developpeur
 
-Le fichier 7z contient une version packagée du projet, dedans lancer prd-0.0.0 pour tester l'application directement.
+Le fichier PRD.7z contient une version packagée du projet, dedans vous pouvez lancer prd-0.0.0 pour tester l'application directement.
 
 ## Construire les exécutables
 
