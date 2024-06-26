@@ -278,6 +278,10 @@ export class ParseService {
       var orig: City = this.findCityById(Number(split[0]));
       var dest: City = this.findCityById(Number(split[1]));
 
+      //cette vérification permet de ne pas ajouter l'arc si sa destination n'a pas de demande (suppression des arcs nulls)
+      if(dest.demandes.get(tube.type.name) == 0)
+        continue;
+
       //couleur de la polyline de l'arc
       var color = this.arcService.colors[tube.number!-1];
 
