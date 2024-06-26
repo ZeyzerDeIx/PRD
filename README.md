@@ -9,13 +9,21 @@ Le projet est codé en TypeScript avec le framework Angular, ainsi que la biblio
 
 ## Initialisation du projet
 
-Après avoir pull le projet depuis le repository Git (`https://github.com/BethencourtFlorian/PRD`),  
+Après avoir pull le projet depuis le repository Git (`https://github.com/ZeyzerDeIx/PRD`),  
 ouvrez un terminal et déplacez vous dans le dossier "PRD".
 D'ici, lancez la commande `npm install` pour installer toutes les dépendances du projet.  
   
   
 La commande `ng serve` ouvrira un serveur de développement à l'adresse `http://localhost:4200`.  
-Vous pouvez également lancer `ng serve --open` pour ouvrir l'onglet automatiquement.  
+Vous pouvez également lancer `ng serve --open` pour ouvrir l'onglet automatiquement.
+
+## Tester l'application sans être developpeur
+
+Le fichier 7z contient une version packagée du projet, dedans lancer prd-0.0.0 pour tester l'application directement.
+
+## Construire les exécutables
+
+Placez vous à la racine du projet et utilisez la commande `npm run package:win` pour windows, `npm run package:os` pour OS X, `npm run package:linux` pour Linux ou encore `npm run package:all` pour tout faire.
 
 ## Documentation  
 
